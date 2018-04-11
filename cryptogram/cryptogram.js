@@ -16,24 +16,6 @@ angular.module('cryptogram', ['ngRoute', 'ngStorage'])
 .controller('CryptController', function($window, $scope, $localStorage, cryptogram) {
 
     $scope.keys = {};
-    var mapped = function(x) {
-        x = x.toUpperCase();
-        return x in $scope.$storage.mapping && $scope.$storage.mapping[x];
-    }
-    $scope.cryptClass = function(x) {
-        return mapped(x) ? "decrypted" : "crypted";
-    }
-    $scope.decrypt = function(x) {
-        if (!mapped(x)) {
-            return x;
-        } else if ('a' <= x && x <= 'z') {
-            return $scope.$storage.mapping[x.toUpperCase()].toLowerCase();
-        } else if ('A' <= x && x <= 'Z') {
-            return $scope.$storage.mapping[x].toUpperCase();
-        } else {
-            return $scope.$storage.mapping[x];
-        }
-    }
     $scope.$watch('$storage.source', function(source) {
         var keys = {' ': 1, '\n': 1, '\t': 1};
         $scope.keys = [];
@@ -64,8 +46,8 @@ angular.module('cryptogram', ['ngRoute', 'ngStorage'])
         });
     })
 
-    $scope.reset = function() {
-        if ($window.confirm("Are you sure?")) {
+    $scope.clearAnswers = function() {
+        if ($window.confirm("Are you sure you want to clear your answers?")) {
             $scope.$storage.mapping = {};
         }
     };
@@ -73,6 +55,7 @@ angular.module('cryptogram', ['ngRoute', 'ngStorage'])
     $scope.$storage = $localStorage.$default({
             source: "",
             mapping: {},
+            caps: true,
         });
 
     if (!$scope.$storage.source) {
@@ -80,6 +63,7 @@ angular.module('cryptogram', ['ngRoute', 'ngStorage'])
             $scope.$storage.source = text;
         });
         $scope.$storage.mapping = {};
+        $scope.$storage.caps = true;
     }
 })
 
@@ -92,7 +76,6 @@ angular.module('cryptogram', ['ngRoute', 'ngStorage'])
     var choice = function(vals) {
         return vals[Math.floor(Math.random() * vals.length)];
     };
-
 
     var randomCipher = function(text) {
         var keys = [];
@@ -144,21 +127,36 @@ angular.module('cryptogram', ['ngRoute', 'ngStorage'])
     }
 })
 
-.directive("moveNextOnType", function() {
-    return {
-        restrict: "A",
-        scope: {
-            moveNext: '<?moveNextOnType',
-        },
-        link: function($scope, element) {
-            // element.on("input", function(e) {
-            //     if(element.val().length == 1) {
-            //         var $nextElement = element.nextAll('input');
-            //         if($nextElement.length) {
-            //             $nextElement[0].focus();
-            //         }
-            //     }
-            // });
+.service('mapped', function() {
+    return function(x, mapping) {
+        x = x.toUpperCase();
+        return x in mapping && mapping[x];
+    }
+})
+
+.filter('cryptClass', function(mapped) {
+    return function(x, mapping) {
+        return mapped(x, mapping) ? "decrypted" : "crypted";
+    }
+})
+
+.filter('decrypt', function(mapped) {
+    return function(x, mapping) {
+        if (!mapped(x, mapping)) {
+            return x;
+        } else if ('a' <= x && x <= 'z') {
+            return mapping[x.toUpperCase()].toLowerCase();
+        } else if ('A' <= x && x <= 'Z') {
+            return mapping[x].toUpperCase();
+        } else {
+            return mapping[x];
         }
     }
-});
+})
+
+.filter('maybeCaps', function() {
+    return function(letter, toCap) {
+        if (toCap) letter = letter.toUpperCase();
+        return letter;
+    }
+})
