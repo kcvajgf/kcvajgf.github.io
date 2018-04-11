@@ -3,7 +3,7 @@
     <p>To help you solve cryptograms.</p>
     <div class="row">
         <div class="col-sm">
-            <div class="source-area"><span ng-repeat="letter in $storage.source track by $index" class="{{letter | cryptClass: $storage.mapping}}">{{ letter | decrypt: $storage.mapping | maybeCaps: $storage.caps }}</span></div>
+            <div class="source-area"><span ng-repeat="letter in $storage.source track by $index" class="{{letter | cryptClass: $storage.mapping}}">{{ letter | substitute: $storage.mapping | maybeCaps: $storage.caps }}</span></div>
         </div>
         <div class="col-sm">
             <form>
