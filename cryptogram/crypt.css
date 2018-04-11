@@ -1,0 +1,19 @@
+.crypted {
+    color: blue;
+}
+
+.decrypted {
+    color: green;
+}
+
+.key-input {
+    width: 100%;
+}
+
+.source-area {
+    white-space: pre-line;
+}
+
+.reset-button {
+    margin-top: 50px;
+}

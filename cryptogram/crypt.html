@@ -1,0 +1,25 @@
+<div class="container">
+    <h1>Cryptogram</h1>
+    <p>To help you solve cryptograms.</p>
+    <div class="row">
+        <div class="col-sm">
+            <div class="source-area"><span ng-repeat="letter in $storage.source track by $index"><span class="{{cryptClass(letter)}}">{{ decrypt(letter) }}</span></div>
+        </div>
+        <div class="col-sm">
+            <form>
+                <div class="form-group">
+                    <label for="source">Paste your source text here. Clear and refresh to get a new one.</label>
+                    <textarea id="source" type="text" ng-model="$storage.source" class="form-control" rows="3"></textarea>
+                </div>
+                <div>Answer key</div>
+                <div class="form-group row no-gutter">
+                    <div ng-repeat="letter in keys" class="col-2 text-center">
+                        <label class="crypted">{{ letter }}</label>
+                        <input type="text" ng-model="$storage.mapping[letter]" class="form-control" class="decrypted key-input">
+                    </div>
+                </div>
+            </form>
+            <button type="button" class="btn btn-danger btn-block reset-button" ng-click="reset()">Reset</button>
+        </div>
+    </div>
+</div>
