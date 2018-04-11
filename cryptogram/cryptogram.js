@@ -115,9 +115,6 @@ angular.module('cryptogram', ['ngRoute', 'ngStorage'])
             return true;
         }
         while (!makeCipher());
-        for (var i = 0; i < letters.length; i++) {
-            console.log(letters[i], cipher[letters[i]]);
-        }
         var newText = [];
         for (var i = 0; i < text.length; i++) {
             var x = text[i];
@@ -146,3 +143,22 @@ angular.module('cryptogram', ['ngRoute', 'ngStorage'])
         randomText: randomText,
     }
 })
+
+.directive("moveNextOnType", function() {
+    return {
+        restrict: "A",
+        scope: {
+            moveNext: '<?moveNextOnType',
+        },
+        link: function($scope, element) {
+            // element.on("input", function(e) {
+            //     if(element.val().length == 1) {
+            //         var $nextElement = element.nextAll('input');
+            //         if($nextElement.length) {
+            //             $nextElement[0].focus();
+            //         }
+            //     }
+            // });
+        }
+    }
+});
