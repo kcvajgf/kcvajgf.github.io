@@ -1,0 +1,43 @@
+.leaderboard-move {
+  transition: transform 2s ease 1.5s;
+}
+
+.leaderboard-item {
+  display: inline-block;
+  margin-right: 10px;
+}
+.leaderboard-enter-active, .leaderboard-leave-active {
+  transition: all 2s;
+}
+.leaderboard-enter, .leaderboard-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+
+td {
+    width: 5%;
+}
+
+.entry-value-leave-active {
+  transition: opacity 0.5s;
+  font-weight: bold;
+  opacity: 1;
+  z-index: 999;
+}
+
+.entry-value-enter-active {
+  transition: opacity 4s;
+  font-weight: bold;
+  opacity: 1;
+  z-index: 999;
+}
+
+.entry-value-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+
+.table-head {
+    background-color: #dddddd;
+}
