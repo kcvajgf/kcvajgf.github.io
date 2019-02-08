@@ -1,9 +1,9 @@
-function perturb(a) {
-    var j = Math.floor(Math.pow(Math.random(), 1.4) * a.length);
+function perturb(a, j) {
+    if (j < 0) j = Math.floor(Math.pow(Math.random(), 1.4) * a.length);
     // update j
     for (var changed = false; !changed; ) {
         for (var k = 0; k < a[j].scores.length; k++) {
-            if (Math.random() < 0.1) { changed = true; a[j].scores[k] += Math.round(Math.random() * (100 - a[j].scores[k])); }
+            if (Math.random() < 0.1) { changed = true; a[j].scores[k] += Math.round(Math.random() * (100 - a[j].scores[k])); break; }
         }
     }
     a[j].penalty += Math.round(Math.random() * Math.min(500, 10000 - a[j].penalty));
@@ -33,6 +33,7 @@ function fixLeaderboard(a) {
 }
 
 
+var index = 0;
 var vm = new Vue({
   el: '#leaderboard',
   data: {
@@ -56,7 +57,20 @@ var vm = new Vue({
   },
   methods: {
     perturb: function () { // sort by rank
-        this.contestants = fixLeaderboard(perturb(this.contestants.slice()));
+        this.contestants = fixLeaderboard(perturb(this.contestants.slice(), -1));
+    },
+    newGuy: function () { // sort by rank
+        var scores = [];
+        for (var i = 0; i < this.problems.length; i++) {
+            scores.push(0);
+        }
+        this.contestants.push({
+            name: `newGuy${index}`,
+            penalty: 0,
+            scores: scores,
+        })
+        index++;
+        this.contestants = fixLeaderboard(perturb(this.contestants.slice(), this.contestants.length - 1));
     },
     colorForScore: function(score) {
         score /= 100;
@@ -100,6 +114,7 @@ var vm = new Vue({
         <div class="row">
             <div class="col-sm">
                 <button class="btn btn-primary" v-on:click="perturb">Random solve!</button>
+                <button class="btn btn-primary" v-on:click="newGuy">Random new guy!</button>
             </div>
         </div>
         <div class="row">

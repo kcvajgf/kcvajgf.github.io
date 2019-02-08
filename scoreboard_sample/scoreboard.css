@@ -7,7 +7,7 @@
   margin-right: 10px;
 }
 .leaderboard-enter-active, .leaderboard-leave-active {
-  transition: all 2s;
+  transition: all 2s ease 1.5s;
 }
 .leaderboard-enter, .leaderboard-leave-to {
   opacity: 0;
