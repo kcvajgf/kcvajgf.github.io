@@ -1,43 +1,73 @@
 .leaderboard-move {
-  transition: transform 2s ease 1.5s;
+    transition: transform 2s ease 1.5s;
 }
 
 .leaderboard-item {
-  display: inline-block;
-  margin-right: 10px;
+    display: inline-block;
+    margin-right: 10px;
 }
 .leaderboard-enter-active, .leaderboard-leave-active {
-  transition: all 2s ease 1.5s;
+    transition: all 2s ease 1.5s;
 }
 .leaderboard-enter, .leaderboard-leave-to {
-  opacity: 0;
-  transform: translateY(30px);
+    opacity: 0;
+    transform: translateY(30px);
 }
 
+.table .leaderboard-move td, .table .leaderboard-move th,
+.table .leaderboard-enter-active td, .table .leaderboard-enter-active th,
+.table .leaderboard-leave-active td, .table .leaderboard-leave-active th {
+  text-align: center;
+  border-top: 1pt solid transparent;
+  border-bottom: 1pt solid transparent;
+}
 
-td {
-    width: 5%;
+.table td, .table th {
+  text-align: center;
+  border-top: 1pt solid #aaa;
+  border-bottom: 1pt solid #aaa;
+}
+
+.t-rank {
+    width: 0.8%;
+}
+.t-problem, .t-score {
+    width: 5.6%;
+}
+.t-name {
+    width: 8.0%;
+}
+.t-penalty {
+    width: 5.6%;
 }
 
 .entry-value-leave-active {
-  transition: opacity 0.5s;
-  font-weight: bold;
-  opacity: 1;
-  z-index: 999;
+    transition: opacity 0.5s;
+    font-weight: bold;
+    opacity: 1;
+    z-index: 999;
 }
 
 .entry-value-enter-active {
-  transition: opacity 4s;
-  font-weight: bold;
-  opacity: 1;
-  z-index: 999;
+    transition: opacity 4s;
+    font-weight: bold;
+    opacity: 1;
+    z-index: 999;
 }
 
 .entry-value-enter, .fade-leave-to {
-  opacity: 0;
+    opacity: 0;
 }
 
 
 .table-head {
-    background-color: #dddddd;
+    background-color: #ccc;
+}
+
+.group-label-par-0 {
+  background-color: #eee;
+}
+
+.group-label-par-1 {
+  background-color: #ddd;
 }
