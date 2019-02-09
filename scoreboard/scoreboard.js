@@ -18,7 +18,7 @@ async function fetchWhile(url, params, collList) {
     params.limit = 100;
     var result = []
     for (params.offset = 0;; params.offset += params.limit) {
-        var res = collList((await axios.get(url, { params })).data);
+        var res = collList((await axios.get(url, { params, timeout: 10000 })).data);
         result = result.concat(res);
         if (res.length < params.limit) break; // we've reached the end.
     };
@@ -48,13 +48,11 @@ var cpast = search && search.get("past") ? search.get("past").split(",") : [];
 var cfetch = search && search.get("fetch") ? search.get("fetch").split(",") : [];
 var curls = cpast.concat(cfetch);
 
-console.log("cfetch", cfetch)
 if (!(cfetch && cfetch.length)) {
     alert("Missing 'fetch' argument.");
     throw "Missing 'fetch' argument.";
 }
 
-console.log(curls)
 var rankRules = rankRuleses[search.get("type") || "generic"]
 if (!rankRules) {
     alert(`Unknown 'type' ${search.get("type")}.`);
@@ -81,7 +79,6 @@ var vm = new Vue({
     },
     async mounted() {
         this.$el.classList.add("board-loading");
-        this.problemGroups = [];
         for (const url of this.curls) {
             var key = `contest_${url}`;
             var probs = localStorage.getItem(key);
@@ -91,6 +88,7 @@ var vm = new Vue({
             } else {
                 console.log("Fetching contest data", url);
                 probs = await fetchWhile(`${hackerrank}/rest/contests/${url}/challenges`, {}, (x) => x.models).catch((x) => {
+                    console.log("Got error", x);
                     alert(`Failed to fetch problem info for ${url}. Please try again later.`);
                 });
                 if (probs) localStorage.setItem(key, JSON.stringify(probs))
@@ -116,7 +114,7 @@ var vm = new Vue({
         }
         await Promise.all(promises);
 
-        this.fix();
+        this.fix(); // not needed?
 
         setTimeout(() => {
             this.$el.classList.remove("board-loading");
@@ -156,9 +154,9 @@ var vm = new Vue({
         },
 
         maxPenalty() {
-            var maxPenalty = 0;
+            var maxPenalty = 1;
             for (const contestant of this.contestants) maxPenalty = Math.max(maxPenalty, contestant.penalty);
-            return Math.max(1, maxPenalty);
+            return maxPenalty;
         },
     },
 
@@ -202,6 +200,11 @@ var vm = new Vue({
         async startFetchLoop() {
             console.log("Starting Fetch Loop");
 
+            if (!(this.problemGroups && this.problemGroups.length)) {
+                console.log("Empty problem groups. Not running fetch loop.");
+                return;
+            }
+
             if (this.startedFetchLoop) {
                 console.log("Already started. Ignoring YOU!!!");
                 return;
@@ -214,6 +217,7 @@ var vm = new Vue({
                         for (const prob of group.probs) {
                             await new Promise(resolve => setTimeout(resolve, 6111)); // feels hacky
                             await this.fetchProblem(prob).catch((e) => {
+                                console.log("Got error", e);
                                 console.log("Failed to load", prob.id, "! Never mind. I'll try again later.")
                             });
                         }
@@ -252,6 +256,7 @@ var vm = new Vue({
         async fetchProblemSubs(problem) {
             console.log("Fetching", problem.contest_slug, problem.slug);
             var subs = await fetchWhile(`${hackerrank}/rest/contests/${problem.contest_slug}/challenges/${problem.slug}/leaderboard`, {}, (x) => x).catch((x) => {
+                console.log("Got error", x);
                 console.log(`Failed to fetch submission info for problem ${problem.slug} for contest ${problem.contest_slug}. Please try again later.`);
             });
             console.log("Fetched", problem.contest_slug, problem.slug);
@@ -318,7 +323,7 @@ var vm = new Vue({
             }
         },
         colorForTotalScore(score) {
-            score = score / this.maxScore;
+            score /= this.maxScore;
             var rb = Math.round(255 * (1 - score));
             return `rgba(${rb}, 255, ${rb}, 0.333)`
         },
@@ -336,64 +341,54 @@ var vm = new Vue({
     },
     template: `
     <div class="container">
-        <!-- <div class="row">
-            <div class="col-sm">
-                <button class="btn btn-primary" v-on:click="randomSolve">Random solve!</button>
-                <button class="btn" v-on:click="newGuy">Random new guy!</button>
-            </div>
-        </div> -->
-        <div>
-            <div>
-                <table class="table table-borderless table-sm">
-                    <thead>
-                        <tr class="table-head">
-                            <th class="t-rank"></th>
-                            <th class="t-name"></th>
-                            <th class="t-score"></th>
-                            <th class="t-penalty" v-if="showPenalty"></th>
-                            <th v-for="(probg, index) in problemGroups" :key="probg.slug" :colspan="probg.probs.length"
-                                    :class="['t-problem-group', 'group-label-' + index, 'group-label-par-' + (index % 2)]">
-                                <small>{{ probg.label }}</small>
-                            </th>
-                        </tr>
-                        <tr class="table-head">
-                            <th class="t-rank">Rank</th>
-                            <th class="t-name">Name</th>
-                            <th class="t-score">Score</th>
-                            <th class="t-penalty" v-if="showPenalty">Time</th>
-                            <th v-for="problem in problemList" :key="problem.slug"
-                                    :class="['t-problem', 'group-label-' + problem.g, 'group-label-par-' + (problem.g % 2)]">
-                                <button class="btn btn-link btn-sm" v-on:click="fetchProblem(problem)"><small>{{ problem.name }}</small></button>
-                            </th>
-                        </tr>
-                    </thead>
-                    <transition-group name="leaderboard" tag="tbody">
-                        <tr v-for="c in contestants" :key="c.name">
-                            <transition name="entry-value" mode="out-in">
-                                <td class="t-rank" :key="c.rank" :style="{'background-color': colorForRank(c.rank)}">{{ c.rank }}</td>
-                            </transition>
-                            <td class="t-name">{{ c.name }}</td>
-                            <transition name="entry-value" mode="out-in">
-                                <td class="t-score" :key="c.score" :style="{'background-color': colorForTotalScore(c.score)}">{{ c.score | score(scoreFixed) }}</td>
-                            </transition>
-                            <transition name="entry-value" mode="out-in">
-                                <td class="t-penalty" :key="c.penalty" v-if="showPenalty"
-                                        :style="{'background-color': colorForPenalty(c.penalty)}"><small>{{ c.penalty | hmPenalty(penaltyFixed) }}</small></td>
-                            </transition>
-                            <transition name="entry-value" mode="out-in" v-for="prob in problemList" :key="prob.slug">
-                                <td v-if="loadedProblem[prob.id]" class="t-problem" :key="c.subs[prob.id].score"
-                                        :style="{'background-color': colorForScore(c.subs[prob.id].score, prob.max_score)}">
-                                    {{ c.subs[prob.id].score | score(scoreFixed) }}
-                                </td>
-                                <td v-if="!loadedProblem[prob.id]" class="t-problem" :key="c.subs[prob.id].score" style="background-color: #bbf">
-                                    Loading...
-                                </td>
-                            </transition>
-                        </tr>
-                    </transition-group>
-                </table>
-            </div>
-        </div>
+        <table class="table table-borderless table-sm">
+            <thead>
+                <tr class="table-head">
+                    <th class="t-rank"></th>
+                    <th class="t-name"></th>
+                    <th class="t-score"></th>
+                    <th class="t-penalty" v-if="showPenalty"></th>
+                    <th v-for="(probg, index) in problemGroups" :key="probg.slug" :colspan="probg.probs.length"
+                            :class="['t-problem-group', 'group-label-' + index, 'group-label-par-' + (index % 2)]">
+                        <small>{{ probg.label }}</small>
+                    </th>
+                </tr>
+                <tr class="table-head">
+                    <th class="t-rank">Rank</th>
+                    <th class="t-name">Name</th>
+                    <th class="t-score">Score</th>
+                    <th class="t-penalty" v-if="showPenalty">Time</th>
+                    <th v-for="problem in problemList" :key="problem.slug"
+                            :class="['t-problem', 'group-label-' + problem.g, 'group-label-par-' + (problem.g % 2)]">
+                        <button class="btn btn-link btn-sm" v-on:click="fetchProblem(problem)"><small>{{ problem.name }}</small></button>
+                    </th>
+                </tr>
+            </thead>
+            <transition-group name="leaderboard" tag="tbody">
+                <tr v-for="c in contestants" :key="c.name">
+                    <transition name="entry-value" mode="out-in">
+                        <td class="t-rank" :key="c.rank" :style="{'background-color': colorForRank(c.rank)}">{{ c.rank }}</td>
+                    </transition>
+                    <td class="t-name">{{ c.name }}</td>
+                    <transition name="entry-value" mode="out-in">
+                        <td class="t-score" :key="c.score" :style="{'background-color': colorForTotalScore(c.score)}">{{ c.score | score(scoreFixed) }}</td>
+                    </transition>
+                    <transition name="entry-value" mode="out-in">
+                        <td class="t-penalty" :key="c.penalty" v-if="showPenalty"
+                                :style="{'background-color': colorForPenalty(c.penalty)}"><small>{{ c.penalty | hmPenalty(penaltyFixed) }}</small></td>
+                    </transition>
+                    <transition name="entry-value" mode="out-in" v-for="prob in problemList" :key="prob.slug">
+                        <td v-if="loadedProblem[prob.id]" class="t-problem" :key="c.subs[prob.id].score"
+                                :style="{'background-color': colorForScore(c.subs[prob.id].score, prob.max_score)}">
+                            {{ c.subs[prob.id].score | score(scoreFixed) }}
+                        </td>
+                        <td v-if="!loadedProblem[prob.id]" class="t-problem" :key="c.subs[prob.id].score" style="background-color: #bbf">
+                            Loading...
+                        </td>
+                    </transition>
+                </tr>
+            </transition-group>
+        </table>
     </div>
     `
 });
