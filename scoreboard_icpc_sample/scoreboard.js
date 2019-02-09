@@ -371,7 +371,7 @@ var vm = new Vue({
         async initFetchAll() {
             // load from localStorage
             var allData = localStorage.getItem(this.leaderboardSource);
-            if (allData) {
+            if (false) {//allData) {
                 console.log(`Loading ${this.leaderboardSource} from local storage`);
                 allData = JSON.parse(allData);
                 console.log(`Loaded ${this.leaderboardSource}`);
@@ -389,7 +389,7 @@ var vm = new Vue({
                 console.log(`Failed to fetch data from ${this.leaderboardSource}. Please try again later.`);
             });
             console.log("Done");
-            if (allData) localStorage.setItem(this.leaderboardSource, JSON.stringify(allData));
+            // if (allData) localStorage.setItem(this.leaderboardSource, JSON.stringify(allData));
             return allData;
         },
 
