@@ -1,0 +1,84 @@
+.board-created .leaderboard-move {
+    transition: transform 1.8s ease 1.5s;
+}
+
+.leaderboard-item {
+    display: inline-block;
+    margin-right: 10px;
+}
+.board-created .leaderboard-enter-active, .board-created .leaderboard-leave-active {
+    transition: all 1.8s ease 1.5s;
+}
+.board-created .leaderboard-enter, .board-created .leaderboard-leave-to {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.table td, .table th {
+    text-align: center;
+    vertical-align: middle;
+    line-height: 1;
+}
+
+tr:hover .t-name, tr:hover .t-problem {
+    font-weight: bold;
+}
+
+tr {
+    background-color: #1111;
+}
+
+
+td.t-score {
+    font-weight: bold;
+}
+
+.t-rank {
+    width: 0.6%;
+}
+.t-problem {
+    width: 1.8%;
+}
+.t-score {
+    width: 1.8%;
+}
+.t-name {
+    width: 7.0%;
+}
+.t-penalty {
+    width: 1.8%;
+}
+.t-attempts {
+    width: 1.8%;
+}
+
+.board-created .entry-value-leave-active {
+    transition: all 0.5s;
+    font-weight: bold;
+    opacity: 1;
+    z-index: 999;
+}
+
+.board-created .entry-value-enter-active {
+    transition: all 2s;
+    font-weight: bold;
+    opacity: 1;
+    z-index: 999;
+}
+
+.board-created .entry-value-enter, .board-created .entry-leave-to {
+    opacity: 0;
+}
+
+
+.table-head {
+    background-color: #ccc;
+}
+
+.group-label-par-0 {
+    background-color: #eee;
+}
+
+.group-label-par-1 {
+    background-color: #ddd;
+}

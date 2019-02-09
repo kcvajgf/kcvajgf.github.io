@@ -384,7 +384,7 @@ var vm = new Vue({
 
         async fetchData() {
             console.log(`Fetching ${this.leaderboardSource}`);
-            var allData = await fetchData().catch((x) => {
+            var allData = await fetchData(this.leaderboardSource).catch((x) => {
                 console.log("Got error", x);
                 console.log(`Failed to fetch data from ${this.leaderboardSource}. Please try again later.`);
             });
