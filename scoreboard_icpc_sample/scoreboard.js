@@ -209,13 +209,13 @@ async function fetchData(source) {
     var trySolving = function(c) {
         var done = 0;
         for (const p of xdata.problems) {
-            if (Math.random() < xattprobs[p] * (c.subs[p].score ? 0.2 : 1)) {
+            if (Math.random() < xattprobs[p] && c.subs[p].score == 0) {
                 done++;
                 console.log("make attempt");
                 // make attempt
                 c.subs[p].attempts++;
                 c.attempts++;
-                if (c.subs[p].score == 0 && Math.random() < xtskill[c.name] * xsolprobs[p]) {
+                if (Math.random() < xtskill[c.name] * xsolprobs[p]) {
                     // correct answer. add penalty
                     if (c.subs[p].penalty != 0) throw "Invalid data";
                     c.subs[p].penalty = xpen;
