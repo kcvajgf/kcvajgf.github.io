@@ -1,0 +1,73 @@
+.board-created .leaderboard-move {
+    transition: transform 2s ease 1.5s;
+}
+
+.leaderboard-item {
+    display: inline-block;
+    margin-right: 10px;
+}
+.board-created .leaderboard-enter-active, .board-created .leaderboard-leave-active {
+    transition: all 2s ease 1.5s;
+}
+.board-created .leaderboard-enter, .board-created .leaderboard-leave-to {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.board-created .table .leaderboard-move td, .board-created .table .leaderboard-move th,
+.board-created .table .leaderboard-enter-active td, .board-created .table .leaderboard-enter-active th,
+.board-created .table .leaderboard-leave-active td, .board-created .table .leaderboard-leave-active th {
+  text-align: center;
+  border-top: 1pt solid transparent;
+  border-bottom: 1pt solid transparent;
+}
+
+.table td, .table th {
+  text-align: center;
+  border-top: 1pt solid #aaa;
+  border-bottom: 1pt solid #aaa;
+}
+
+.t-rank {
+    width: 0.7%;
+}
+.t-problem, .t-score {
+    width: 4.0%;
+}
+.t-name {
+    width: 7.0%;
+}
+.t-penalty {
+    width: 2.5%;
+}
+
+.board-created .entry-value-leave-active {
+    transition: opacity 0.5s;
+    font-weight: bold;
+    opacity: 1;
+    z-index: 999;
+}
+
+.board-created .entry-value-enter-active {
+    transition: opacity 4s;
+    font-weight: bold;
+    opacity: 1;
+    z-index: 999;
+}
+
+.board-created .entry-value-enter, .board-created .entry-leave-to {
+    opacity: 0;
+}
+
+
+.table-head {
+    background-color: #ccc;
+}
+
+.group-label-par-0 {
+  background-color: #eee;
+}
+
+.group-label-par-1 {
+  background-color: #ddd;
+}
