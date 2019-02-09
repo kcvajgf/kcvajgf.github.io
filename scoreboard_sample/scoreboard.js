@@ -1,6 +1,6 @@
 var probgroups = [
-    {label: "Day 1", names: ["A lol foo", "B hey fool", "C hey bar", "D hey barl", "E lol foo"]},
-    {label: "Day 2", names: ["F hey fool", "G hey bar", "H hey barl", "I lol", "J zorz"]},
+    {label: "Day 1", names: ["foo", "fool", "bar", "barl", "coo"]},
+    {label: "Day 2", names: ["cool", "car", "carl", "lol", "zorz"]},
 ]
 var sampleProblems = [];
 var probt = 0;
@@ -207,51 +207,47 @@ var scoreboard = new Vue({
         },
     },
     template: `
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm">
-                <button class="btn btn-primary" v-on:click="randomSolve">Random solve!</button>
-                <button class="btn btn-primary" v-on:click="newGuy">Random new guy!</button>
-            </div>
+    <div class="container">
+        <div>
+            <button class="perturb-button btn btn-primary" v-on:click="randomSolve">+ Random solve!</button>
+            <button class="perturb-button btn" v-on:click="newGuy">+ Random new guy!</button>
         </div>
-        <div class="row">
-            <div class="col-sm">
-                <table class="table table-borderless table-sm">
-                    <thead>
-                        <tr class="table-head">
-                            <th class="t-rank"></th>
-                            <th class="t-name"></th>
-                            <th class="t-score"></th>
-                            <th class="t-penalty" v-if="showPenalty"></th>
-                            <th v-for="(probg, index) in problems" :class="['t-problem-group', 'group-label-' + index, 'group-label-par-' + (index % 2)]" :colspan="probg.probs.length" :key="probg.label">{{ probg.label }}</th>
-                        </tr>
-                        <tr class="table-head">
-                            <th class="t-rank">Rank</th>
-                            <th class="t-name">Name</th>
-                            <th class="t-score">Score</th>
-                            <th class="t-penalty" v-if="showPenalty">Penalty</th>
-                            <th v-for="problem in problemList" :class="['t-problem', 'group-label-' + problem.g, 'group-label-par-' + (problem.g % 2)]"  :key="problem.name">{{ problem.name }}</th>
-                        </tr>
-                    </thead>
-                    <transition-group name="leaderboard" tag="tbody">
-                        <tr v-for="c in contestants" :key="c.name">
-                            <transition name="entry-value" mode="out-in">
-                                <td class="t-rank" :key="c.rank" :style="{'background-color': colorForRank(c.rank)}">{{ c.rank }}</td>
-                            </transition>
-                            <td clsas="t-name">{{ c.name }}</td>
-                            <transition name="entry-value" mode="out-in">
-                                <td class="t-score" :key="c.score" :style="{'background-color': colorForTotalScore(c.score)}">{{ c.score }}</td>
-                            </transition>
-                            <transition name="entry-value" mode="out-in">
-                                <td class="t-penalty" :key="c.penalty" v-if="showPenalty" :style="{'background-color': colorForPenalty(c.penalty)}">{{ c.penalty | hmPenalty }}</td>
-                            </transition>
-                            <transition name="entry-value" mode="out-in" v-for="prob in problemList" :key="prob.name">
-                                <td class="t-problem" :key="c.subs[prob.name].score" :style="{'background-color': colorForScore(c.subs[prob.name].score)}">{{ c.subs[prob.name].score }} </td>
-                            </transition>
-                        </tr>
-                    </transition-group>
-                </table>
-            </div>
+        <div>
+            <table class="table table-borderless table-sm">
+                <thead>
+                    <tr class="table-head">
+                        <th class="t-rank"></th>
+                        <th class="t-name"></th>
+                        <th class="t-score"></th>
+                        <th class="t-penalty" v-if="showPenalty"></th>
+                        <th v-for="(probg, index) in problems" :class="['t-problem-group', 'group-label-' + index, 'group-label-par-' + (index % 2)]" :colspan="probg.probs.length" :key="probg.label">{{ probg.label }}</th>
+                    </tr>
+                    <tr class="table-head">
+                        <th class="t-rank">Rank</th>
+                        <th class="t-name">Name</th>
+                        <th class="t-score">Score</th>
+                        <th class="t-penalty" v-if="showPenalty">Penalty</th>
+                        <th v-for="problem in problemList" :class="['t-problem', 'group-label-' + problem.g, 'group-label-par-' + (problem.g % 2)]"  :key="problem.name">{{ problem.name }}</th>
+                    </tr>
+                </thead>
+                <transition-group name="leaderboard" tag="tbody">
+                    <tr v-for="c in contestants" :key="c.name">
+                        <transition name="entry-value" mode="out-in">
+                            <td class="t-rank" :key="c.rank" :style="{'background-color': colorForRank(c.rank)}">{{ c.rank }}</td>
+                        </transition>
+                        <td class="t-name">{{ c.name }}</td>
+                        <transition name="entry-value" mode="out-in">
+                            <td class="t-score" :key="c.score" :style="{'background-color': colorForTotalScore(c.score)}">{{ c.score }}</td>
+                        </transition>
+                        <transition name="entry-value" mode="out-in">
+                            <td class="t-penalty" :key="c.penalty" v-if="showPenalty" :style="{'background-color': colorForPenalty(c.penalty)}">{{ c.penalty | hmPenalty }}</td>
+                        </transition>
+                        <transition name="entry-value" mode="out-in" v-for="prob in problemList" :key="prob.name">
+                            <td class="t-problem" :key="c.subs[prob.name].score" :style="{'background-color': colorForScore(c.subs[prob.name].score)}">{{ c.subs[prob.name].score }} </td>
+                        </transition>
+                    </tr>
+                </transition-group>
+            </table>
         </div>
     </div>
     `

@@ -17,15 +17,19 @@
 .table .leaderboard-move td, .table .leaderboard-move th,
 .table .leaderboard-enter-active td, .table .leaderboard-enter-active th,
 .table .leaderboard-leave-active td, .table .leaderboard-leave-active th {
-  text-align: center;
+  text-align: center;/*
   border-top: 1pt solid transparent;
-  border-bottom: 1pt solid transparent;
+  border-bottom: 1pt solid transparent;*/
 }
 
 .table td, .table th {
-  text-align: center;
+  text-align: center;/*
   border-top: 1pt solid #aaa;
-  border-bottom: 1pt solid #aaa;
+  border-bottom: 1pt solid #aaa;*/
+}
+
+tr:hover .t-name, tr:hover .t-problem {
+    font-weight: bold;
 }
 
 .t-rank {
@@ -39,6 +43,12 @@
 }
 .t-penalty {
     width: 5.6%;
+}
+
+.perturb-button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 10px;
 }
 
 .entry-value-leave-active {

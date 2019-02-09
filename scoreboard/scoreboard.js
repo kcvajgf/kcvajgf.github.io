@@ -1,16 +1,16 @@
 var hackerrank = "http://localhost:8000"
 // var hackerrank = "https://www.hackerrank.com"
 
-Vue.filter('hmPenalty', function(penalty) {
+Vue.filter('hmPenalty', function(penalty, fixed) {
     var h = Math.floor(penalty / 60);
-    var m = (penalty - 60 * h).toFixed(0);
+    var m = (penalty - 60 * h).toFixed(fixed);
     var p = m < 10 ? "0" : "";
     return `${h}:${p}${m}`;
 })
 
 
-Vue.filter('score', function(score) {
-    return score == -1 ? "" : (score / 1).toFixed(2);
+Vue.filter('score', function(score, fixed) {
+    return score == -1 ? "" : (score / 1).toFixed(fixed);
 })
 
 
@@ -48,12 +48,21 @@ var cpast = search && search.get("past") ? search.get("past").split(",") : [];
 var cfetch = search && search.get("fetch") ? search.get("fetch").split(",") : [];
 var curls = cpast.concat(cfetch);
 
+console.log("cfetch", cfetch)
+if (!(cfetch && cfetch.length)) {
+    alert("Missing 'fetch' argument.");
+    throw "Missing 'fetch' argument.";
+}
+
 console.log(curls)
 var rankRules = rankRuleses[search.get("type") || "generic"]
 if (!rankRules) {
-    alert(`Unknown type ${search.get("type")}.`);
+    alert(`Unknown 'type' ${search.get("type")}.`);
     rankRules = [];
 }
+
+var penaltyFixed = search && search.get("pd") ? parseInt(search.get("pd")) : 0;
+var scoreFixed = search && search.get("sd") ? parseInt(search.get("sd")) : 2;
 
 var vm = new Vue({
     el: '#leaderboard',
@@ -67,6 +76,8 @@ var vm = new Vue({
         rankRules,
         showPenalty: true,
         startedFetchLoop: false,
+        penaltyFixed,
+        scoreFixed,
     },
     async mounted() {
         this.$el.classList.add("board-loading");
@@ -324,15 +335,15 @@ var vm = new Vue({
         },
     },
     template: `
-    <div class="container-fluid">
+    <div class="container">
         <!-- <div class="row">
             <div class="col-sm">
                 <button class="btn btn-primary" v-on:click="randomSolve">Random solve!</button>
                 <button class="btn" v-on:click="newGuy">Random new guy!</button>
             </div>
         </div> -->
-        <div class="row">
-            <div class="col-sm">
+        <div>
+            <div>
                 <table class="table table-borderless table-sm">
                     <thead>
                         <tr class="table-head">
@@ -361,18 +372,18 @@ var vm = new Vue({
                             <transition name="entry-value" mode="out-in">
                                 <td class="t-rank" :key="c.rank" :style="{'background-color': colorForRank(c.rank)}">{{ c.rank }}</td>
                             </transition>
-                            <td clsas="t-name">{{ c.name }}</td>
+                            <td class="t-name">{{ c.name }}</td>
                             <transition name="entry-value" mode="out-in">
-                                <td class="t-score" :key="c.score" :style="{'background-color': colorForTotalScore(c.score)}">{{ c.score | score }}</td>
+                                <td class="t-score" :key="c.score" :style="{'background-color': colorForTotalScore(c.score)}">{{ c.score | score(scoreFixed) }}</td>
                             </transition>
                             <transition name="entry-value" mode="out-in">
                                 <td class="t-penalty" :key="c.penalty" v-if="showPenalty"
-                                        :style="{'background-color': colorForPenalty(c.penalty)}"><small>{{ c.penalty | hmPenalty }}</small></td>
+                                        :style="{'background-color': colorForPenalty(c.penalty)}"><small>{{ c.penalty | hmPenalty(penaltyFixed) }}</small></td>
                             </transition>
                             <transition name="entry-value" mode="out-in" v-for="prob in problemList" :key="prob.slug">
                                 <td v-if="loadedProblem[prob.id]" class="t-problem" :key="c.subs[prob.id].score"
                                         :style="{'background-color': colorForScore(c.subs[prob.id].score, prob.max_score)}">
-                                    {{ c.subs[prob.id].score | score }}
+                                    {{ c.subs[prob.id].score | score(scoreFixed) }}
                                 </td>
                                 <td v-if="!loadedProblem[prob.id]" class="t-problem" :key="c.subs[prob.id].score" style="background-color: #bbf">
                                     Loading...

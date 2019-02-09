@@ -17,28 +17,32 @@
 .board-created .table .leaderboard-move td, .board-created .table .leaderboard-move th,
 .board-created .table .leaderboard-enter-active td, .board-created .table .leaderboard-enter-active th,
 .board-created .table .leaderboard-leave-active td, .board-created .table .leaderboard-leave-active th {
-  text-align: center;
-  border-top: 1pt solid transparent;
-  border-bottom: 1pt solid transparent;
+    text-align: center;/*
+    border-top: 1pt solid transparent;
+    border-bottom: 1pt solid transparent;*/
 }
 
 .table td, .table th {
-  text-align: center;
-  border-top: 1pt solid #aaa;
-  border-bottom: 1pt solid #aaa;
+    text-align: center;/*
+    border-top: 1pt solid #aaa8;
+    border-bottom: 1pt solid #aaa8;*/
+}
+
+tr:hover .t-name, tr:hover .t-problem {
+    font-weight: bold;
 }
 
 .t-rank {
-    width: 0.7%;
+    width: 0.6%;
 }
 .t-problem, .t-score {
-    width: 4.0%;
+    width: 3.6%;
 }
 .t-name {
     width: 7.0%;
 }
 .t-penalty {
-    width: 2.5%;
+    width: 2.2%;
 }
 
 .board-created .entry-value-leave-active {
@@ -65,9 +69,9 @@
 }
 
 .group-label-par-0 {
-  background-color: #eee;
+    background-color: #eee;
 }
 
 .group-label-par-1 {
-  background-color: #ddd;
+    background-color: #ddd;
 }
