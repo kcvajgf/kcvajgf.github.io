@@ -46,14 +46,14 @@ tr:hover .t-name, tr:hover .t-problem {
 }
 
 .board-created .entry-value-leave-active {
-    transition: opacity 0.5s;
+    transition: all 0.5s;
     font-weight: bold;
     opacity: 1;
     z-index: 999;
 }
 
 .board-created .entry-value-enter-active {
-    transition: opacity 4s;
+    transition: all 4s;
     font-weight: bold;
     opacity: 1;
     z-index: 999;
