@@ -285,7 +285,7 @@ rankRuleses = {
 var search = new URLSearchParams(window.location.search);
 
 var leaderboardSource = search && search.get("src") ? search.get("src") : "http://localhost:8000";
-
+var nohilit = search && search.get("nohilit") ? parseInt(search.get("nohilit")) : 0;
 
 var rankRules = rankRuleses[search.get("type") || "generic"]
 if (!rankRules) {
@@ -301,6 +301,7 @@ var vm = new Vue({
         loadedAll: false,
         leaderboardSource,
         rankRules,
+        nohilit,
         showAttempts: true,
         showPenalty: true,
         startedFetchLoop: false,
@@ -445,7 +446,7 @@ var vm = new Vue({
         },
     },
     template: `
-    <div>
+    <div :class="[nohilit ? 'nohilit' : 'hilit']">
         <table class="table table-borderless table-sm">
             <thead>
                 <tr class="table-head">
@@ -464,7 +465,7 @@ var vm = new Vue({
                     <transition name="entry-value" mode="out-in">
                         <td class="t-rank" :key="c.rank" :style="{'background-color': colorForRank(c.rank)}">{{ c.rank }}</td>
                     </transition>
-                    <td class="t-name">{{ c.name }}</td>
+                    <td class="t-name"><div class="d-name">{{ c.name }}</div></td>
                     <transition name="entry-value" mode="out-in">
                         <td class="t-score" :key="contId(c)" :style="{'background-color': colorForTotalScore(c.score)}">{{ c.score }}<transition name="entry-value" mode="out-in"><small class="t-penalty" v-if="showPenalty && c.score"><br/>{{ c.penalty }}</small><small class="t-penalty" v-if="showPenalty && !c.score"><br/>&nbsp;</small></transition></td>
                     </transition>

@@ -17,10 +17,10 @@
 .table td, .table th {
     text-align: center;
     vertical-align: middle;
-    line-height: 1;
+    line-height: 1.2;
 }
 
-tr:hover .t-name, tr:hover .t-problem {
+.hilit tr:hover .t-name, .hilit tr:hover .t-problem {
     font-weight: bold;
 }
 
@@ -28,6 +28,25 @@ tr {
     background-color: #1111;
 }
 
+.d-name {
+    line-height: normal;
+    max-height: 40px;
+    overflow: hidden;
+    width: 100%;
+    margin: 0 auto;
+}
+td.t-name:not(:hover) .d-name {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    text-overflow: ellipsis;
+}
+td.t-name:hover .d-name {
+    overflow: visible;
+}
+td.t-name {
+    max-width: 250px;
+}
 
 td.t-score {
     font-weight: bold;

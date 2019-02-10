@@ -1,4 +1,4 @@
-var hackerrank = "http://localhost:8000"
+var hackerrank = "http://localhost:8002"
 // var hackerrank = "https://www.hackerrank.com"
 
 Vue.filter('hmPenalty', function(penalty, fixed) {
@@ -61,6 +61,7 @@ if (!rankRules) {
 
 var penaltyFixed = search && search.get("pd") ? parseInt(search.get("pd")) : 0;
 var scoreFixed = search && search.get("sd") ? parseInt(search.get("sd")) : 2;
+var nohilit = search && search.get("nohilit") ? parseInt(search.get("nohilit")) : 0;
 
 var vm = new Vue({
     el: '#leaderboard',
@@ -76,6 +77,7 @@ var vm = new Vue({
         startedFetchLoop: false,
         penaltyFixed,
         scoreFixed,
+        nohilit,
     },
     async mounted() {
         this.$el.classList.add("board-loading");
@@ -340,7 +342,7 @@ var vm = new Vue({
         },
     },
     template: `
-    <div class="container">
+    <div :class="[problemList.length <= 10 ? 'container' : 'container-fluid', nohilit ? 'nohilit' : 'hilit']">
         <table class="table table-borderless table-sm">
             <thead>
                 <tr class="table-head">
@@ -369,7 +371,7 @@ var vm = new Vue({
                     <transition name="entry-value" mode="out-in">
                         <td class="t-rank" :key="c.rank" :style="{'background-color': colorForRank(c.rank)}">{{ c.rank }}</td>
                     </transition>
-                    <td class="t-name">{{ c.name }}</td>
+                    <td class="t-name"><div class="d-name">{{ c.name }}</div></td>
                     <transition name="entry-value" mode="out-in">
                         <td class="t-score" :key="c.score" :style="{'background-color': colorForTotalScore(c.score)}">{{ c.score | score(scoreFixed) }}</td>
                     </transition>

@@ -35,6 +35,8 @@ function makeTempContestant(name, penalty, subs) {
 }
 
 
+var mor = "WyJTdGV2ZW4gSGFsaW0iLCJDYXJsU2FnYW40MiIsIk1yTGxhbWFTQyIsIkEgdmVyeSB2ZXJ5IGxvbmcgbmFtZSBndXN0byBrb25nIG1hdHV0b25nIG1hZ2RyaXZlIiwiTWljaGFlbCBTZWJiaW5zIiwiUnViaWNvTl9TIiwiTWlrZSBUcnVrIiwiQmVubmV0dCBGb2RkeSIsIkNhdGhlcmluZSIsIlRvbW15IFdpc2VhdSIsIkR3aWd0IFJvcnR1Z2FsIiwiUm9iaW4gV3UiLCJHb3Jkb24gUmFtc2F5IiwiVmlsb3JpYSIsIlpvcnJvIiwiTG91ZWxsYSBDYWNlcyIsIlNsZXZlIE1jRGljaGFlbCIsIkNhbWVsQ2FzZUFWZXJ5VmVyeUxvbmdOYW1lR3VzdG9Lb25nTWF0dXRvbmdNYWdkcml2ZSIsIktpenVuYSBBSSIsIkNoZWZGb3JjZXMiLCJQb3BweSBIYXJsb3ciLCJrZWJhYi1jYXNlLWEtdmVyeS12ZXJ5LWxvbmctbmFtZS1ndXN0by1rb25nLW1hdHV0b25nLW1hZ2RyaXZlIiwiS3VydW1pIl0="
+
 var sampleContestants = [
         makeTempContestant("dan", 305, [0, 70, 0, 5, 1, 10, 0, 0, 0, 0]),
         makeTempContestant("cj", 550, [20, 0, 5, 0, 1, 0, 0, 0, 0, 10]),
@@ -58,8 +60,10 @@ Vue.filter('hmPenalty', function(penalty) {
     return `${h}:${p}${m}`;
 })
 
+var search = new URLSearchParams(window.location.search);
+var nohilit = search && search.get("nohilit") ? parseInt(search.get("nohilit")) : 0;
 
-var index = 0;
+var index = 0, pos = 0;
 var scoreboard = new Vue({
     el: '#leaderboard',
     data: {
@@ -72,6 +76,7 @@ var scoreboard = new Vue({
             {rank: 3, color: "#c0c0c0"},
             {rank: 6, color: "#cd7f32"},
         ],
+        nohilit,
     },
     created() {
         this.problems = sampleProblems;
@@ -197,17 +202,20 @@ var scoreboard = new Vue({
                     };
                 }
             }
-            this.contestants.push({
-                name: `newGuy${index}`,
-                subs: subs,
-            })
-            index++;
+            let name, xmor;
+            if (typeof mor == "string") xmor = JSON.parse(atob(mor));
+            if (xmor && typeof xmor == "object" && xmor.length && pos < xmor.length && Math.random() < 1/(5 + pos * pos * pos / 11 / 11)) {
+                name = xmor[pos++];
+            } else {
+                name = `newGuy${index++}`;
+            }
+            this.contestants.push({ name, subs });
             this.perturb(this.contestants.length - 1);
             this.fixLeaderboard();
         },
     },
     template: `
-    <div class="container">
+    <div :class="['container', nohilit ? 'nohilit' : 'hilit']">
         <div>
             <button class="perturb-button btn btn-primary" v-on:click="randomSolve">+ Random solve!</button>
             <button class="perturb-button btn" v-on:click="newGuy">+ Random new guy!</button>
@@ -235,7 +243,7 @@ var scoreboard = new Vue({
                         <transition name="entry-value" mode="out-in">
                             <td class="t-rank" :key="c.rank" :style="{'background-color': colorForRank(c.rank)}">{{ c.rank }}</td>
                         </transition>
-                        <td class="t-name">{{ c.name }}</td>
+                        <td class="t-name"><div class="d-name">{{ c.name }}</div></td>
                         <transition name="entry-value" mode="out-in">
                             <td class="t-score" :key="c.score" :style="{'background-color': colorForTotalScore(c.score)}">{{ c.score }}</td>
                         </transition>

@@ -17,19 +17,36 @@
 .table .leaderboard-move td, .table .leaderboard-move th,
 .table .leaderboard-enter-active td, .table .leaderboard-enter-active th,
 .table .leaderboard-leave-active td, .table .leaderboard-leave-active th {
-  text-align: center;/*
-  border-top: 1pt solid transparent;
-  border-bottom: 1pt solid transparent;*/
+    text-align: center;/*
+    border-top: 1pt solid transparent;
+   border-bottom: 1pt solid transparent;*/
 }
 
 .table td, .table th {
-  text-align: center;/*
-  border-top: 1pt solid #aaa;
-  border-bottom: 1pt solid #aaa;*/
+    text-align: center;/*
+    border-top: 1pt solid #aaa;
+    border-bottom: 1pt solid #aaa;*/
 }
 
-tr:hover .t-name, tr:hover .t-problem {
+.hilit tr:hover .t-name, .hilit tr:hover .t-problem {
     font-weight: bold;
+}
+
+
+.d-name {
+    line-height: normal;
+    max-height: 24px;
+    overflow: hidden;
+    max-width: 300px;
+}
+td.t-name:not(:hover) .d-name {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    text-overflow: ellipsis;
+}
+td.t-name:hover .d-name {
+    overflow: visible;
 }
 
 .t-rank {
@@ -39,7 +56,7 @@ tr:hover .t-name, tr:hover .t-problem {
     width: 5.6%;
 }
 .t-name {
-    width: 8.0%;
+    width: 14.0%;
 }
 .t-penalty {
     width: 5.6%;
@@ -48,7 +65,7 @@ tr:hover .t-name, tr:hover .t-problem {
 .perturb-button {
   margin-top: 10px;
   margin-bottom: 10px;
-  margin-right: 10px;
+  margin-right: 5px;
 }
 
 .entry-value-leave-active {
@@ -75,9 +92,9 @@ tr:hover .t-name, tr:hover .t-problem {
 }
 
 .group-label-par-0 {
-  background-color: #eee;
+    background-color: #eee;
 }
 
 .group-label-par-1 {
-  background-color: #ddd;
+    background-color: #ddd;
 }

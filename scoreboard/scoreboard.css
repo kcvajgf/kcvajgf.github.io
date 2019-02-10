@@ -28,8 +28,25 @@
     border-bottom: 1pt solid #aaa8;*/
 }
 
-tr:hover .t-name, tr:hover .t-problem {
+.hilit tr:hover .t-name, .hilit tr:hover .t-problem {
     font-weight: bold;
+}
+
+
+.d-name {
+    line-height: normal;
+    max-height: 24px;
+    overflow: hidden;
+    max-width: 300px;
+}
+td.t-name:not(:hover) .d-name {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    text-overflow: ellipsis;
+}
+td.t-name:hover .d-name {
+    overflow: visible;
 }
 
 .t-rank {
