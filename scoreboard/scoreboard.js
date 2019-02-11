@@ -10,7 +10,7 @@ Vue.filter('hmPenalty', function(penalty, fixed) {
 
 
 Vue.filter('score', function(score, fixed) {
-    return score == -1 ? "" : (score / 1).toFixed(fixed);
+    return score == -1 ? "-" : (score / 1).toFixed(fixed);
 })
 
 
@@ -60,8 +60,10 @@ if (!rankRules) {
 }
 
 var penaltyFixed = search && search.get("pd") ? parseInt(search.get("pd")) : 0;
+var tScoreFixed = search && search.get("td") ? parseInt(search.get("td")) : 2;
 var scoreFixed = search && search.get("sd") ? parseInt(search.get("sd")) : 2;
 var nohilit = search && search.get("nohilit") ? parseInt(search.get("nohilit")) : 0;
+var missing = search && search.get("missing") ? parseInt(search.get("missing")) : 0;
 
 var vm = new Vue({
     el: '#leaderboard',
@@ -76,8 +78,10 @@ var vm = new Vue({
         showPenalty: true,
         startedFetchLoop: false,
         penaltyFixed,
+        tScoreFixed,
         scoreFixed,
         nohilit,
+        missing,
     },
     async mounted() {
         this.$el.classList.add("board-loading");
@@ -314,7 +318,11 @@ var vm = new Vue({
         },
 
         // these are mostly just filter-like things.
+        tColorForScore(score, maxScore) {
+            return score == -1 ? `rgba(117, 117, 117)` : "";
+        },
         colorForScore(score, maxScore) {
+            if (!this.missing && score == -1) return `rgba(222, 222, 222, 0.333)`;
             score = Math.max(score, 0) / maxScore;
             if (score <= 0.5) {
                 var gr = Math.round(255 * 2 * score);
@@ -373,7 +381,7 @@ var vm = new Vue({
                     </transition>
                     <td class="t-name"><div class="d-name">{{ c.name }}</div></td>
                     <transition name="entry-value" mode="out-in">
-                        <td class="t-score" :key="c.score" :style="{'background-color': colorForTotalScore(c.score)}">{{ c.score | score(scoreFixed) }}</td>
+                        <td class="t-score" :key="c.score" :style="{'background-color': colorForTotalScore(c.score)}">{{ c.score | score(tScoreFixed) }}</td>
                     </transition>
                     <transition name="entry-value" mode="out-in">
                         <td class="t-penalty" :key="c.penalty" v-if="showPenalty"
@@ -381,7 +389,8 @@ var vm = new Vue({
                     </transition>
                     <transition name="entry-value" mode="out-in" v-for="prob in problemList" :key="prob.slug">
                         <td v-if="loadedProblem[prob.id]" class="t-problem" :key="c.subs[prob.id].score"
-                                :style="{'background-color': colorForScore(c.subs[prob.id].score, prob.max_score)}">
+                                :style="{'background-color': colorForScore(c.subs[prob.id].score, prob.max_score),
+                                    'color': tColorForScore(c.subs[prob.id].score, prob.max_score)}">
                             {{ c.subs[prob.id].score | score(scoreFixed) }}
                         </td>
                         <td v-if="!loadedProblem[prob.id]" class="t-problem" :key="c.subs[prob.id].score" style="background-color: #bbf">
