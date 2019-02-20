@@ -407,7 +407,9 @@ var vm = new Vue({
 
         // these are mostly just filter-like things.
         colorForSub(sub) {
-            if (sub.attempts == 0) {
+            if (sub.pending) {
+                return "rgba(80, 80, 255, 0.333)";
+            } else if (sub.attempts == 0) {
                 return "rgba(255, 255, 255, 0.333)";
             } else if (sub.score == 0) {
                 return "rgba(255, 0, 0, 0.333)";

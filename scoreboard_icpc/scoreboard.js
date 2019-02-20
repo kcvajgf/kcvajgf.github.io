@@ -1,6 +1,6 @@
 async function fetchData(source) {
     var el = $( '<div></div>' );
-    el.html((await axios.get(`${source}/summary.html`, { timeout: 10000 })).data);
+    el.html((await axios.get(`${source}/index.html`, { timeout: 10000 })).data);
     var res = {
         problems: null,
         contestants: [],
@@ -65,6 +65,7 @@ async function fetchData(source) {
                     score: scoreAttPen.score,
                     attempts: scoreAttPen.att,
                     penalty: scoreAttPen.pen,
+                    pending: $(ch).is('.pending'),
                 };
             });
             if (sc != c.score) console.log("WARNING: SCORE MISMATCH");
@@ -212,7 +213,9 @@ var vm = new Vue({
 
         // these are mostly just filter-like things.
         colorForSub(sub) {
-            if (sub.attempts == 0) {
+            if (sub.pending) {
+                return "rgba(80, 80, 255, 0.333)";
+            } else if (sub.attempts == 0) {
                 return "rgba(255, 255, 255, 0.333)";
             } else if (sub.score == 0) {
                 return "rgba(255, 0, 0, 0.333)";
