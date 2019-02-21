@@ -1,3 +1,4 @@
+// by Kevin Atienza
 async function fetchData(source) {
     var el = $( '<div></div>' );
     el.html((await axios.get(`${source}/index.html`, { timeout: 10000 })).data);
