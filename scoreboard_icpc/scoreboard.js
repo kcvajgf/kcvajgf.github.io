@@ -156,11 +156,6 @@ var vm = new Vue({
         async startFetchLoop() {
             console.log("Starting Fetch Loop");
 
-            if (!(this.problems && this.problems.length)) {
-                console.log("Empty problems. Not running fetch loop.");
-                return;
-            }
-
             if (this.startedFetchLoop) {
                 console.log("Already started. Ignoring YOU!!!");
                 return;
