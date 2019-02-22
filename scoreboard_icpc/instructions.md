@@ -13,6 +13,8 @@ Use Linux.
 
 2. Open `file:///path/to/scoreboard_icpc/index.html?src=http://localhost:8000` in a browser. It should now work.
 
+You may need to make `nocache_serve` executable via `chmod`. (Alternatively, just use `python3 path/to/nocache_serve` or something.)
+
 
 
 # Using different computers for the leaderboard account and display
@@ -46,3 +48,5 @@ The thing works by reading off the `html/index.html` file produced by PC^2. Most
 In essence, it receives a URL param called `src` which should be a valid URL. It then fetches `/index.html` from that URL every 5 seconds or so. If the URL is not on the same domain as the one running `scoreboard_icpc/index.html`, then it needs to allow CORS (cross-origin resource sharing), otherwise, it will refuse the GET request and the scoreboard cannot read the data.
 
 If `src` is not passed, then it defaults to `html/` (relative to the folder `scoreboard_icpc/`). As long as you can serve the files statically here and are able to update `html/index.html` constantly (say by copying it over every few seconds, perhaps via `scp`), the `src` param will not be needed.  
+
+Side comment: since the `html/index.html` file is constantly changing, I think "static files" is not quite accurate. Oh well, I hope you get the point.
