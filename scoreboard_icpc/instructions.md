@@ -35,7 +35,7 @@ Assume for example that the IP address of the PC^2 leaderboard account computer 
 
 This will clutter the PC^2 folder, so please only do this on the scoreboard computer and not on judge/admin computers just to be safe.
 
-You can make this less insane by not copying the `scoreboard_icpc/` files over, and instead running a script that continuously copies `pc2/html/index.html` to `scoreboard_icpc/html/` every 5 seconds or something. This is probably also the best way to serve it publicly, as long as you have a server that can serve static files and in which you can write to constantly.  
+You can make this less hacky by not copying the `scoreboard_icpc/` files over, and instead running a script that continuously copies `pc2/html/index.html` to `scoreboard_icpc/html/` every 5 seconds or something. This is probably also the best way to serve it publicly, as long as you have a server that can serve static files and in which you can write to constantly.  
 
 
 
@@ -43,8 +43,6 @@ You can make this less insane by not copying the `scoreboard_icpc/` files over, 
 
 The thing works by reading off the `html/index.html` file produced by PC^2. Most of the setting up is just pointing it to where it can get this file.
 
-In essence, it receives a URL param calle `?src=` which should be a valid URL. It then fetches `/index.html` from that URL every 5 seconds or so. If `?src=` is not passed, then it defaults to `html/`.  
+In essence, it receives a URL param called `src` which should be a valid URL. It then fetches `/index.html` from that URL every 5 seconds or so. If the URL is not on the same domain as the one running `scoreboard_icpc/index.html`, then it needs to allow CORS (cross-origin resource sharing), otherwise, it will refuse the GET request and the scoreboard cannot read the data.
 
-If the URL is not on the same domain as the one running `scoreboard_icpc/index.html`, then it needs to allow CORS (cross-origin resource sharing), otherwise, it will refuse the GET request and the scoreboard cannot read the data.
-
-As long as you can serve the files statically here and are able to update `html/index.html` constantly (say by copying it over every few seconds, perhaps via `scp`), the `?src=` param will not be needed.  
+If `src` is not passed, then it defaults to `html/` (relative to the folder `scoreboard_icpc/`). As long as you can serve the files statically here and are able to update `html/index.html` constantly (say by copying it over every few seconds, perhaps via `scp`), the `src` param will not be needed.  
