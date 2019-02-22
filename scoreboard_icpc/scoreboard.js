@@ -91,7 +91,7 @@ rankRuleses = {
 
 var search = new URLSearchParams(window.location.search);
 
-var leaderboardSource = search && search.get("src") ? search.get("src") : "http://localhost:8000";
+var leaderboardSource = search && search.get("src") ? search.get("src") : [location.protocol, '//', location.host, location.pathname, 'html'].join('');
 var nohilit = search && search.get("nohilit") ? parseInt(search.get("nohilit")) : 0;
 
 var rankRules = rankRuleses[search.get("type") || "generic"]
