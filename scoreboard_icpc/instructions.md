@@ -60,7 +60,7 @@ For this, you will need a server with a public IP address, and another computer 
     ```bash
     while true; do
         echo "Copying now..."
-        scp local/path/to/html/index.html xxx@xx.xx.xx.xx:~/path/in/server/to/scoreboard_icpc/html/ && echo "successful" || echo "failed :( trying again later"
+        scp local/path/to/html/index.html xxx@xx.xx.xx.xx:~/path/in/server/to/scoreboard_icpc/html/
         sleep 15
     done
     ```
