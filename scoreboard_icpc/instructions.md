@@ -79,13 +79,13 @@ The thing works by reading off the `html/index.html` file produced by PC^2. Most
 
 In essence, it receives a URL param called `src` which should be a valid URL. It then fetches `/index.html` from that URL every 5 seconds or so. If the URL is not on the same domain as the one running `scoreboard_icpc/index.html`, then it needs to allow CORS (cross-origin resource sharing), otherwise, it will refuse the GET request and the scoreboard cannot read the data.
 
-If `src` is not passed, then it defaults to `html/` (relative to the folder `scoreboard_icpc/`). As long as you can serve the files statically here and are able to update `html/index.html` constantly (say by copying it over every few seconds, perhaps via `scp`), the `src` param will not be needed.  
+If `src` is not passed, then it defaults to `html/` (relative to the folder `scoreboard_icpc/`). As long as you can serve the files statically here and are able to update `scoreboard_icpc/html/index.html` constantly (say by copying it over every few seconds, perhaps via `scp`), the `src` param will not be needed.  
 
-*Side comment:* since the `html/index.html` file is constantly changing, I think the term "static files" is not quite accurate. Oh well, I hope you get the point.
+*Side comment:* since the `scoreboard_icpc/html/index.html` file is constantly changing, I think the term "static files" is not quite accurate. Oh well, I hope you get the point.
 
 
 ## Security and stability  
 
 `nocache_serve` and `cors_serve` both use Python's `http.server` library to serve the files. Its [doc](https://docs.python.org/3/library/http.server.html) states that it is not production ready and also gives a security warning. This might also mean that it can't handle too many users.
 
-I don't know how bad this really is, especially for something as simple as serving a few html, js and css files, but if you're that concerned about stability and security (maybe you have a huge audience, or your server is sensitive), then I suggest finding alternatives to `nocache_serve` and `cors_serve`. It doesn't have to be in Python. It only needs to serve a bunch of "static" files, with no-cache (otherwise, the leaderboard won't update since it will fetch a cached version every time), and in the case of `cors_serve`, it needs CORS.
+I don't know how bad this really is, especially for something as simple as serving a few html, js and css files, but if you're that concerned about stability and security (maybe you have a huge audience, or your server is sensitive), then I suggest finding alternatives to `nocache_serve` and `cors_serve`. It doesn't have to be in Python. It only needs to serve a bunch of "static" files, with no-cache (otherwise, the leaderboard won't update since it will fetch a cached version every time), and in the case of `cors_serve`, it needs CORS. (Read `nocache_serve` and `cors_serve` to see the exact headers passed to `SimpleHTTPServer`.)
