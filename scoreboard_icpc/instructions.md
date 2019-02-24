@@ -1,4 +1,4 @@
-Use Linux.
+The instructions are written for Linux, but it should also work for Windows. Just update the steps accordingly.
 
 
 # Using the same computer for the leaderboard account and display
