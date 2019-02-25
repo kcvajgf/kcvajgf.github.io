@@ -10,6 +10,8 @@ This integrates easily with PC^2, and this document explains how to set it up fo
 
 - If something doesn't work for you, or if you encounter problems, please tell me so I can help you fix it.
 
+- You can add header messages, modify the title, do more customizations, etc., by modifying `scoreboard_icpc/index.html`. The scoreboard itself will be generated in the `div` with `id="leaderboard"`, so you just need to keep that `div` around.
+
 
 # Using the same computer for the leaderboard account and display
 
