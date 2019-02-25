@@ -222,7 +222,7 @@ var vm = new Vue({
             }
         },
         subId(sub) {
-            return `${sub.score}_${sub.attempts}_${sub.penalty}`;
+            return `${sub.score}_${sub.attempts}_${sub.penalty}_${sub.pending}`;
         },
         contId(cont) {
             return `${cont.score}_${cont.penalty}`;
@@ -280,7 +280,7 @@ var vm = new Vue({
                     </transition>
                     <transition name="entry-value" mode="out-in" v-for="prob in problems" :key="prob">
                         <td class="t-problem" :key="subId(c.subs[prob])"
-                                :style="{'background-color': colorForSub(c.subs[prob])}"><span v-if="!c.subs[prob].attempts">-</span><span v-if="showAttempts && c.subs[prob].attempts">{{ c.subs[prob].attempts }}</span><span v-if="!showAttempts && c.subs[prob].attempts"><i v-if="!c.subs[prob].score" class="fa fa-times" aria-hidden="true"></i><i v-if="c.subs[prob].score" class="fa fa-check" aria-hidden="true"></i></span><transition name="entry-value" mode="out-in"><small class="t-penalty" v-if="showPenalty && c.subs[prob].score"><br/>{{ c.subs[prob].penalty }}</small><small class="t-penalty" v-if="showPenalty && !c.subs[prob].score && c.subs[prob].attempts"><br/>-</small></transition></td>
+                                :style="{'background-color': colorForSub(c.subs[prob])}"><span v-if="!c.subs[prob].attempts">-</span><span v-if="showAttempts && c.subs[prob].attempts">{{ c.subs[prob].attempts }}</span><span v-if="!showAttempts && c.subs[prob].attempts"><i v-if="!c.subs[prob].score" class="fa fa-times" aria-hidden="true"></i><i v-if="c.subs[prob].score" class="fa fa-check" aria-hidden="true"></i></span><transition name="entry-value" mode="out-in"><small class="t-penalty" v-if="showPenalty && c.subs[prob].score"><br/>{{ c.subs[prob].penalty }}</small><small class="t-penalty" v-if="showPenalty && !c.subs[prob].score && c.subs[prob].attempts"><br/>{{c.subs[prob].pending?'?':'-'}}</small></transition></td>
                     </transition>
                     <transition name="entry-value" mode="out-in">
                         <td class="t-attempts" :key="c.attempts" v-if="showAttempts"

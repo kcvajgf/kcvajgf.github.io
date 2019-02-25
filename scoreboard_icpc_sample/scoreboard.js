@@ -8,167 +8,168 @@ var xdata = {
             name: "Team X",
             rank: 1, score: 2, attempts: 3, penalty: 100,
             subs: {
-                "A": { score: 1, attempts: 1, penalty: 30 },
-                "B": { score: 1, attempts: 2, penalty: 50 },
-                "C": { score: 0, attempts: 0, penalty: 0 },
-                "D": { score: 0, attempts: 0, penalty: 0 },
-                "E": { score: 0, attempts: 0, penalty: 0 },
-                "F": { score: 0, attempts: 0, penalty: 0 },
-                "G": { score: 0, attempts: 0, penalty: 0 },
-                "H": { score: 0, attempts: 0, penalty: 0 },
-                "I": { score: 0, attempts: 0, penalty: 0 },
-                "J": { score: 0, attempts: 0, penalty: 0 },
-                "K": { score: 0, attempts: 0, penalty: 0 },
-                "L": { score: 0, attempts: 0, penalty: 0 },
-                "M": { score: 0, attempts: 0, penalty: 0 },
+                "A": { score: 1, attempts: 1, penalty: 30, pending: false },
+                "B": { score: 1, attempts: 2, penalty: 50, pending: false },
+                "C": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "D": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "E": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "F": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "G": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "H": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "I": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "J": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "K": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "L": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "M": { score: 0, attempts: 0, penalty: 0, pending: false },
             },
         },
         {
             name: "Team Y",
             rank: 2, score: 2, attempts: 4, penalty: 110,
             subs: {
-                "A": { score: 1, attempts: 2, penalty: 30 },
-                "B": { score: 1, attempts: 2, penalty: 40 },
-                "C": { score: 0, attempts: 0, penalty: 0 },
-                "D": { score: 0, attempts: 0, penalty: 0 },
-                "E": { score: 0, attempts: 0, penalty: 0 },
-                "F": { score: 0, attempts: 0, penalty: 0 },
-                "G": { score: 0, attempts: 0, penalty: 0 },
-                "H": { score: 0, attempts: 0, penalty: 0 },
-                "I": { score: 0, attempts: 0, penalty: 0 },
-                "J": { score: 0, attempts: 0, penalty: 0 },
-                "K": { score: 0, attempts: 0, penalty: 0 },
-                "L": { score: 0, attempts: 0, penalty: 0 },
-                "M": { score: 0, attempts: 0, penalty: 0 },
+                "A": { score: 1, attempts: 2, penalty: 30, pending: false },
+                "B": { score: 1, attempts: 2, penalty: 40, pending: false },
+                "C": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "D": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "E": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "F": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "G": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "H": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "I": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "J": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "K": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "L": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "M": { score: 0, attempts: 0, penalty: 0, pending: false },
             },
         },
         {
             name: "Team A",
             rank: 3, score: 1, attempts: 3, penalty: 70,
             subs: {
-                "A": { score: 1, attempts: 3, penalty: 30 },
-                "B": { score: 0, attempts: 0, penalty: 0 },
-                "C": { score: 0, attempts: 0, penalty: 0 },
-                "D": { score: 0, attempts: 0, penalty: 0 },
-                "E": { score: 0, attempts: 0, penalty: 0 },
-                "F": { score: 0, attempts: 0, penalty: 0 },
-                "G": { score: 0, attempts: 0, penalty: 0 },
-                "H": { score: 0, attempts: 0, penalty: 0 },
-                "I": { score: 0, attempts: 0, penalty: 0 },
-                "J": { score: 0, attempts: 0, penalty: 0 },
-                "K": { score: 0, attempts: 0, penalty: 0 },
-                "L": { score: 0, attempts: 0, penalty: 0 },
-                "M": { score: 0, attempts: 0, penalty: 0 },
+                "A": { score: 1, attempts: 3, penalty: 30, pending: false },
+                "B": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "C": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "D": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "E": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "F": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "G": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "H": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "I": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "J": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "K": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "L": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "M": { score: 0, attempts: 0, penalty: 0, pending: false },
             },
         },
         {
             name: "Team B",
             rank: 3, score: 1, attempts: 4, penalty: 70,
             subs: {
-                "A": { score: 0, attempts: 2, penalty: 0 },
-                "B": { score: 1, attempts: 2, penalty: 50 },
-                "C": { score: 0, attempts: 0, penalty: 0 },
-                "D": { score: 0, attempts: 0, penalty: 0 },
-                "E": { score: 0, attempts: 0, penalty: 0 },
-                "F": { score: 0, attempts: 0, penalty: 0 },
-                "G": { score: 0, attempts: 0, penalty: 0 },
-                "H": { score: 0, attempts: 0, penalty: 0 },
-                "I": { score: 0, attempts: 0, penalty: 0 },
-                "J": { score: 0, attempts: 0, penalty: 0 },
-                "K": { score: 0, attempts: 0, penalty: 0 },
-                "L": { score: 0, attempts: 0, penalty: 0 },
-                "M": { score: 0, attempts: 0, penalty: 0 },
+                "A": { score: 0, attempts: 2, penalty: 0, pending: false },
+                "B": { score: 1, attempts: 2, penalty: 50, pending: false },
+                "C": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "D": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "E": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "F": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "G": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "H": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "I": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "J": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "K": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "L": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "M": { score: 0, attempts: 0, penalty: 0, pending: false },
             },
         },
         {
             name: "Team C",
             rank: 5, score: 1, attempts: 1, penalty: 71,
             subs: {
-                "A": { score: 0, attempts: 0, penalty: 0 },
-                "B": { score: 1, attempts: 1, penalty: 71 },
-                "C": { score: 0, attempts: 0, penalty: 0 },
-                "D": { score: 0, attempts: 0, penalty: 0 },
-                "E": { score: 0, attempts: 0, penalty: 0 },
-                "F": { score: 0, attempts: 0, penalty: 0 },
-                "G": { score: 0, attempts: 0, penalty: 0 },
-                "H": { score: 0, attempts: 0, penalty: 0 },
-                "I": { score: 0, attempts: 0, penalty: 0 },
-                "J": { score: 0, attempts: 0, penalty: 0 },
-                "K": { score: 0, attempts: 0, penalty: 0 },
-                "L": { score: 0, attempts: 0, penalty: 0 },
-                "M": { score: 0, attempts: 0, penalty: 0 },
+                "A": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "B": { score: 1, attempts: 1, penalty: 71, pending: false },
+                "C": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "D": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "E": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "F": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "G": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "H": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "I": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "J": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "K": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "L": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "M": { score: 0, attempts: 0, penalty: 0, pending: false },
             },
         },
         {
             name: "Team LOL",
             rank: 6, score: 0, attempts: 11, penalty: 0,
             subs: {
-                "A": { score: 0, attempts: 5, penalty: 0 },
-                "B": { score: 0, attempts: 6, penalty: 0 },
-                "C": { score: 0, attempts: 0, penalty: 0 },
-                "D": { score: 0, attempts: 0, penalty: 0 },
-                "E": { score: 0, attempts: 0, penalty: 0 },
-                "F": { score: 0, attempts: 0, penalty: 0 },
-                "G": { score: 0, attempts: 0, penalty: 0 },
-                "H": { score: 0, attempts: 0, penalty: 0 },
-                "I": { score: 0, attempts: 0, penalty: 0 },
-                "J": { score: 0, attempts: 0, penalty: 0 },
-                "K": { score: 0, attempts: 0, penalty: 0 },
-                "L": { score: 0, attempts: 0, penalty: 0 },
-                "M": { score: 0, attempts: 0, penalty: 0 },
+                "A": { score: 0, attempts: 5, penalty: 0, pending: false },
+                "B": { score: 0, attempts: 6, penalty: 0, pending: false },
+                "C": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "D": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "E": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "F": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "G": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "H": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "I": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "J": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "K": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "L": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "M": { score: 0, attempts: 0, penalty: 0, pending: false },
             },
         },
         {
             name: "Team LAL",
             rank: 6, score: 0, attempts: 24, penalty: 0,
             subs: {
-                "A": { score: 0, attempts: 0, penalty: 0 },
-                "B": { score: 0, attempts: 0, penalty: 0 },
-                "C": { score: 0, attempts: 0, penalty: 0 },
-                "D": { score: 0, attempts: 0, penalty: 0 },
-                "E": { score: 0, attempts: 1, penalty: 0 },
-                "F": { score: 0, attempts: 1, penalty: 0 },
-                "G": { score: 0, attempts: 11, penalty: 0 },
-                "H": { score: 0, attempts: 11, penalty: 0 },
-                "I": { score: 0, attempts: 0, penalty: 0 },
-                "J": { score: 0, attempts: 0, penalty: 0 },
-                "K": { score: 0, attempts: 0, penalty: 0 },
-                "L": { score: 0, attempts: 0, penalty: 0 },
-                "M": { score: 0, attempts: 0, penalty: 0 },
+                "A": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "B": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "C": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "D": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "E": { score: 0, attempts: 1, penalty: 0, pending: false },
+                "F": { score: 0, attempts: 1, penalty: 0, pending: false },
+                "G": { score: 0, attempts: 11, penalty: 0, pending: false },
+                "H": { score: 0, attempts: 11, penalty: 0, pending: false },
+                "I": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "J": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "K": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "L": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "M": { score: 0, attempts: 0, penalty: 0, pending: false },
             },
         },
         {
             name: "Team LEL",
             rank: 6, score: 0, attempts: 1, penalty: 0,
             subs: {
-                "A": { score: 0, attempts: 0, penalty: 0 },
-                "B": { score: 0, attempts: 0, penalty: 0 },
-                "C": { score: 0, attempts: 0, penalty: 0 },
-                "D": { score: 0, attempts: 0, penalty: 0 },
-                "E": { score: 0, attempts: 1, penalty: 0 },
-                "F": { score: 0, attempts: 0, penalty: 0 },
-                "G": { score: 0, attempts: 0, penalty: 0 },
-                "H": { score: 0, attempts: 0, penalty: 0 },
-                "I": { score: 0, attempts: 0, penalty: 0 },
-                "J": { score: 0, attempts: 0, penalty: 0 },
-                "K": { score: 0, attempts: 0, penalty: 0 },
-                "L": { score: 0, attempts: 0, penalty: 0 },
-                "M": { score: 0, attempts: 0, penalty: 0 },
+                "A": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "B": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "C": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "D": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "E": { score: 0, attempts: 1, penalty: 0, pending: false },
+                "F": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "G": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "H": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "I": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "J": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "K": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "L": { score: 0, attempts: 0, penalty: 0, pending: false },
+                "M": { score: 0, attempts: 0, penalty: 0, pending: false },
             },
         },
     ]
 };
 
-var sc = 0.7;
+var sc = 0.6;
+var newGuyProb = 0.3;
 var xattprobs = {
     "A": 0.11*sc,
     "B": 0.03*sc,
     "C": 0.01*sc,
-    "D": 0.01*sc,
-    "E": 0.01*sc,
+    "D": 0.003*sc,
+    "E": 0.002*sc,
     "F": 0.05*sc,
     "G": 0.01*sc,
-    "H": 0.01*sc,
+    "H": 0.06*sc,
     "I": 0.005*sc,
     "J": 0.01*sc,
     "K": 0.01*sc,
@@ -176,19 +177,19 @@ var xattprobs = {
     "M": 0.21*sc,
 };
 var xsolprobs = {
-    "A": 0.9,
+    "A": 0.92,
     "B": 0.4,
     "C": 0.7,
     "D": 0.7,
-    "E": 0.7,
-    "F": 0.1,
+    "E": 0.6,
+    "F": 0.08,
     "G": 0.9,
-    "H": 0.7,
+    "H": 0.08,
     "I": 0.1,
     "J": 0.9,
     "K": 0.3,
-    "L": 0.1,
-    "M": 0.01,
+    "L": 0.12,
+    "M": 0.008,
 };
 
 var xtskill = {
@@ -200,23 +201,152 @@ var xtskill = {
     "Team LOL": 20.0,
     "Team LAL": 0.3,
     "Team LEL": 1.0,
+};
+
+var xteager = {
+    "Team X": 1.0,
+    "Team Y": 2.0,
+    "Team A": 1.0,
+    "Team B": 1.0,
+    "Team C": 0.5,
+    "Team LOL": 1.5,
+    "Team LAL": 4.0,
+    "Team LEL": 3.0,
+};
+
+var xspecs = [
+    "...",
+    "1BUPC",
+    "2BUPC",
+    ";hack",
+    "A1Q",
+    "A^3",
+    "ABL Tree",
+    "ACE1",
+    "ACE2",
+    "ACE3",
+    "Ainge WF",
+    "Alone2gether",
+    "AN2KINS",
+    "APT",
+    "Bcc:",
+    "Big-O",
+    "Blackjack",
+    "Blazar",
+    "Blueknights",
+    "BlueKnights-1",
+    "BlueKnights-2",
+    "BOY",
+    "BTNode",
+    "CCIS2017",
+    "Chicken Tinola ni Chris",
+    "CITU 10X",
+    "Clean Mind",
+    "Code Slashers",
+    "Code Slayer",
+    "CPCU 4197",
+    "CPCU HEYYEYAAEYAAAEYAEYAA",
+    "CPCU K-GOD",
+    "CS:Source",
+    "Dani's Angels",
+    "Doom All",
+    "Dragon Exceed",
+    "Dragon Traverse",
+    "Eliens - Makiling",
+    "Eliens - Pegaraw",
+    "Exceptions",
+    "Fibonachips",
+    "FPT_HAN_ThreeFrogs",
+    "FPT_HAN_VTeam",
+    "Franz's Angels",
+    "Fuchsia Moth",
+    "G00dMeow",
+    "Gween Tea",
+    "HCMUS-Serendipity",
+    "Highwind",
+    "Hokage",
+    "ITworks",
+    "JAM",
+    "Jbros",
+    "Keyboard Fighters",
+    "Liadri",
+    "Lv. 1 Crooks",
+    "Magikarp",
+    "Marielle's Angels",
+    "Möbius",
+    "Nairud",
+    "Never Give Up",
+    "NSF Mangoes",
+    "NTHU_Jinkela",
+    "NTHUccu",
+    "NTU Three-headed Monster",
+    "NTUNOOBS",
+    "NU CCS Wizards Circle Team 1",
+    "NU CCS Wizards Circle Team 2",
+    "NU Wizards Circle Team A",
+    "O(bf)",
+    "Olemop",
+    "Omega",
+    "Onisnack69",
+    "Pandamiao",
+    "Pandamonium",
+    "Panic",
+    "Penguin1",
+    "Penguin2",
+    "PLUS ULTRA",
+    "PVP",
+    "Quiwarriors 0",
+    "Re:Programmers",
+    "RjEaCa",
+    "Smoking Wombat",
+    "SRC",
+    "Te3s",
+    "Team UM 1",
+    "Team UMTC",
+    "ThaThu",
+    "The Hedgehogs",
+    "Theta",
+    "TIP SAPIENS",
+    "troubleShooters",
+    "Unexpected",
+    "Unstoppable",
+    "Xavier",
+    "Zenith",
+];
+
+// shuffle names
+for (let i = 0; i < xspecs.length; i++) {
+    while (true) {
+        let j = Math.floor((i + 1) * Math.random());
+        if (j <= i) {
+            if (j != i) {
+                let t = xspecs[i]; xspecs[i] = xspecs[j]; xspecs[j] = t;
+            }
+            break;
+        }
+    }
 }
 
-var xpen = 0, xguys = 0;
+
+var xpen = 0, xguys = 0, xspeci = 0, xquis = 0;
 async function fetchData(source) {
     // increase penalty a little bit
     xpen++;
     while (Math.random() < 0.1) xpen++;
 
     var trySolving = function(c) {
+        console.log("stuck at", c, xteager[c.name])
         var done = 0;
         for (const p of xdata.problems) {
-            if (Math.random() < xattprobs[p] && c.subs[p].score == 0) {
+            if (c.subs[p].pending || Math.random() < xteager[c.name] * xattprobs[p] && c.subs[p].score == 0) {
                 done++;
                 console.log("make attempt");
                 // make attempt
-                c.subs[p].attempts++;
-                c.attempts++;
+                if (!c.subs[p].pending) {
+                    c.subs[p].attempts++;
+                    c.attempts++;
+                }
+                if (c.subs[p].pending = Math.random() < 0.06) continue;
                 if (Math.random() < xtskill[c.name] * xsolprobs[p]) {
                     // correct answer. add penalty
                     if (c.subs[p].penalty != 0) throw "Invalid data";
@@ -230,22 +360,23 @@ async function fetchData(source) {
         return done;
     };
 
-    while (Math.random() < 0.2 && xdata.contestants.length < 1111) {
+    while (Math.random() < newGuyProb && xdata.contestants.length < 1111) {
         // new guy
-        console.log("new guy");
+        console.log("new team");
         var c = {
-            name: `new guy ${xguys++}`,
+            name: (xspeci < xspecs.length && Math.random() < 0.1 ? xspecs[xspeci++] : Math.random() < 0.8 ? `Quiwarriors ${++xquis}` : `New team ${xguys++}`),
             score: 0,
             attempts: 0,
             penalty: 0,
             subs: {},
         };
         for (const p of xdata.problems) {
-            c.subs[p] = { score: 0, attempts: 0, penalty: 0 };
+            c.subs[p] = { score: 0, attempts: 0, penalty: 0, pending: false };
         }
-        while (!trySolving(c));
         xdata.contestants.push(c);
         xtskill[c.name] = 0.01 + 50.0 * Math.random() * Math.random();
+        xteager[c.name] = 0.5 + 3.5 * Math.random() * Math.random() * Math.random() * Math.random();
+        while (!trySolving(c));
     }
 
     for (const c of xdata.contestants) trySolving(c);
@@ -417,7 +548,7 @@ var vm = new Vue({
             }
         },
         subId(sub) {
-            return `${sub.score}_${sub.attempts}_${sub.penalty}`;
+            return `${sub.score}_${sub.attempts}_${sub.penalty}_${sub.pending}`;
         },
         contId(cont) {
             return `${cont.score}_${cont.penalty}`;
@@ -475,7 +606,7 @@ var vm = new Vue({
                     </transition>
                     <transition name="entry-value" mode="out-in" v-for="prob in problems" :key="prob">
                         <td class="t-problem" :key="subId(c.subs[prob])"
-                                :style="{'background-color': colorForSub(c.subs[prob])}"><span v-if="!c.subs[prob].attempts">-</span><span v-if="showAttempts && c.subs[prob].attempts">{{ c.subs[prob].attempts }}</span><span v-if="!showAttempts && c.subs[prob].attempts"><i v-if="!c.subs[prob].score" class="fa fa-times" aria-hidden="true"></i><i v-if="c.subs[prob].score" class="fa fa-check" aria-hidden="true"></i></span><transition name="entry-value" mode="out-in"><small class="t-penalty" v-if="showPenalty && c.subs[prob].score"><br/>{{ c.subs[prob].penalty }}</small><small class="t-penalty" v-if="showPenalty && !c.subs[prob].score && c.subs[prob].attempts"><br/>-</small></transition></td>
+                                :style="{'background-color': colorForSub(c.subs[prob])}"><span v-if="!c.subs[prob].attempts">-</span><span v-if="showAttempts && c.subs[prob].attempts">{{ c.subs[prob].attempts }}</span><span v-if="!showAttempts && c.subs[prob].attempts"><i v-if="!c.subs[prob].score" class="fa fa-times" aria-hidden="true"></i><i v-if="c.subs[prob].score" class="fa fa-check" aria-hidden="true"></i></span><transition name="entry-value" mode="out-in"><small class="t-penalty" v-if="showPenalty && c.subs[prob].score"><br/>{{ c.subs[prob].penalty }}</small><small class="t-penalty" v-if="showPenalty && !c.subs[prob].score && c.subs[prob].attempts"><br/>{{c.subs[prob].pending?'?':'-'}}</small></transition></td>
                     </transition>
                     <transition name="entry-value" mode="out-in">
                         <td class="t-attempts" :key="c.attempts" v-if="showAttempts"
