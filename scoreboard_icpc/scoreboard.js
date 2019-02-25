@@ -166,7 +166,7 @@ var vm = new Vue({
                 await new Promise(resolve => setTimeout(resolve, 7111)); // feels hacky
                 await this.fetchAll().catch((e) => {
                     console.log("Got error", e);
-                    console.log(`Failed to load ${prob}! Never mind. I'll try again later.`)
+                    console.log(`Failed to load data! Never mind. I'll try again later.`)
                 });
             }
         },
