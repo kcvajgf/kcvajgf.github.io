@@ -82,12 +82,16 @@ For this, you will need a server with a public IP address, and another computer 
 
     where `xxx@xx.xx.xx.xx` is the public server's IP and username. (The same argument you pass to `ssh`. You should know what this is if you are familiar with `ssh`/`scp`.)
 
+3. The public scoreboard can now be accessed at `http://xx.xx.xx.xx:8000`, where `xx.xx.xx.xx` is the server's IP. (If your server has a domain name, say `www.example.com`, then it can be accessed at `http://www.example.com:8000`.)
+
 
 *Notes:*  
 
 - One way of doing this would be to set up a temporary SSH key for the scoreboard computer so you don't need to specify the plain password in the script. You can just delete the key afterward.
 
 - You may need to make `nocache_serve` executable via `chmod`. (Alternatively, just use `python3 nocache_serve` or something.)
+
+- You can specify a different port by passing it to `nocache_serve`, like `./nocache_serve 8080`. For example, you may want to use port `80` (the port assigned to HTTP) so the port doesn't have to be specified in the URL.
 
 - Feel free to replace 15 seconds with anything you want.
 
