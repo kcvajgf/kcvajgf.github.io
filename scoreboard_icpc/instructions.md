@@ -101,6 +101,13 @@ For this, you will need a server with a public IP address, and another computer 
 - Feel free to replace 15 seconds with anything you want.
 
 
+# Options
+
+- By default, hovering the mouse over a row will highlight that row. If you wish to disable this, add the URL param `nohilit=1`, e.g., `http://localhost:8000?nohilit=1`
+
+- The first-, second- and third-ranked teams are highlighted gold, silver, and bronze, respectively. If you want ICPC world-finals style highlighting (4 gold, 4 silver, 4 bronze), add the URL param `type=wf`. If you want more options, contact me so I can add support for them. :D
+
+
 # Under the hood
 
 The thing works by reading off the `html/index.html` file produced by PC^2. Most of the setting up is just pointing it to where it can get this file.
