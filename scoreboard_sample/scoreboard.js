@@ -21,7 +21,7 @@ Vue.filter('score', function(score, missing) {
 })
 
 
-var mor = "WyJTdGV2ZW4gSGFsaW0iLCJDYXJsU2FnYW40MiIsIk1yTGxhbWFTQyIsIkEgdmVyeSB2ZXJ5IGxvbmcgbmFtZSBndXN0byBrb25nIG1hdHV0b25nIG1hZ2RyaXZlIiwiTWljaGFlbCBTZWJiaW5zIiwiUnViaWNvTl9TIiwiTWlrZSBUcnVrIiwiQmVubmV0dCBGb2RkeSIsIkNhdGhlcmluZSIsIlRvbW15IFdpc2VhdSIsIkR3aWd0IFJvcnR1Z2FsIiwiQiBMYXNhZ25hIiwiUm9iaW4gV3UiLCJHb3Jkb24gUmFtc2F5IiwiVmlsb3JpYSIsIlpvcnJvIiwiTG91ZWxsYSBDYWNlcyIsIlNsZXZlIE1jRGljaGFlbCIsImNhbWVsQ2FzZUFWZXJ5VmVyeUxvbmdOYW1lR3VzdG9Lb25nTWF0dXRvbmdNYWdkcml2ZSIsIkJlYWNoIExhc2FnbmEiLCJLaXp1bmEgQUkiLCJDaGVmRm9yY2VzIiwiUG9wcHkgSGFybG93Iiwia2ViYWItY2FzZS1hLXZlcnktdmVyeS1sb25nLW5hbWUtZ3VzdG8ta29uZy1tYXR1dG9uZy1tYWdkcml2ZSIsIkt1cnVtaSJd"
+var mor = "WyJTdGV2ZW4gSGFsaW0iLCJDYXJsU2FnYW40MiIsIk1yTGxhbWFTQyIsIkEgdmVyeSB2ZXJ5IGxvbmcgbmFtZSBndXN0byBrb25nIG1hdHV0b25nIG1hZ2RyaXZlIiwiTWljaGFlbCBTdGViYmlucyIsIlJ1Ymljb05fUyIsIk1pa2UgVHJ1ayIsIkJlbm5ldHQgRm9kZHkiLCJDYXRoZXJpbmUiLCJUb21teSBXaXNlYXUiLCJEd2lndCBSb3J0dWdhbCIsIkIgTGFzYWduYSIsIlJvYmluIFd1IiwiR29yZG9uIFJhbXNheSIsIlZpbG9yaWEiLCJab3JybyIsIkxvdWVsbGEgQ2FjZXMiLCJTbGV2ZSBNY0RpY2hhZWwiLCJjYW1lbENhc2VBVmVyeVZlcnlMb25nTmFtZUd1c3RvS29uZ01hdHV0b25nTWFnZHJpdmUiLCJCZWFjaCBMYXNhZ25hIiwiS2l6dW5hIEFJIiwiQ2hlZkZvcmNlcyIsIlBvcHB5IEhhcmxvdyIsImtlYmFiLWNhc2UtYS12ZXJ5LXZlcnktbG9uZy1uYW1lLWd1c3RvLWtvbmctbWF0dXRvbmctbWFnZHJpdmUiLCJLdXJ1bWkiXQ=="
 
 var search = new URLSearchParams(window.location.search);
 var missing = search && search.get("missing") ? parseInt(search.get("missing")) : 0;
@@ -93,8 +93,7 @@ for (const name of names) {
     sampleContestants.push(bago(name))
 }
 for (const cont of sampleContestants) {
-    var atts = 1 + 3 * Math.random();
-    for (let i = 0; i < atts; i++) solb(cont);
+    solb(cont);
 }
 
 
