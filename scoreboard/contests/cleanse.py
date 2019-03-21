@@ -16,4 +16,4 @@ x = {'models': [{
 } for prob in x['models']]}
 
 with open(argv[1], 'w') as f:
-    json.dump(x, f)
+    json.dump(x, f, indent=4)

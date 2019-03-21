@@ -49,6 +49,12 @@ td.t-name:hover .d-name {
     overflow: visible;
 }
 
+.t-problem.t-problem-head .t-problem-link {
+    overflow: hidden;
+    max-width: 100px;
+}
+
+
 .t-rank {
     width: 0.6%;
 }

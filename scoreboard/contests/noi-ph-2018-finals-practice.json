@@ -1,0 +1,28 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "studying-diplomacy",
+            "contest_slug": "noi-ph-2018-finals-practice",
+            "name": "Studying Diplomacy"
+        },
+        {
+            "max_score": 100,
+            "slug": "speedup-loop",
+            "contest_slug": "noi-ph-2018-finals-practice",
+            "name": "The Speedup Loop"
+        },
+        {
+            "max_score": 100,
+            "slug": "yumamma-ii",
+            "contest_slug": "noi-ph-2018-finals-practice",
+            "name": "Yumamma II"
+        },
+        {
+            "max_score": 100,
+            "slug": "sharing-chocolates-6",
+            "contest_slug": "noi-ph-2018-finals-practice",
+            "name": "Sharing Chocolates 6: Return of the Juday"
+        }
+    ]
+}

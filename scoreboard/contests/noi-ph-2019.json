@@ -1,1 +1,88 @@
-{"models": [{"max_score": 100, "slug": "ngc", "contest_slug": "noi-ph-2019", "name": "Next Generation Currency"}, {"max_score": 100, "slug": "anion-find", "contest_slug": "noi-ph-2019", "name": "Anion Find"}, {"max_score": 100, "slug": "evening-gown", "contest_slug": "noi-ph-2019", "name": "Evening Gown"}, {"max_score": 100, "slug": "aswang-immortal-trivia", "contest_slug": "noi-ph-2019", "name": "Aswang Immortal - Trivia!"}, {"max_score": 100, "slug": "exchange-gift", "contest_slug": "noi-ph-2019", "name": "Exchange Gift"}, {"max_score": 100, "slug": "lots-of-cookies", "contest_slug": "noi-ph-2019", "name": "Lots of Cookies"}, {"max_score": 100, "slug": "dagohoy-rock-lapu-lapu-boogie", "contest_slug": "noi-ph-2019", "name": "Dagohoy Rock Lapu-Lapu Boogie"}, {"max_score": 100, "slug": "saishuu-shinpan", "contest_slug": "noi-ph-2019", "name": "\u6700\u7d42\u5be9\u5224"}, {"max_score": 100, "slug": "spratly-islands-tour", "contest_slug": "noi-ph-2019", "name": "Spratly Islands Tour"}, {"max_score": 100, "slug": "skyscaping", "contest_slug": "noi-ph-2019", "name": "Skyscaping"}, {"max_score": 100, "slug": "super-rangers", "contest_slug": "noi-ph-2019", "name": "Super Rangers"}, {"max_score": 100, "slug": "remotion", "contest_slug": "noi-ph-2019", "name": "ReMotion"}, {"max_score": 100, "slug": "yet-another-packing-problem", "contest_slug": "noi-ph-2019", "name": "Yet Another Packing Problem"}, {"max_score": 100, "slug": "almost-original", "contest_slug": "noi-ph-2019", "name": "Almost Original"}]}
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "ngc",
+            "contest_slug": "noi-ph-2019",
+            "name": "Next Generation Currency"
+        },
+        {
+            "max_score": 100,
+            "slug": "anion-find",
+            "contest_slug": "noi-ph-2019",
+            "name": "Anion Find"
+        },
+        {
+            "max_score": 100,
+            "slug": "evening-gown",
+            "contest_slug": "noi-ph-2019",
+            "name": "Evening Gown"
+        },
+        {
+            "max_score": 100,
+            "slug": "aswang-immortal-trivia",
+            "contest_slug": "noi-ph-2019",
+            "name": "Aswang Immortal - Trivia!"
+        },
+        {
+            "max_score": 100,
+            "slug": "exchange-gift",
+            "contest_slug": "noi-ph-2019",
+            "name": "Exchange Gift"
+        },
+        {
+            "max_score": 100,
+            "slug": "lots-of-cookies",
+            "contest_slug": "noi-ph-2019",
+            "name": "Lots of Cookies"
+        },
+        {
+            "max_score": 100,
+            "slug": "dagohoy-rock-lapu-lapu-boogie",
+            "contest_slug": "noi-ph-2019",
+            "name": "Dagohoy Rock Lapu-Lapu Boogie"
+        },
+        {
+            "max_score": 100,
+            "slug": "saishuu-shinpan",
+            "contest_slug": "noi-ph-2019",
+            "name": "\u6700\u7d42\u5be9\u5224"
+        },
+        {
+            "max_score": 100,
+            "slug": "spratly-islands-tour",
+            "contest_slug": "noi-ph-2019",
+            "name": "Spratly Islands Tour"
+        },
+        {
+            "max_score": 100,
+            "slug": "skyscaping",
+            "contest_slug": "noi-ph-2019",
+            "name": "Skyscaping"
+        },
+        {
+            "max_score": 100,
+            "slug": "super-rangers",
+            "contest_slug": "noi-ph-2019",
+            "name": "Super Rangers"
+        },
+        {
+            "max_score": 100,
+            "slug": "remotion",
+            "contest_slug": "noi-ph-2019",
+            "name": "ReMotion"
+        },
+        {
+            "max_score": 100,
+            "slug": "yet-another-packing-problem",
+            "contest_slug": "noi-ph-2019",
+            "name": "Yet Another Packing Problem"
+        },
+        {
+            "max_score": 100,
+            "slug": "almost-original",
+            "contest_slug": "noi-ph-2019",
+            "name": "Almost Original"
+        }
+    ]
+}

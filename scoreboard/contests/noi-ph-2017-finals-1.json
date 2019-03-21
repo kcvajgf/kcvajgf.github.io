@@ -1,0 +1,28 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "bits-by-dr-dre",
+            "contest_slug": "noi-ph-2017-finals-1",
+            "name": "Bits by Dr. Dre"
+        },
+        {
+            "max_score": 100,
+            "slug": "bettys-bitter-batter-bother",
+            "contest_slug": "noi-ph-2017-finals-1",
+            "name": "Betty's Bitter Batter Bother"
+        },
+        {
+            "max_score": 100,
+            "slug": "chenes-chorva",
+            "contest_slug": "noi-ph-2017-finals-1",
+            "name": "The Chenes of The Chorva"
+        },
+        {
+            "max_score": 100,
+            "slug": "corrupted-grid",
+            "contest_slug": "noi-ph-2017-finals-1",
+            "name": "Bisayaka Grid"
+        }
+    ]
+}

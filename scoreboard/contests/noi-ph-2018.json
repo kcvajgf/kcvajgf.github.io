@@ -1,0 +1,94 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "dubidubidapdap",
+            "contest_slug": "noi-ph-2018",
+            "name": "Dubidubidapdap"
+        },
+        {
+            "max_score": 100,
+            "slug": "congrats-bimb",
+            "contest_slug": "noi-ph-2018",
+            "name": "Congratulations Bimb!"
+        },
+        {
+            "max_score": 100,
+            "slug": "palacanang-portrait",
+            "contest_slug": "noi-ph-2018",
+            "name": "Palaca\u00f1ang Portrait"
+        },
+        {
+            "max_score": 100,
+            "slug": "attac-protec",
+            "contest_slug": "noi-ph-2018",
+            "name": "He Attac But Also Protec"
+        },
+        {
+            "max_score": 100,
+            "slug": "extreme-ambulation",
+            "contest_slug": "noi-ph-2018",
+            "name": "Extreme Ambulation"
+        },
+        {
+            "max_score": 100,
+            "slug": "lodi-petmalu",
+            "contest_slug": "noi-ph-2018",
+            "name": "Lodi Petmalu"
+        },
+        {
+            "max_score": 100,
+            "slug": "tsunderefs",
+            "contest_slug": "noi-ph-2018",
+            "name": "Tsunderefs"
+        },
+        {
+            "max_score": 100,
+            "slug": "ika-6-ordinansa",
+            "contest_slug": "noi-ph-2018",
+            "name": "Ika-6 na Ordinansa"
+        },
+        {
+            "max_score": 100,
+            "slug": "number-party",
+            "contest_slug": "noi-ph-2018",
+            "name": "Number Party"
+        },
+        {
+            "max_score": 100,
+            "slug": "help-your-friend-come-out",
+            "contest_slug": "noi-ph-2018",
+            "name": "Help Your Friend Come Out"
+        },
+        {
+            "max_score": 100,
+            "slug": "lazytown-2",
+            "contest_slug": "noi-ph-2018",
+            "name": "Cooking by the Book"
+        },
+        {
+            "max_score": 100,
+            "slug": "robin-vs-penguin",
+            "contest_slug": "noi-ph-2018",
+            "name": "Robin vs The Penguin"
+        },
+        {
+            "max_score": 100,
+            "slug": "keribells-keriboomboom",
+            "contest_slug": "noi-ph-2018",
+            "name": "Keribells and Keriboomboom"
+        },
+        {
+            "max_score": 100,
+            "slug": "pakain-ng-pahiyas",
+            "contest_slug": "noi-ph-2018",
+            "name": "Pakain ng Pahiyas"
+        },
+        {
+            "max_score": 100,
+            "slug": "breakdown-budget",
+            "contest_slug": "noi-ph-2018",
+            "name": "Breakdown Budget"
+        }
+    ]
+}

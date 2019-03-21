@@ -1,0 +1,28 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "superstitious",
+            "contest_slug": "noi-ph-2017-finals-practice",
+            "name": "Superstitious"
+        },
+        {
+            "max_score": 100,
+            "slug": "fermatslasttheoremfinal",
+            "contest_slug": "noi-ph-2017-finals-practice",
+            "name": "Fermat's Last Theorem FINAL NA TALAGA"
+        },
+        {
+            "max_score": 100,
+            "slug": "sharing-chocolates-5",
+            "contest_slug": "noi-ph-2017-finals-practice",
+            "name": "Sharing Chocolates 5: The Umpire Strikes Back"
+        },
+        {
+            "max_score": 100,
+            "slug": "colored-tile-puzzle",
+            "contest_slug": "noi-ph-2017-finals-practice",
+            "name": "Colored Tile Puzzle"
+        }
+    ]
+}

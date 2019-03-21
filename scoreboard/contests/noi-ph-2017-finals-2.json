@@ -1,0 +1,28 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "krazy-karl",
+            "contest_slug": "noi-ph-2017-finals-2",
+            "name": "Krazy Karl"
+        },
+        {
+            "max_score": 100,
+            "slug": "gora-the-explorer",
+            "contest_slug": "noi-ph-2017-finals-2",
+            "name": "Gora the Explorer"
+        },
+        {
+            "max_score": 100,
+            "slug": "spratly-islands",
+            "contest_slug": "noi-ph-2017-finals-2",
+            "name": "Kapuluan ng Kalayaan"
+        },
+        {
+            "max_score": 100,
+            "slug": "heavy-metal-wall-decoration",
+            "contest_slug": "noi-ph-2017-finals-2",
+            "name": "Heavy Metal Wall Decoration"
+        }
+    ]
+}

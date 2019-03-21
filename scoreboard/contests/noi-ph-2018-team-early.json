@@ -1,0 +1,40 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "paranaqueue",
+            "contest_slug": "noi-ph-2018-team-early",
+            "name": "Para\u00f1aqueue"
+        },
+        {
+            "max_score": 100,
+            "slug": "mood-swings",
+            "contest_slug": "noi-ph-2018-team-early",
+            "name": "Mood Swings"
+        },
+        {
+            "max_score": 100,
+            "slug": "socrates-plateau",
+            "contest_slug": "noi-ph-2018-team-early",
+            "name": "Socrates and Plateau"
+        },
+        {
+            "max_score": 100,
+            "slug": "anaks-ng-tokwas",
+            "contest_slug": "noi-ph-2018-team-early",
+            "name": "Mga Anak ng Tokwa"
+        },
+        {
+            "max_score": 100,
+            "slug": "sugar-roll",
+            "contest_slug": "noi-ph-2018-team-early",
+            "name": " Sugar Roll"
+        },
+        {
+            "max_score": 100,
+            "slug": "lazytown-4",
+            "contest_slug": "noi-ph-2018-team-early",
+            "name": "We Are Number One"
+        }
+    ]
+}

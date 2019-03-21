@@ -1,0 +1,94 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "pak-ganern",
+            "contest_slug": "noi-ph-2017",
+            "name": "Pak Ganern"
+        },
+        {
+            "max_score": 100,
+            "slug": "copy-pasta",
+            "contest_slug": "noi-ph-2017",
+            "name": "Copy Pasta"
+        },
+        {
+            "max_score": 100,
+            "slug": "ati-atihan",
+            "contest_slug": "noi-ph-2017",
+            "name": "Ati-atihan Dance Party"
+        },
+        {
+            "max_score": 100,
+            "slug": "cargo-train-to-busan",
+            "contest_slug": "noi-ph-2017",
+            "name": "Cargo Train to Busan"
+        },
+        {
+            "max_score": 100,
+            "slug": "mutual-friendzone-not-hacked",
+            "contest_slug": "noi-ph-2017",
+            "name": "Mutual Friendzone"
+        },
+        {
+            "max_score": 100,
+            "slug": "another-packing-problem",
+            "contest_slug": "noi-ph-2017",
+            "name": "Another Packing Problem"
+        },
+        {
+            "max_score": 100,
+            "slug": "hidden-pepe",
+            "contest_slug": "noi-ph-2017",
+            "name": "Hidden Pepe"
+        },
+        {
+            "max_score": 100,
+            "slug": "the-cheapest-reid",
+            "contest_slug": "noi-ph-2017",
+            "name": "The Cheapest Reid"
+        },
+        {
+            "max_score": 100,
+            "slug": "goodboy",
+            "contest_slug": "noi-ph-2017",
+            "name": "Goodboy"
+        },
+        {
+            "max_score": 100,
+            "slug": "tinikling-2-sequel-2",
+            "contest_slug": "noi-ph-2017",
+            "name": "Tinikling 2: The Sequel 2"
+        },
+        {
+            "max_score": 100,
+            "slug": "fliptop-sort",
+            "contest_slug": "noi-ph-2017",
+            "name": "FlipTop Sort"
+        },
+        {
+            "max_score": 100,
+            "slug": "lolo-generoso",
+            "contest_slug": "noi-ph-2017",
+            "name": "Lolo Generoso"
+        },
+        {
+            "max_score": 100,
+            "slug": "the-ultimate-rescue",
+            "contest_slug": "noi-ph-2017",
+            "name": "The Ultimate Rescue"
+        },
+        {
+            "max_score": 100,
+            "slug": "dlawan-obosn",
+            "contest_slug": "noi-ph-2017",
+            "name": "A Tale of Two Tribes"
+        },
+        {
+            "max_score": 100,
+            "slug": "dick-and-a-box",
+            "contest_slug": "noi-ph-2017",
+            "name": "Dick and a Box"
+        }
+    ]
+}

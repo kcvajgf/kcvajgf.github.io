@@ -1,0 +1,34 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "voltes-group",
+            "contest_slug": "noi-ph-2018-finals-1",
+            "name": "Voltes Group"
+        },
+        {
+            "max_score": 100,
+            "slug": "global-warming",
+            "contest_slug": "noi-ph-2018-finals-1",
+            "name": "Global Warming"
+        },
+        {
+            "max_score": 100,
+            "slug": "thrust-trials",
+            "contest_slug": "noi-ph-2018-finals-1",
+            "name": "Thrust Trials"
+        },
+        {
+            "max_score": 100,
+            "slug": "lean-on-me",
+            "contest_slug": "noi-ph-2018-finals-1",
+            "name": "Lean on Me"
+        },
+        {
+            "max_score": 100,
+            "slug": "boomerang-gadget",
+            "contest_slug": "noi-ph-2018-finals-1",
+            "name": "Boomerang Gadget"
+        }
+    ]
+}

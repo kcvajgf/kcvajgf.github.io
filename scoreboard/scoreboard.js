@@ -1,3 +1,5 @@
+const currentYear = "2019";
+
 // var hackerrank = "http://localhost:8002"
 // // var hackerrank = "https://www.hackerrank.com"
 // function contestReqData(cslug) {
@@ -32,6 +34,7 @@ function contestReqData(cslug) {
 function problemReqData(cslug, slug) {
     return {
         url: 'https://noi-ph-scoreboard.azurewebsites.net/api/HttpTrigger1',
+        // url: 'https://live-scoreboard.noi.ph/api/HttpTrigger1',
         params: {
             code: 'DfAanBvy6sSQUm1VtbewRjajhaOsV730a6X7OapGE/g15/dZhJynnA==',
             urlType: 'problem',
@@ -52,9 +55,16 @@ Vue.filter('hmPenalty', function(penalty, fixed) {
     return `${h}:${p}${m}`;
 })
 
+function isclose(a, b) {
+    return Math.abs(a - b) / Math.max(1, Math.max(Math.abs(a), Math.abs(b))) <= 1e-5;
+}
 
-Vue.filter('score', function(score, fixed) {
-    return score == -1 ? "-" : (score / 1).toFixed(fixed);
+Vue.filter('score', function(score, maxD) {
+    if (score == -1) return "-";
+    score /= 1;
+    var fixed = 0;
+    while (fixed < maxD && !isclose(score, +score.toFixed(fixed))) fixed++;
+    return score == -1 ? "-" : score.toFixed(fixed);
 })
 
 
@@ -62,7 +72,7 @@ async function fetchWhile(url, params, limit, collList) {
     params.limit = limit;
     var result = []
     for (params.offset = 0;; params.offset += params.limit) {
-        var res = collList((await axios.get(url, { params, timeout: 10000 })).data);
+        var res = collList((await axios.get(url, { params, timeout: 60000 })).data);
         result = result.concat(res);
         if (!res || res.length < params.limit) break; // we've reached the end.
     };
@@ -73,6 +83,9 @@ async function fetchWhile(url, params, limit, collList) {
 rankRuleses = {
     "noielims": [
         {rank: 30, color: "#00cc00"},
+    ],
+    "noielims2016": [
+        {rank: 20, color: "#00cc00"},
     ],
     "noifinals": [
         {rank: 1, color: "#ffd700"},
@@ -90,22 +103,66 @@ var search = new URLSearchParams(window.location.search);
 
 var cpast = search && search.get("past") ? search.get("past").split(",") : [];
 var cfetch = search && search.get("fetch") ? search.get("fetch").split(",") : [];
-var curls = cpast.concat(cfetch);
+var rankRules = rankRuleses[search.get("type") || "generic"];
+var others = {
+    "noi-ph-2018-team": "noi-ph-2018-team-early",
+    "noi-ph-2017-team": "noi-ph-2017-team-early",
+};
 
-if (!(cfetch && cfetch.length)) {
-    alert("Missing 'fetch' argument.");
-    throw "Missing 'fetch' argument.";
+if (search && search.get("contest")) {
+    var cyear = search && search.get("year") ? search.get("year") : currentYear;
+    let base = `noi-ph-${cyear}`;
+    if (search.get("contest") == "noielims") {
+        if (cyear == "2015") {
+            cpast = [`${base}-1`, `${base}-2`];
+            cfetch = [];
+            rankRules = rankRuleses["noielims2016"];
+        } else if (cyear == "2016") {
+            cpast = [`${base}-1`, `${base}-2`, `${base}-3`];
+            cfetch = [];
+            rankRules = rankRuleses["noielims2016"];
+        } else {
+            cpast = [];
+            cfetch = [base];
+            rankRules = rankRuleses["noielims"];
+        }
+    } else if (search.get("contest") == "noipractice") {
+        cpast = [];
+        cfetch = [`${base}-finals-practice`];
+        rankRules = rankRuleses["noifinals"];
+    } else if (search.get("contest") == "noifinals1") {
+        cpast = [];
+        cfetch = `${base}-finals-1`;
+        rankRules = rankRuleses["noifinals"];
+    } else if (search.get("contest") == "noifinals2") {
+        cpast = [`${base}-finals-1`];
+        cfetch = [`${base}-finals-2`];
+        rankRules = rankRuleses["noifinals"];
+    } else if (search.get("contest") == "noiteam") {
+        cpast = [];
+        cfetch = [`${base}-team`];
+        rankRules = rankRuleses["noiteam"];
+    } else {
+        alert(`Unknown contest ${search.get("contest")}`);
+        throw `Unknown contest ${search.get("contest")}`;
+    }
+    if (cyear != currentYear) {
+        cpast = cpast.concat(cfetch);
+        cfetch = [];
+    }
 }
 
-var rankRules = rankRuleses[search.get("type") || "generic"]
+console.log("got", cpast, cfetch, rankRules);
 if (!rankRules) {
     alert(`Unknown 'type' ${search.get("type")}.`);
     rankRules = [];
 }
 
+var curls = cpast.concat(cfetch);
+
 var penaltyFixed = search && search.get("pd") ? parseInt(search.get("pd")) : 0;
-var tScoreFixed = search && search.get("td") ? parseInt(search.get("td")) : 2;
-var scoreFixed = search && search.get("sd") ? parseInt(search.get("sd")) : 2;
+var tScoreMax = search && search.get("td") ? parseInt(search.get("td")) : 2;
+var scoreMax = search && search.get("sd") ? parseInt(search.get("sd")) : 2;
 var nohilit = search && search.get("nohilit") ? parseInt(search.get("nohilit")) : 0;
 var missing = search && search.get("missing") ? parseInt(search.get("missing")) : 0;
 
@@ -122,10 +179,11 @@ var vm = new Vue({
         showPenalty: true,
         startedFetchLoop: false,
         penaltyFixed,
-        tScoreFixed,
-        scoreFixed,
+        tScoreMax,
+        scoreMax,
         nohilit,
         missing,
+        others,
     },
     async mounted() {
         this.$el.classList.add("board-loading");
@@ -213,6 +271,7 @@ var vm = new Vue({
 
     methods: {
         setScore(problem, hackerName, score, penalty, fix = true) {
+            if (hackerName == "[deleted]") return;
             var contestant = this.getOrCreateContestant(hackerName, false);
             var prob = contestant.subs[problem.id];
             prob.score = score;
@@ -251,7 +310,7 @@ var vm = new Vue({
         async startFetchLoop() {
             console.log("Starting Fetch Loop");
 
-            if (!(this.problemGroups && this.problemGroups.length)) {
+            if (!(this.cfetch && this.cfetch.length && this.problemGroups && this.problemGroups.length)) {
                 console.log("Empty problem groups. Not running fetch loop.");
                 return;
             }
@@ -312,6 +371,17 @@ var vm = new Vue({
                 console.log(`Failed to fetch submission info for problem ${problem.slug} for contest ${problem.contest_slug}. Please try again later.`);
             });
             console.log("Fetched", problem.contest_slug, problem.slug);
+
+            if (others[problem.contest_slug]) {
+                console.log("xFetching", others[problem.contest_slug], problem.slug);
+                var xreqData = problemReqData(others[problem.contest_slug], problem.slug)
+                var xsubs = await fetchWhile(xreqData.url, xreqData.params, xreqData.limit, (x) => x.models).catch((x) => {
+                    console.log("xGot error", x);
+                    console.log(`xFailed to fetch submission info for problem ${problem.slug} for contest ${others[problem.contest_slug]}. Please try again later.`);
+                })
+                console.log("xFetched", others[problem.contest_slug], problem.slug);
+                if (xsubs) subs = subs.concat(xsubs);
+            }
 
             // save to localStorage
             if (subs) localStorage.setItem(`problem_${problem.id}`, JSON.stringify(subs));
@@ -415,8 +485,8 @@ var vm = new Vue({
                     <th class="t-score">Score</th>
                     <th class="t-penalty" v-if="showPenalty">Time</th>
                     <th v-for="problem in problemList" :key="problem.slug"
-                            :class="['t-problem', 'group-label-' + problem.g, 'group-label-par-' + (problem.g % 2)]">
-                        <button class="btn btn-link btn-sm" v-on:click="fetchProblem(problem)"><small>{{ problem.name }}</small></button>
+                            :class="['t-problem-head', 't-problem', 'group-label-' + problem.g, 'group-label-par-' + (problem.g % 2)]">
+                        <button class="t-problem-link btn btn-link btn-sm" v-on:click="fetchProblem(problem)"><small>{{ problem.name }}</small></button>
                     </th>
                 </tr>
             </thead>
@@ -427,7 +497,7 @@ var vm = new Vue({
                     </transition>
                     <td class="t-name"><div class="d-name">{{ c.name }}</div></td>
                     <transition name="entry-value" mode="out-in">
-                        <td class="t-score" :key="c.score" :style="{'background-color': colorForTotalScore(c.score)}">{{ c.score | score(tScoreFixed) }}</td>
+                        <td class="t-score" :key="c.score" :style="{'background-color': colorForTotalScore(c.score)}">{{ c.score | score(tScoreMax) }}</td>
                     </transition>
                     <transition name="entry-value" mode="out-in">
                         <td class="t-penalty" :key="c.penalty" v-if="showPenalty"
@@ -437,7 +507,7 @@ var vm = new Vue({
                         <td v-if="loadedProblem[prob.id]" class="t-problem" :key="c.subs[prob.id].score"
                                 :style="{'background-color': colorForScore(c.subs[prob.id].score, prob.max_score),
                                     'color': tColorForScore(c.subs[prob.id].score, prob.max_score)}">
-                            {{ c.subs[prob.id].score | score(scoreFixed) }}
+                            {{ c.subs[prob.id].score | score(scoreMax) }}
                         </td>
                         <td v-if="!loadedProblem[prob.id]" class="t-problem" :key="c.subs[prob.id].score" style="background-color: #bbf">
                             Loading...

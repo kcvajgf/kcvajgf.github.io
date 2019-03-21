@@ -1,0 +1,34 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "guardians-lunatics-2",
+            "contest_slug": "noi-ph-2017-team",
+            "name": "Guardians of the Lunatics Vol. 2"
+        },
+        {
+            "max_score": 100,
+            "slug": "agadoo",
+            "contest_slug": "noi-ph-2017-team",
+            "name": "Agadoo"
+        },
+        {
+            "max_score": 100,
+            "slug": "spreadsheet-game",
+            "contest_slug": "noi-ph-2017-team",
+            "name": "Spreadsheet Game"
+        },
+        {
+            "max_score": 100,
+            "slug": "city-plan",
+            "contest_slug": "noi-ph-2017-team",
+            "name": "Constructing a City Plan"
+        },
+        {
+            "max_score": 100,
+            "slug": "lito-lapida",
+            "contest_slug": "noi-ph-2017-team",
+            "name": "Lito Lapida's Lost Lapida"
+        }
+    ]
+}
