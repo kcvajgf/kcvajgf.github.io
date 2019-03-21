@@ -126,7 +126,7 @@ if (search && search.get("contest")) {
             cfetch = [base];
             rankRules = rankRuleses["noielims"];
         }
-    } else if (search.get("contest") == "noipractice") {
+    } else if (search.get("contest") == "noifinalspractice") {
         cpast = [];
         cfetch = [`${base}-finals-practice`];
         rankRules = rankRuleses["noifinals"];
