@@ -1,0 +1,28 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "awit2daremixyo",
+            "contest_slug": "noi-ph-2015-1",
+            "name": "Awit2DARemixYo!"
+        },
+        {
+            "max_score": 100,
+            "slug": "supkotao",
+            "contest_slug": "noi-ph-2015-1",
+            "name": "Supkotao"
+        },
+        {
+            "max_score": 100,
+            "slug": "kambyo-kard",
+            "contest_slug": "noi-ph-2015-1",
+            "name": "Kambyo Kard"
+        },
+        {
+            "max_score": 100,
+            "slug": "yumamma",
+            "contest_slug": "noi-ph-2015-1",
+            "name": "Yumamma"
+        }
+    ]
+}

@@ -1,0 +1,28 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "christmas-at-naia",
+            "contest_slug": "noi-ph-2016-2",
+            "name": "Christmas at NAIA"
+        },
+        {
+            "max_score": 100,
+            "slug": "sa-tamang-panahon",
+            "contest_slug": "noi-ph-2016-2",
+            "name": "HeKaSerye"
+        },
+        {
+            "max_score": 100,
+            "slug": "meteor-garden-garden",
+            "contest_slug": "noi-ph-2016-2",
+            "name": "Meteor Garden Garden"
+        },
+        {
+            "max_score": 100,
+            "slug": "bureau-of-customs",
+            "contest_slug": "noi-ph-2016-2",
+            "name": "Balikbayan Boxes"
+        }
+    ]
+}

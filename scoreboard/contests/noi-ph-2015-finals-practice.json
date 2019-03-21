@@ -1,0 +1,28 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "sharing-chocolates-3",
+            "contest_slug": "noi-ph-2015-finals-practice",
+            "name": "Sharing Chocolates 3: World Record"
+        },
+        {
+            "max_score": 100,
+            "slug": "1-like-1-house",
+            "contest_slug": "noi-ph-2015-finals-practice",
+            "name": "1 Like = 1 House"
+        },
+        {
+            "max_score": 100,
+            "slug": "in-or-out",
+            "contest_slug": "noi-ph-2015-finals-practice",
+            "name": "In or Out"
+        },
+        {
+            "max_score": 100,
+            "slug": "ham-path",
+            "contest_slug": "noi-ph-2015-finals-practice",
+            "name": "Ham Path"
+        }
+    ]
+}

@@ -1,0 +1,28 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "paasa-numbers",
+            "contest_slug": "noi-ph-2016-finals-2",
+            "name": "Paasa Numbers"
+        },
+        {
+            "max_score": 100,
+            "slug": "shake-it-off",
+            "contest_slug": "noi-ph-2016-finals-2",
+            "name": "Shake It Off"
+        },
+        {
+            "max_score": 100,
+            "slug": "candles-for-everyone",
+            "contest_slug": "noi-ph-2016-finals-2",
+            "name": "Candles for Everyone"
+        },
+        {
+            "max_score": 100,
+            "slug": "awkward-goodbye",
+            "contest_slug": "noi-ph-2016-finals-2",
+            "name": "Goodbye, Awkward Goodbyes!"
+        }
+    ]
+}

@@ -1,0 +1,28 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "putogethers",
+            "contest_slug": "noi-ph-2016-1",
+            "name": "Putogethers"
+        },
+        {
+            "max_score": 100,
+            "slug": "run-devil-run",
+            "contest_slug": "noi-ph-2016-1",
+            "name": "\ub7f0\ub370\ube4c\ub7f0"
+        },
+        {
+            "max_score": 100,
+            "slug": "the-holiday-school-play",
+            "contest_slug": "noi-ph-2016-1",
+            "name": "The Holiday School Play"
+        },
+        {
+            "max_score": 100,
+            "slug": "dishes-how-we-do-it",
+            "contest_slug": "noi-ph-2016-1",
+            "name": "Dishes: How We Do It?"
+        }
+    ]
+}

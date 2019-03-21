@@ -1,0 +1,28 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "everybody-was",
+            "contest_slug": "noi-ph-2016-3",
+            "name": "Kung-Fu Fighting"
+        },
+        {
+            "max_score": 100,
+            "slug": "those-kicks-were",
+            "contest_slug": "noi-ph-2016-3",
+            "name": "Fast As Lightning"
+        },
+        {
+            "max_score": 100,
+            "slug": "in-fact-it-was",
+            "contest_slug": "noi-ph-2016-3",
+            "name": "A Little Bit Frightening"
+        },
+        {
+            "max_score": 100,
+            "slug": "but-they-fought-with",
+            "contest_slug": "noi-ph-2016-3",
+            "name": "Expert Timing"
+        }
+    ]
+}

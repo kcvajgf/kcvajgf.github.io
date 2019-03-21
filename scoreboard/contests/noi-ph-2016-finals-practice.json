@@ -1,0 +1,28 @@
+{
+    "models": [
+        {
+            "max_score": 50,
+            "slug": "a-simple-practice-problem",
+            "contest_slug": "noi-ph-2016-finals-practice",
+            "name": "A Simple Problem."
+        },
+        {
+            "max_score": 50,
+            "slug": "sharing-chocolates-4",
+            "contest_slug": "noi-ph-2016-finals-practice",
+            "name": "Sharing Chocolates 4: A New Chocolate"
+        },
+        {
+            "max_score": 50,
+            "slug": "union-find",
+            "contest_slug": "noi-ph-2016-finals-practice",
+            "name": "Union Find"
+        },
+        {
+            "max_score": 50,
+            "slug": "onion-find",
+            "contest_slug": "noi-ph-2016-finals-practice",
+            "name": "Onion Find"
+        }
+    ]
+}

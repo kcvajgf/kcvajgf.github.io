@@ -1,0 +1,28 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "running-sam",
+            "contest_slug": "noi-ph-2015-finals-1",
+            "name": "Running Sam"
+        },
+        {
+            "max_score": 100,
+            "slug": "the-tide-is-high",
+            "contest_slug": "noi-ph-2015-finals-1",
+            "name": "The Tide is High"
+        },
+        {
+            "max_score": 100,
+            "slug": "day-today",
+            "contest_slug": "noi-ph-2015-finals-1",
+            "name": "What Day is It?"
+        },
+        {
+            "max_score": 100,
+            "slug": "dili-magpakopya",
+            "contest_slug": "noi-ph-2015-finals-1",
+            "name": "Dili Magpakopya"
+        }
+    ]
+}

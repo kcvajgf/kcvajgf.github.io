@@ -1,0 +1,28 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "a-simple-problem",
+            "contest_slug": "noi-ph-2016-finals-1",
+            "name": "A Simple Problem!"
+        },
+        {
+            "max_score": 100,
+            "slug": "confidentialegassem-8",
+            "contest_slug": "noi-ph-2016-finals-1",
+            "name": "Confidential Message"
+        },
+        {
+            "max_score": 100,
+            "slug": "the-king-and-queen-of-rock-and-roll",
+            "contest_slug": "noi-ph-2016-finals-1",
+            "name": "The King and Queen of Rock and Roll"
+        },
+        {
+            "max_score": 100,
+            "slug": "pabebe-cake",
+            "contest_slug": "noi-ph-2016-finals-1",
+            "name": "Pabebe Girl Cuts Cake"
+        }
+    ]
+}

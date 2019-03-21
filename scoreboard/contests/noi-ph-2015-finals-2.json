@@ -1,0 +1,28 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "schwelve",
+            "contest_slug": "noi-ph-2015-finals-2",
+            "name": "The Final Schwelve"
+        },
+        {
+            "max_score": 100,
+            "slug": "chuva-choo-choo",
+            "contest_slug": "noi-ph-2015-finals-2",
+            "name": "Chuva Choo Choo"
+        },
+        {
+            "max_score": 100,
+            "slug": "super-boss",
+            "contest_slug": "noi-ph-2015-finals-2",
+            "name": "Super Boss"
+        },
+        {
+            "max_score": 100,
+            "slug": "chooga-choo-choo",
+            "contest_slug": "noi-ph-2015-finals-2",
+            "name": "Chooga Choo Choo"
+        }
+    ]
+}

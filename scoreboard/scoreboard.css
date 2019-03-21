@@ -68,6 +68,10 @@ td.t-name:hover .d-name {
     width: 2.2%;
 }
 
+.t-problem-link {
+    background: none;
+}
+
 .board-created .entry-value-leave-active {
     transition: all 0.5s;
     font-weight: bold;

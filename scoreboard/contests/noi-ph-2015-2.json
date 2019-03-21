@@ -1,0 +1,28 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "this-problem-is-so-fetch",
+            "contest_slug": "noi-ph-2015-2",
+            "name": "This Problem Is So Fetch"
+        },
+        {
+            "max_score": 100,
+            "slug": "house-arrest",
+            "contest_slug": "noi-ph-2015-2",
+            "name": "House Arrest"
+        },
+        {
+            "max_score": 100,
+            "slug": "tinikling-2",
+            "contest_slug": "noi-ph-2015-2",
+            "name": "Tinikling 2 "
+        },
+        {
+            "max_score": 100,
+            "slug": "back-to-the-future",
+            "contest_slug": "noi-ph-2015-2",
+            "name": "Back to the Future"
+        }
+    ]
+}

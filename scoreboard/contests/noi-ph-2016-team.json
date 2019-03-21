@@ -1,0 +1,34 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "zognoid-eggs",
+            "contest_slug": "noi-ph-2016-team",
+            "name": "Zognoid Eggs"
+        },
+        {
+            "max_score": 100,
+            "slug": "balot-boxes",
+            "contest_slug": "noi-ph-2016-team",
+            "name": "Balot Boxes"
+        },
+        {
+            "max_score": 100,
+            "slug": "mutual-friendzone",
+            "contest_slug": "noi-ph-2016-team",
+            "name": "PWNED BY ANONYMOUS PH"
+        },
+        {
+            "max_score": 100,
+            "slug": "r-u-g",
+            "contest_slug": "noi-ph-2016-team",
+            "name": "Carps?"
+        },
+        {
+            "max_score": 100,
+            "slug": "jabahw",
+            "contest_slug": "noi-ph-2016-team",
+            "name": "Jabahw"
+        }
+    ]
+}

@@ -139,9 +139,15 @@ if (search && search.get("contest")) {
         cfetch = [`${base}-finals-2`];
         rankRules = rankRuleses["noifinals"];
     } else if (search.get("contest") == "noiteam") {
-        cpast = [];
-        cfetch = [`${base}-team`];
-        rankRules = rankRuleses["noiteam"];
+        if (cyear == "2015") {
+            cpast = [];
+            cfetch = [`${base}-finals-2`];
+            rankRules = rankRuleses["noiteam"];
+        } else {
+            cpast = [];
+            cfetch = [`${base}-team`];
+            rankRules = rankRuleses["noiteam"];
+        }
     } else {
         alert(`Unknown contest ${search.get("contest")}`);
         throw `Unknown contest ${search.get("contest")}`;
@@ -486,7 +492,7 @@ var vm = new Vue({
                     <th class="t-penalty" v-if="showPenalty">Time</th>
                     <th v-for="problem in problemList" :key="problem.slug"
                             :class="['t-problem-head', 't-problem', 'group-label-' + problem.g, 'group-label-par-' + (problem.g % 2)]">
-                        <button class="t-problem-link btn btn-link btn-sm" v-on:click="fetchProblem(problem)"><small>{{ problem.name }}</small></button>
+                        <button class="t-problem-link btn btn-sm" v-on:click="fetchProblem(problem)"><small>{{ problem.name }}</small></button>
                     </th>
                 </tr>
             </thead>
