@@ -1,5 +1,49 @@
-var hackerrank = "http://localhost:8002"
-// var hackerrank = "https://www.hackerrank.com"
+// var hackerrank = "http://localhost:8002"
+// // var hackerrank = "https://www.hackerrank.com"
+// function contestReqData(cslug) {
+//     return {
+//         url: `${hackerrank}/rest/contests/${cslug}/challenges`,
+//         params: {
+//             // cslug,
+//         },
+//         limit: 100,
+//     }
+// }
+
+// function problemReqData(cslug, slug) {
+//     return {
+//         url: `${hackerrank}/rest/contests/${cslug}/challenges/${slug}/leaderboard`,
+//         params: {
+//             // cslug,
+//             // slug,
+//         },
+//         limit: 100,
+//     }
+// }
+
+function contestReqData(cslug) {
+    return {
+        url: `contests/${cslug}.json`,
+        params: {},
+        limit: 100000000,
+    }
+}
+
+function problemReqData(cslug, slug) {
+    return {
+        url: 'https://noi-ph-scoreboard.azurewebsites.net/api/HttpTrigger1',
+        params: {
+            code: 'DfAanBvy6sSQUm1VtbewRjajhaOsV730a6X7OapGE/g15/dZhJynnA==',
+            urlType: 'problem',
+            cslug,
+            slug,
+        },
+        limit: 100,
+    }
+}
+
+
+
 
 Vue.filter('hmPenalty', function(penalty, fixed) {
     var h = Math.floor(penalty / 60);
@@ -14,13 +58,13 @@ Vue.filter('score', function(score, fixed) {
 })
 
 
-async function fetchWhile(url, params, collList) {
-    params.limit = 100;
+async function fetchWhile(url, params, limit, collList) {
+    params.limit = limit;
     var result = []
     for (params.offset = 0;; params.offset += params.limit) {
         var res = collList((await axios.get(url, { params, timeout: 10000 })).data);
         result = result.concat(res);
-        if (res.length < params.limit) break; // we've reached the end.
+        if (!res || res.length < params.limit) break; // we've reached the end.
     };
     return result;
 }
@@ -93,7 +137,8 @@ var vm = new Vue({
                 probs = JSON.parse(probs);
             } else {
                 console.log("Fetching contest data", url);
-                probs = await fetchWhile(`${hackerrank}/rest/contests/${url}/challenges`, {}, (x) => x.models).catch((x) => {
+                var reqData = contestReqData(url);
+                probs = await fetchWhile(reqData.url, reqData.params, reqData.limit, (x) => x.models).catch((x) => {
                     console.log("Got error", x);
                     alert(`Failed to fetch problem info for ${url}. Please try again later.`);
                 });
@@ -221,7 +266,7 @@ var vm = new Vue({
                 for (const group of this.problemGroups) {
                     if (this.cfetch.includes(group.slug)) {
                         for (const prob of group.probs) {
-                            await new Promise(resolve => setTimeout(resolve, 6111)); // feels hacky
+                            await new Promise(resolve => setTimeout(resolve, 6111));
                             await this.fetchProblem(prob).catch((e) => {
                                 console.log("Got error", e);
                                 console.log("Failed to load", prob.id, "! Never mind. I'll try again later.")
@@ -261,7 +306,8 @@ var vm = new Vue({
 
         async fetchProblemSubs(problem) {
             console.log("Fetching", problem.contest_slug, problem.slug);
-            var subs = await fetchWhile(`${hackerrank}/rest/contests/${problem.contest_slug}/challenges/${problem.slug}/leaderboard`, {}, (x) => x).catch((x) => {
+            var reqData = problemReqData(problem.contest_slug, problem.slug);
+            var subs = await fetchWhile(reqData.url, reqData.params, reqData.limit, (x) => x.models).catch((x) => {
                 console.log("Got error", x);
                 console.log(`Failed to fetch submission info for problem ${problem.slug} for contest ${problem.contest_slug}. Please try again later.`);
             });
@@ -273,7 +319,7 @@ var vm = new Vue({
         },
 
         processSubs(problem, subs, fix) {
-            for (const sub of subs) {
+            if (subs) for (const sub of subs) {
                 this.setScore(problem, sub.hacker, parseFloat(sub.score), parseFloat(sub.time_taken), false);
             }
             if (fix) this.fix();
