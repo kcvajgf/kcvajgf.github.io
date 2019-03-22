@@ -1,4 +1,5 @@
 const currentYear = "2019";
+const currentYearContests = ["noifinalspractice", "noifinals1", "noifinals2", "noiteam"];
 
 // var hackerrank = "http://localhost:8002"
 // // var hackerrank = "https://www.hackerrank.com"
@@ -152,13 +153,13 @@ if (search && search.get("contest")) {
         alert(`Unknown contest ${search.get("contest")}`);
         throw `Unknown contest ${search.get("contest")}`;
     }
-    if (cyear != currentYear) {
+    if (cyear != currentYear || !currentYearContests.includes(search.get("contests"))) {
         cpast = cpast.concat(cfetch);
         cfetch = [];
     }
 }
 
-console.log("got", cpast, cfetch, rankRules);
+console.log("got details", cfetch, cpast, rankRules);
 if (!rankRules) {
     alert(`Unknown 'type' ${search.get("type")}.`);
     rankRules = [];
@@ -224,7 +225,7 @@ var vm = new Vue({
         var promises = [];
         for (const group of this.problemGroups) {
             for (const prob of group.probs) {
-                promises.push(this.initFetchProblem(prob), false);
+                promises.push(this.initFetchProblem(prob));
             }
         }
         await Promise.all(promises);
@@ -328,9 +329,11 @@ var vm = new Vue({
             this.startedFetchLoop = true;
 
             while (true) {
+                var found = false;
                 for (const group of this.problemGroups) {
                     if (this.cfetch.includes(group.slug)) {
                         for (const prob of group.probs) {
+                            found = true;
                             await new Promise(resolve => setTimeout(resolve, 6111));
                             await this.fetchProblem(prob).catch((e) => {
                                 console.log("Got error", e);
@@ -339,7 +342,11 @@ var vm = new Vue({
                         }
                     }
                 }
+                if (!found) break;
             }
+
+            console.log("Did not find anything to fetch. Stopping fetch loop.");
+            this.startedFetchLoop = false;
         },
 
         getProblem(prob) {
@@ -386,7 +393,7 @@ var vm = new Vue({
                     console.log(`xFailed to fetch submission info for problem ${problem.slug} for contest ${others[problem.contest_slug]}. Please try again later.`);
                 })
                 console.log("xFetched", others[problem.contest_slug], problem.slug);
-                if (xsubs) subs = subs.concat(xsubs);
+                if (subs && xsubs) subs = subs.concat(xsubs);
             }
 
             // save to localStorage
