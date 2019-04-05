@@ -28,8 +28,10 @@
     border-bottom: 1pt solid #aaa8;*/
 }
 
-.hilit tr:hover .t-name, .hilit tr:hover .t-problem {
-    font-weight: bold;
+@media screen {
+    .hilit tr:hover .t-name, .hilit tr:hover .t-problem {
+        font-weight: bold;
+    }
 }
 
 

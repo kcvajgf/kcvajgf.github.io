@@ -22,8 +22,10 @@
     line-height: 1.2;
 }
 
-.hilit tr:hover .t-name, .hilit tr:hover .t-problem {
-    font-weight: bold;
+@media screen {
+    .hilit tr:hover .t-name, .hilit tr:hover .t-problem {
+        font-weight: bold;
+    }
 }
 
 tr {
