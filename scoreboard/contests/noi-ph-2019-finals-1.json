@@ -1,0 +1,34 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "arnibal",
+            "contest_slug": "noi-ph-2019-finals-1",
+            "name": "Magkaribal sa Arnibal"
+        },
+        {
+            "max_score": 100,
+            "slug": "come-back-to-bakuna",
+            "contest_slug": "noi-ph-2019-finals-1",
+            "name": "Baby Come Bak"
+        },
+        {
+            "max_score": 100,
+            "slug": "tower-bloxx",
+            "contest_slug": "noi-ph-2019-finals-1",
+            "name": "Tower Bloxx"
+        },
+        {
+            "max_score": 100,
+            "slug": "the-room",
+            "contest_slug": "noi-ph-2019-finals-1",
+            "name": "The Room"
+        },
+        {
+            "max_score": 100,
+            "slug": "sumbong-centers",
+            "contest_slug": "noi-ph-2019-finals-1",
+            "name": "Sumbong Centers"
+        }
+    ]
+}
