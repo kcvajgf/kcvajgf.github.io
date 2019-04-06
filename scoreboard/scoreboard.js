@@ -28,7 +28,7 @@ function contestReqData(cslug) {
     return {
         url: `contests/${cslug}.json`,
         params: {},
-        limit: 100000000,
+        limit: -1,
     }
 }
 
@@ -70,13 +70,18 @@ Vue.filter('score', function(score, maxD) {
 
 
 async function fetchWhile(url, params, limit, collList) {
-    params.limit = limit;
     var result = []
-    for (params.offset = 0;; params.offset += params.limit) {
+    if (limit > 0) {
+        params.limit = limit;
+        for (params.offset = 0;; params.offset += params.limit) {
+            var res = collList((await axios.get(url, { params, timeout: 60000 })).data);
+            result = result.concat(res);
+            if (!res || res.length < params.limit) break; // we've reached the end.
+        };
+    } else {
         var res = collList((await axios.get(url, { params, timeout: 60000 })).data);
         result = result.concat(res);
-        if (!res || res.length < params.limit) break; // we've reached the end.
-    };
+    }
     return result;
 }
 
