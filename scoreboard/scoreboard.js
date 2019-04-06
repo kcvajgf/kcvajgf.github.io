@@ -1,5 +1,5 @@
 const currentYear = "2019";
-const currentYearContests = ["noifinals1", "noifinals2", "noiteam"];
+const currentYearContests = ["noifinals2", "noiteam"];
 
 // var hackerrank = "http://localhost:8002"
 // // var hackerrank = "https://www.hackerrank.com"
