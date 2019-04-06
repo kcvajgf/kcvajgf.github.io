@@ -1,0 +1,34 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "sharing-chocolates-7",
+            "contest_slug": "noi-ph-2019-finals-practice",
+            "name": "Sharing Chocolates 7: The Force Equals Mass Times Acceleration"
+        },
+        {
+            "max_score": 100,
+            "slug": "totally-not-robots",
+            "contest_slug": "noi-ph-2019-finals-practice",
+            "name": "Totally Not Robots"
+        },
+        {
+            "max_score": 100,
+            "slug": "mystery-function",
+            "contest_slug": "noi-ph-2019-finals-practice",
+            "name": "Mystery Function"
+        },
+        {
+            "max_score": 100,
+            "slug": "city-map",
+            "contest_slug": "noi-ph-2019-finals-practice",
+            "name": "City Map"
+        },
+        {
+            "max_score": 100,
+            "slug": "noi-bato-bato-split",
+            "contest_slug": "noi-ph-2019-finals-practice",
+            "name": "Bato Bato Split"
+        }
+    ]
+}
