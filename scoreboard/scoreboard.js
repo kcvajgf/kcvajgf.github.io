@@ -133,7 +133,7 @@ if (search && search.get("contest")) {
         rankRules = rankRuleses["noifinals"];
     } else if (search.get("contest") == "noifinals1") {
         cpast = [];
-        cfetch = `${base}-finals-1`;
+        cfetch = [`${base}-finals-1`];
         rankRules = rankRuleses["noifinals"];
     } else if (search.get("contest") == "noifinals2") {
         cpast = [`${base}-finals-1`];
@@ -153,7 +153,7 @@ if (search && search.get("contest")) {
         alert(`Unknown contest ${search.get("contest")}`);
         throw `Unknown contest ${search.get("contest")}`;
     }
-    if (cyear != currentYear || !currentYearContests.includes(search.get("contests"))) {
+    if (cyear != currentYear || !currentYearContests.includes(search.get("contest"))) {
         cpast = cpast.concat(cfetch);
         cfetch = [];
     }
