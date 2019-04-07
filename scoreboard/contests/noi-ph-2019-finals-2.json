@@ -1,0 +1,34 @@
+{
+    "models": [
+        {
+            "max_score": 100,
+            "slug": "illegal-logging",
+            "contest_slug": "noi-ph-2019-finals-2",
+            "name": "Illegal Logging"
+        },
+        {
+            "max_score": 100,
+            "slug": "batibots",
+            "contest_slug": "noi-ph-2019-finals-2",
+            "name": "BATIBots"
+        },
+        {
+            "max_score": 100,
+            "slug": "mr-kupido",
+            "contest_slug": "noi-ph-2019-finals-2",
+            "name": "Mr. Kupido"
+        },
+        {
+            "max_score": 100,
+            "slug": "sorting-the-planets",
+            "contest_slug": "noi-ph-2019-finals-2",
+            "name": "Sorting the Planets"
+        },
+        {
+            "max_score": 100,
+            "slug": "cartogram",
+            "contest_slug": "noi-ph-2019-finals-2",
+            "name": "Cartogram"
+        }
+    ]
+}
