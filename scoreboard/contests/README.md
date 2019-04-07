@@ -1,3 +1,5 @@
+Interfaces with HackerRank contests. Maybe I'll add others later.
+
 Suppose you want to add the contest `my-example-contest` from HackerRank:
 
 - Log-in to HackerRank
