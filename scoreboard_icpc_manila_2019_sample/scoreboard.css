@@ -105,3 +105,24 @@ td.t-score {
 .group-label-par-1 {
     background-color: #ddd;
 }
+
+.scoreboard-score-pending {
+    background-color: rgba(80, 80, 255, 0.333);
+}
+
+.scoreboard-score-blank {
+    background-color: rgba(255, 255, 255, 0.333);
+}
+
+.scoreboard-score-no {
+    background-color: rgba(255, 0, 0, 0.333);
+}
+
+.scoreboard-score-yes {
+    background-color: rgba(0, 255, 0, 0.333);
+}
+
+.scoreboard-score-unknown {
+    background-color: rgba(255, 0, 0, 0.666);
+}
+

@@ -143,13 +143,13 @@ tbody tr:nth-child(even) {
     background-color: #CFCFCF80;
 }
 
-tr:nth-child(odd) td:nth-child(n+5):nth-child(odd) {
+/*tr:nth-child(odd) td:nth-child(n+5):nth-child(odd) {
     background-color: #BEBEBE80;
 }
 
 tr:nth-child(even) td:nth-child(n+5):nth-child(odd) {
     background-color: #9F9F9F80;
-}
+}*/
 
 .team {
     text-align: left;

@@ -550,17 +550,17 @@ var vm = new Vue({
         },
 
         // these are mostly just filter-like things.
-        colorForSub(sub) {
+        classForSub(sub) {
             if (sub.pending) {
-                return "rgba(80, 80, 255, 0.333)";
+                return "scoreboard-score-pending";
             } else if (sub.attempts == 0) {
-                return "rgba(255, 255, 255, 0.333)";
+                return "scoreboard-score-blank";
             } else if (sub.score == 0) {
-                return "rgba(255, 0, 0, 0.333)";
+                return "scoreboard-score-no";
             } else if (sub.score == 1) {
-                return "rgba(0, 255, 0, 0.333)";
+                return "scoreboard-score-yes";
             } else {
-                return "rgba(255, 0, 0, 0.666)";
+                return "scoreboard-score-unknown";
             }
         },
         subId(sub) {
@@ -622,7 +622,7 @@ var vm = new Vue({
                     </transition>
                     <transition name="entry-value" mode="out-in" v-for="prob in problems" :key="prob">
                         <td class="t-problem" :key="subId(c.subs[prob])"
-                                :style="{'background-color': colorForSub(c.subs[prob])}"><span v-if="!c.subs[prob].attempts">-</span><span v-if="showAttempts && c.subs[prob].attempts">{{ c.subs[prob].attempts }}</span><span v-if="!showAttempts && c.subs[prob].attempts"><i v-if="!c.subs[prob].score" class="fa fa-times" aria-hidden="true"></i><i v-if="c.subs[prob].score" class="fa fa-check" aria-hidden="true"></i></span><transition name="entry-value" mode="out-in"><small class="t-penalty" v-if="showPenalty && c.subs[prob].score"><br/>{{ c.subs[prob].penalty }}</small><small class="t-penalty" v-if="showPenalty && !c.subs[prob].score && c.subs[prob].attempts"><br/>{{c.subs[prob].pending?'?':'-'}}</small></transition></td>
+                                :class="classForSub(c.subs[prob])"><span v-if="!c.subs[prob].attempts">-</span><span v-if="showAttempts && c.subs[prob].attempts">{{ c.subs[prob].attempts }}</span><span v-if="!showAttempts && c.subs[prob].attempts"><i v-if="!c.subs[prob].score" class="fa fa-times" aria-hidden="true"></i><i v-if="c.subs[prob].score" class="fa fa-check" aria-hidden="true"></i></span><transition name="entry-value" mode="out-in"><small class="t-penalty" v-if="showPenalty && c.subs[prob].score"><br/>{{ c.subs[prob].penalty }}</small><small class="t-penalty" v-if="showPenalty && !c.subs[prob].score && c.subs[prob].attempts"><br/>{{c.subs[prob].pending?'?':'-'}}</small></transition></td>
                     </transition>
                     <transition name="entry-value" mode="out-in">
                         <td class="t-attempts" :key="c.attempts" v-if="showAttempts"
