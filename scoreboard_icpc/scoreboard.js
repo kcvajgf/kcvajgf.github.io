@@ -1,11 +1,15 @@
 // by Kevin Atienza
+
 async function fetchData(source) {
     var el = $( '<div></div>' );
     el.html((await axios.get(`${source}/index.html`, { timeout: 10000 })).data);
     var res = {
         problems: null,
         contestants: [],
+        title: el.find("title").text(),
+        lastUpdated: extractFrom("Last updated", el.find(".tail").text()),
     };
+
 
     getAttSolv = function(attsolv) {
         var parts = attsolv.split("/");
@@ -74,6 +78,11 @@ async function fetchData(source) {
         }
     });
     return res;
+}
+
+function extractFrom(word, source) {
+    let i = source.search(word);
+    return i >= 0 ? source.substring(i + word.length) : "";
 }
 
 rankRuleses = {
@@ -171,6 +180,14 @@ var vm = new Vue({
             }
         },
 
+        updateMetadata(allData) {
+            if (allData.title && allData.title.length > 0) $(".scoreboard-contest-name").text(allData.title);
+            if (allData.lastUpdated && allData.lastUpdated.length > 0) {
+                $(".scoreboard-last-updated-str").text("Last updated");
+                $(".scoreboard-last-updated").text(allData.lastUpdated);
+            }
+        },
+
         async initFetchAll() {
             // load from localStorage
             var allData = localStorage.getItem(this.leaderboardSource);
@@ -191,6 +208,7 @@ var vm = new Vue({
                 console.log("Got error", x);
                 console.log(`Failed to fetch data from ${this.leaderboardSource}. Please try again later.`);
             });
+
             console.log("Done");
             if (allData) localStorage.setItem(this.leaderboardSource, JSON.stringify(allData));
             return allData;
@@ -204,6 +222,7 @@ var vm = new Vue({
             if (allData) {
                 this.problems = allData.problems;
                 this.contestants = allData.contestants;
+                this.updateMetadata(allData);
             }
         },
 

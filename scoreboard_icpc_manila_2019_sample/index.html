@@ -1,0 +1,98 @@
+<!-- by Kevin Atienza -->
+<!DOCTYPE html>
+<html lang="en" class="gr__rizal2_lib_admu_edu_ph gr__penoy_admu_edu_ph">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <link rel="icon" type="image/x-icon" href="./favicon.ico"/>
+        <META HTTP-EQUIV="REFRESH" CONTENT="60;"/>
+        <META HTTP-EQUIV="EXPIRES" CONTENT="0"/>
+        <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE"/>
+        <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE"/>
+        <title class="scoreboard-contest-name">Nice ICPC-style Scoreboard</title>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+                integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>   
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+        <!-- <script src="js/jquery-3.3.1.js"></script>
+        <script src="js/vue.js"></script>
+        <script src="js/axios.min.js"></script>   
+        <link href="css/bootstrap.min.css" rel="stylesheet" /> -->
+        <link href="scoreboard.css" rel="stylesheet" />
+        <link href="style.css" rel="stylesheet" />
+        <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
+    </head>
+    <body>
+        <header>
+            <!-- <img src="http://penoy.admu.edu.ph/icpcmanila/images/landscape.png" alt=""/> -->
+            <div class="details">
+                <h1 class="event scoreboard-contest-name">...</h1>
+                <p>Ateneo de Manila University</p>
+                <p>December 14–15, 2019</p>
+                <h4>OFFICIAL SCOREBOARD</h4>
+            </div>
+        </header>
+
+                <main role="main">
+
+                    <div class="container">
+
+                        <div class="update"><span class="scoreboard-last-updated-str">...</span> <span class="scoreboard-last-updated">...</span></div>
+                        <div class="legends">
+                            <p class="legend_title">Legend:</p>
+                            <!-- <p class="first_solved legend">First to solve problem</p> -->
+                            <p class="solved legend">Solved Problem</p>
+                            <p class="attempt legend">Attempted Problem</p>
+                            <p class="pending legend">Pending Judgement</p>
+                        </div>
+
+                        <div id="leaderboard"></div>
+                    </div>
+
+                    <!--<table class="scoreboard">
+                        <thead>
+                            <tr class="score_head">
+                                <th>#</th>
+                                <th colspan="4" class="team">team</th>
+                                <th>slv.</th>
+                                <th>time</th>
+                                <xsl:call-template name="problemTitle"/>
+                                <th>Total att/solv</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <xsl:call-template name="teamStanding"/>
+                            <xsl:call-template name="summary"/>
+                        </tbody>
+                    </table> -->
+
+
+                    <div class="sponsors">
+                        <div class="main">
+                            <img src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/ICPC_Jet_Brains.png" alt=""/>
+                            <img src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/ICPC_Main.png" alt=""/>
+                            <img src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/ICPC_ICPC Foundation.png"/>
+                        </div>
+                        <div class="partners">
+                            <!-- <img class="square" src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/AIPros.png" alt="">
+                            <img class="rect" src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/Smart.png" alt="">
+                            <img class="square" id="dost" src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/DOST.png" alt="">
+                            <img class="square" id="rizallib" src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/Rizal_Library_Logo_Color+B.png" alt="">
+                            <img class="rect" id="stratpoint" src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/Stratpoint.png" alt="">
+                            <img class="rect" src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/Accenture.png" alt="">
+                            <img class="rect" src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/Acer.png" alt=""> -->
+                        </div>
+                    </div>
+
+
+                    <!-- Created by <A HREF="http://pc2.ecs.csus.edu/">CSUS PC^2</A> version <xsl:value-of select="/contestStandings/standingsHeader/@systemVersion"/> -->
+                </main>
+                <footer>
+                    <a href="http://fb.com/ICPCAsiaManila" target="_blank">fb.com/ICPCAsiaManila</a><a href="http://twitter.com/ICPCAsiaManila" target="_blank">@ICPCAsiaManila</a><a href="http://penoy.admu.edu.ph/icpcmanila/" target="_blank">penoy.admu.edu.ph/icpcmanila/</a>
+                </footer>
+
+
+        <script src="scoreboard.js"></script>
+    </body>
+</html>
