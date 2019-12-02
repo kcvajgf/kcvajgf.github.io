@@ -250,7 +250,6 @@ var vm = new Vue({
 
     methods: {
         bufferLoad() {
-            console.log("BUFFERING LOAD!");
             this.$el.classList.remove("board-created");
             this.$el.classList.add("board-loading");
             setTimeout(() => {
