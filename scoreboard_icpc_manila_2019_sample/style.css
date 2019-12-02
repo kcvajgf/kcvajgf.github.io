@@ -120,12 +120,36 @@ main {
     border-collapse: collapse;
 }
 
-thead tr.table-head {
+thead tr.table-head, .table-foot .header-repeat {
     background-color: #2F599F;
     color: white;
     text-transform: uppercase;
 }
 
+tr.table-foot.leaderboard-summary {
+    background-color: #2F599F;
+    color: white;
+}
+
+.table-foot .scoreboard-score-pending {
+    background-color: rgba(80, 80, 255, 0.333);
+}
+
+.table-foot .scoreboard-score-blank {
+    background-color: rgba(255, 255, 255, 0.333);
+}
+
+.table-foot .scoreboard-score-no {
+    background-color: rgba(255, 0, 0, 0.333);
+}
+
+.table-foot .scoreboard-score-yes {
+    background-color: rgba(0, 255, 0, 0.333);
+}
+
+.table-foot .scoreboard-score-unknown {
+    background-color: rgba(255, 0, 0, 0.666);
+}
 th {
     padding: 9px 6px;
 }
@@ -265,4 +289,8 @@ header div {
 
 .details p:nth-child(-n+3) {
     margin: 0.69em;
+}
+
+.leaderboard-controls {
+    padding: 0.57em 0.83em;
 }

@@ -19,15 +19,26 @@ async function fetchData(source) {
             solv: parseInt(parts[1]),
         }
     };
-    getScoreAttPen = function(scoreattpen) {
-        var parts = scoreattpen.split("/");
-        if (parts.length != 2) console.log(`WARNING: INVALID SCOREATTPEN ${scoreattpen}`)
+    getScoreAttPen = function(scoreAttPen) {
+        var parts = scoreAttPen.split("/");
+        if (parts.length != 2) console.log(`WARNING: INVALID SCOREATTPEN ${scoreAttPen}`)
         var att = parseInt(parts[0]), score, pen;
         if (parts[1] == "--") {
             score = 0;
             pen = 0;
         } else {
             score = 1;
+            pen = parseInt(parts[1]);
+        }
+        return { score, att, pen };
+    };
+    getSummaryScoreAttPen = function(sumScoreAttPen) {
+        var parts = sumScoreAttPen.split("/");
+        if (parts.length != 3) console.log(`WARNING: INVALID SUMMARYSCOREATTPEN ${sumScoreAttPen}`)
+        var att = parseInt(parts[0]), score = parseInt(parts[2]), pen;
+        if (parts[1] == "--") {
+            pen = 0;
+        } else {
             pen = parseInt(parts[1]);
         }
         return { score, att, pen };
@@ -75,10 +86,33 @@ async function fetchData(source) {
             });
             if (sc != c.score) console.log("WARNING: SCORE MISMATCH");
             res.contestants.push(c);
+        } else if (children[1].innerText.trim() == "Submitted/1st Yes/Total Yes") {
+            var attsolv = getAttSolv(children[children.length - 1].innerText.trim());
+            res.summary = {
+                attempts: attsolv.att,
+                score: attsolv.solv,
+                penalty: Number.POSITIVE_INFINITY,
+                subs: {},
+            };
+            children.each((idx, ch) => {
+                if (!(4 <= idx && idx < children.length - 1)) return;
+                var sumScoreAttPen = getSummaryScoreAttPen(ch.innerText.trim());
+                res.summary.subs[res.problems[idx - 4]] = {
+                    score: sumScoreAttPen.score,
+                    attempts: sumScoreAttPen.att,
+                    penalty: sumScoreAttPen.pen,
+                    loaded: true,
+                };
+                if (sumScoreAttPen.score) {
+                    res.summary.penalty = Math.min(res.summary.penalty, sumScoreAttPen.pen);
+                }
+            });
+            if (res.summary.penalty >= Number.POSITIVE_INFINITY) res.summary.penalty = 0;
         }
     });
     return res;
 }
+let demo = false;
 
 function extractFrom(word, source) {
     let i = source.search(word);
@@ -87,20 +121,24 @@ function extractFrom(word, source) {
 
 rankRuleses = {
     "wf": [
-        {rank: 4, color: "#ffd700"},
-        {rank: 8, color: "#c0c0c0"},
-        {rank: 12, color: "#cd7f32"},
+        {rank: 4, 'class': "scoreboard-rank-gold"},
+        {rank: 8, 'class': "scoreboard-rank-silver"},
+        {rank: 12, 'class': "scoreboard-rank-bronze"},
     ],
     "generic": [
-        {rank: 1, color: "#ffd700"},
-        {rank: 2, color: "#c0c0c0"},
-        {rank: 3, color: "#cd7f32"},
+        {rank: 1, 'class': "scoreboard-rank-gold"},
+        {rank: 2, 'class': "scoreboard-rank-silver"},
+        {rank: 3, 'class': "scoreboard-rank-bronze"},
     ],
 }
 
 var search = new URLSearchParams(window.location.search);
 
-var leaderboardSource = search && search.get("src") ? search.get("src") : [location.protocol, '//', location.host, location.pathname, 'html'].join('');
+var leaderboardSource = (
+        search && search.get("src") ? search.get("src") :
+        demo ? "http://localhost:8000" :
+        [location.protocol, '//', location.host, location.pathname, 'html'].join('')
+    );
 var nohilit = search && search.get("nohilit") ? parseInt(search.get("nohilit")) : 0;
 
 var rankRules = rankRuleses[search.get("type") || "generic"]
@@ -114,16 +152,21 @@ var vm = new Vue({
     data: {
         problems: [],
         contestants: [],
+        summary: null,
         loadedAll: false,
         leaderboardSource,
         rankRules,
-        nohilit,
         showAttempts: true,
         showPenalty: true,
+        hilit: !nohilit,
         startedFetchLoop: false,
     },
     async mounted() {
         this.$el.classList.add("board-loading");
+
+        this.$on("setShowAttempts", (value) => { this.showAttempts = value; });
+        this.$on("setShowPenalty", (value) => { this.showPenalty = value; });
+        this.$on("setHilit", (value) => { this.hilit = value; });
 
         await this.initFetchAll();
 
@@ -137,26 +180,34 @@ var vm = new Vue({
     computed: {
         nameContestant() {
             var nameContestant = {};
-            for (const contestant of this.contestants) nameContestant[contestant.name] = contestant;
+            for (const contestant of this.contestants) {
+                nameContestant[contestant.name] = contestant;
+            }
             return nameContestant;
         },
 
         maxScore() {
             var maxScore = 1;
-            for (const contestant of this.contestants) maxScore = Math.max(maxScore, contestant.score);
+            for (const contestant of this.contestants) {
+                maxScore = Math.max(maxScore, contestant.score);
+            }
             return maxScore;
 
         },
 
         maxPenalty() {
             var maxPenalty = 1;
-            for (const contestant of this.contestants) maxPenalty = Math.max(maxPenalty, contestant.penalty);
+            for (const contestant of this.contestants) {
+                maxPenalty = Math.max(maxPenalty, contestant.penalty);
+            }
             return maxPenalty;
         },
 
         maxAttempts() {
             var maxAttempts = 1;
-            for (const contestant of this.contestants) maxAttempts = Math.max(maxAttempts, contestant.attempts);
+            for (const contestant of this.contestants) {
+                maxAttempts = Math.max(maxAttempts, contestant.attempts);
+            }
             return maxAttempts;
         },
     },
@@ -181,7 +232,9 @@ var vm = new Vue({
         },
 
         updateMetadata(allData) {
-            if (allData.title && allData.title.length > 0) $(".scoreboard-contest-name").text(allData.title);
+            if (allData.title && allData.title.length > 0) {
+                $(".scoreboard-contest-name").text(allData.title);
+            }
             if (allData.lastUpdated && allData.lastUpdated.length > 0) {
                 $(".scoreboard-last-updated-str").text("Last updated");
                 $(".scoreboard-last-updated").text(allData.lastUpdated);
@@ -191,7 +244,7 @@ var vm = new Vue({
         async initFetchAll() {
             // load from localStorage
             var allData = localStorage.getItem(this.leaderboardSource);
-            if (allData) {
+            if (!demo && allData) {
                 console.log(`Loading ${this.leaderboardSource} from local storage`);
                 allData = JSON.parse(allData);
                 console.log(`Loaded ${this.leaderboardSource}`);
@@ -210,7 +263,7 @@ var vm = new Vue({
             });
 
             console.log("Done");
-            if (allData) localStorage.setItem(this.leaderboardSource, JSON.stringify(allData));
+            if (!demo && allData) localStorage.setItem(this.leaderboardSource, JSON.stringify(allData));
             return allData;
         },
 
@@ -220,8 +273,10 @@ var vm = new Vue({
 
         processData(allData) {
             if (allData) {
+                console.log("processing", allData);
                 this.problems = allData.problems;
                 this.contestants = allData.contestants;
+                this.summary = allData.summary;
                 this.updateMetadata(allData);
             }
         },
@@ -234,7 +289,18 @@ var vm = new Vue({
                 return "scoreboard-score-blank";
             } else if (sub.score == 0) {
                 return "scoreboard-score-no";
-            } else if (sub.score == 1) {
+            } else if (sub.score > 0) {
+                return "scoreboard-score-yes";
+            } else {
+                return "scoreboard-score-unknown";
+            }
+        },
+        classForSummarySub(sub) {
+            if (sub.attempts == 0) {
+                return "scoreboard-score-blank";
+            } else if (sub.score == 0) {
+                return "scoreboard-score-no";
+            } else if (sub.score > 0) {
                 return "scoreboard-score-yes";
             } else {
                 return "scoreboard-score-unknown";
@@ -242,6 +308,33 @@ var vm = new Vue({
         },
         subId(sub) {
             return `${sub.score}_${sub.attempts}_${sub.penalty}_${sub.pending}`;
+        },
+        getSummary() {
+            if (this.summary && this.summary.subs) {
+                return this.summary;
+            } else {
+                return {
+                    attempts: 0,
+                    score: 0,
+                    penalty: Number.POSITIVE_INFINITY,
+                    subs: {},
+                };
+            }
+        },
+        summarySubs(prob) {
+            if (this.summary && this.summary.subs && this.summary.subs[prob]) {
+                return this.summary.subs[prob];
+            } else {
+                return {
+                    score: 0,
+                    attempts: 0,
+                    penalty: Number.POSITIVE_INFINITY,
+                    loaded: false,
+                };
+            }
+        },
+        summarySubId(prob) {
+            return `summary_${prob}`;
         },
         contId(cont) {
             return `${cont.score}_${cont.penalty}`;
@@ -261,36 +354,60 @@ var vm = new Vue({
             var g = Math.round(255 * (1 - 0.2 * attempts));
             return `rgba(${g}, ${g}, ${g}, 0.333)`;
         },
-        colorForRank(rank) {
+        classForRank(rank) {
             for (const rankRule of this.rankRules) {
                 if (rank <= rankRule.rank) return rankRule.color;
             }
-            return "#eeeeee";
+            return 'scoreboard-rank-blank';
+        },
+        summaryKey() {
+            let i = 0;
+            while (this.nameContestant["summary_".concat(i)]) i++;
+            return "summary_".concat(i);
+        },
+        headerKey() {
+            let i = 0;
+            while (this.nameContestant["header_".concat(i)]) i++;
+            return "header_".concat(i);
         },
     },
     template: `
-    <div :class="[nohilit ? 'nohilit' : 'hilit']">
+    <div :class="[hilit ? 'hilit' : 'nohilit']">
         <table class="table table-borderless table-sm">
             <thead>
                 <tr class="table-head">
                     <th class="t-rank">Rank</th>
                     <th class="t-name">Name</th>
-                    <th class="t-score">Solved<transition name="entry-value" mode="out-in"><small v-if="showPenalty"><br/>Time</small></transition></th>
+                    <th class="t-score">
+                        Solved
+                        <transition name="entry-value" mode="out-in">
+                            <small v-if="showPenalty"><br/>Time</small>
+                        </transition>
+                    </th>
                     <th class="t-penalty" v-if="!showPenalty">Time</th>
                     <th class="t-problem" v-for="problem in problems">{{ problem }}</th>
                     <transition name="entry-value" mode="out-in">
-                        <th class="t-attempts" v-if="showAttempts"><small>Attempts</small></th>
+                        <th class="t-attempts"><small>Attempts</small></th>
                     </transition>
                 </tr>
             </thead>
             <transition-group name="leaderboard" tag="tbody">
                 <tr v-for="c in contestants" :key="c.name">
                     <transition name="entry-value" mode="out-in">
-                        <td class="t-rank" :key="c.rank" :style="{'background-color': colorForRank(c.rank)}">{{ c.rank }}</td>
+                        <td class="t-rank" :key="c.rank" :class="classForRank(c.rank)">{{ c.rank }}</td>
                     </transition>
                     <td class="t-name"><div class="d-name">{{ c.name }}</div></td>
                     <transition name="entry-value" mode="out-in">
-                        <td class="t-score" :key="contId(c)" :style="{'background-color': colorForTotalScore(c.score)}">{{ c.score }}<transition name="entry-value" mode="out-in"><small class="t-penalty" v-if="showPenalty && c.score"><br/>{{ c.penalty }}</small><small class="t-penalty" v-if="showPenalty && !c.score"><br/>&nbsp;</small></transition></td>
+                        <td class="t-score" :key="contId(c)"
+                            :style="{'background-color': colorForTotalScore(c.score)}">
+                            {{ c.score }}
+                            <transition name="entry-value" mode="out-in">
+                                <small class="t-penalty"
+                                       v-if="showPenalty && c.score"><br/>{{ c.penalty }}</small>
+                                <small class="t-penalty"
+                                       v-if="showPenalty && !c.score"><br/>&nbsp;</small>
+                            </transition>
+                        </td>
                     </transition>
                     <transition v-if="!showPenalty" name="entry-value" mode="out-in">
                         <td class="t-score" :key="c.penalty">
@@ -299,12 +416,100 @@ var vm = new Vue({
                     </transition>
                     <transition name="entry-value" mode="out-in" v-for="prob in problems" :key="prob">
                         <td class="t-problem" :key="subId(c.subs[prob])"
-                                :class="classForSub(c.subs[prob])"><span v-if="!c.subs[prob].attempts">-</span><span v-if="showAttempts && c.subs[prob].attempts">{{ c.subs[prob].attempts }}</span><span v-if="!showAttempts && c.subs[prob].attempts"><i v-if="!c.subs[prob].score" class="fa fa-times" aria-hidden="true"></i><i v-if="c.subs[prob].score" class="fa fa-check" aria-hidden="true"></i></span><transition name="entry-value" mode="out-in"><small class="t-penalty" v-if="showPenalty && c.subs[prob].score"><br/>{{ c.subs[prob].penalty }}</small><small class="t-penalty" v-if="showPenalty && !c.subs[prob].score && c.subs[prob].attempts"><br/>{{c.subs[prob].pending?'?':'-'}}</small></transition></td>
+                                :class="classForSub(c.subs[prob])">
+                            <span v-if="!c.subs[prob].attempts">-</span>
+                            <span v-if="showAttempts && c.subs[prob].attempts">
+                                {{ c.subs[prob].attempts }}
+                            </span>
+                            <span v-if="(!showAttempts || !showPenalty) && c.subs[prob].attempts">
+                                <i v-if="!c.subs[prob].score && c.subs[prob].pending"
+                                   class="fa fa-question verdict-pending" aria-hidden="true"></i>
+                                <i v-if="!c.subs[prob].score && !c.subs[prob].pending"
+                                   class="fa fa-times verdict-wa" aria-hidden="true"></i>
+                                <i v-if="c.subs[prob].score"
+                                   class="fa fa-check verdict-ac" aria-hidden="true"></i>
+                            </span>
+                            <transition name="entry-value" mode="out-in">
+                                <small class="t-penalty"
+                                       v-if="showPenalty && c.subs[prob].score">
+                                    <br/>{{ c.subs[prob].penalty }}
+                                </small>
+                                <small class="t-penalty"
+                                       v-if="showPenalty && !c.subs[prob].score && c.subs[prob].attempts">
+                                    <br/>{{c.subs[prob].pending?'?':'-'}}
+                                </small>
+                            </transition></td>
                     </transition>
                     <transition name="entry-value" mode="out-in">
-                        <td class="t-attempts" :key="c.attempts" v-if="showAttempts"
+                        <td class="t-attempts" :key="c.attempts"
                                 :style="{'background-color': colorForAttempts(c.attempts)}">
                             {{ c.attempts }}
+                        </td>
+                    </transition>
+                </tr>
+                <tr class="table-foot" :key="headerKey()">
+                    <td class="header-repeat t-rank">Rank</td>
+                    <td class="header-repeat t-name">Name</td>
+                    <td class="header-repeat t-score">
+                        Solved
+                        <transition name="entry-value" mode="out-in">
+                            <small v-if="showPenalty"><br/>Time</small>
+                        </transition>
+                    </td>
+                    <td class="header-repeat t-penalty" v-if="!showPenalty">Time</td>
+                    <td class="header-repeat t-problem" v-for="problem in problems">{{ problem }}</td>
+                    <transition name="entry-value" mode="out-in">
+                        <td class="header-repeat t-attempts"><small>Attempts</small></td>
+                    </transition>
+                </tr>
+                <tr class="table-foot leaderboard-summary" :key="summaryKey()">
+                    <td class="t-rank scoreboard-rank-blank"></td>
+                    <td class="t-name">
+                        <span class="footer-subcount">Submitted</span>
+                        <span v-if="showPenalty"><br/>1st Yes</span>
+                        <span class="footer-subcount"><br/>Total Yes</span>
+                    </td>
+                    <transition name="entry-value" mode="out-in">
+                        <td class="t-score" :key="'summary_attpen'">{{ getSummary().attempts }}
+                            <transition name="entry-value" mode="out-in">
+                                <small class="t-penalty" v-if="showPenalty && getSummary().score">
+                                    <br/>{{ getSummary().penalty }}
+                                </small>
+                                <small class="t-penalty" v-if="showPenalty && !getSummary().score">
+                                    <br/>-
+                                </small>
+                            </transition><br/>{{ getSummary().score }}
+                        </td>
+                    </transition>
+                    <transition v-if="!showPenalty" name="entry-value" mode="out-in">
+                        <td class="t-score" :key="'summary_penalty'">{{ getSummary().penalty }}</td>
+                    </transition>
+                    <transition name="entry-value" mode="out-in" v-for="prob in problems" :key="prob">
+                        <td class="t-problem" :key="summarySubId(prob)"
+                                :class="classForSummarySub(summarySubs(prob))">
+                            <span v-if="!summarySubs(prob).attempts">-</span>
+                            <span v-if="showAttempts && summarySubs(prob).attempts">
+                                {{ summarySubs(prob).attempts }}
+                            </span>
+                            <span v-if="(!showAttempts || !showPenalty) && summarySubs(prob).attempts">
+                                <i v-if="!summarySubs(prob).score"
+                                   class="fa fa-times verdict-wa" aria-hidden="true"></i>
+                                <i v-if="summarySubs(prob).score"
+                                   class="fa fa-check verdict-ac" aria-hidden="true"></i>
+                            </span>
+                            <transition name="entry-value" mode="out-in">
+                                <small class="t-penalty" v-if="showPenalty && summarySubs(prob).score">
+                                    <br/>{{ summarySubs(prob).penalty }}
+                                </small>
+                                <small class="t-penalty" v-if="showPenalty && !summarySubs(prob).score">
+                                    <br/>{{summarySubs(prob).pending?'?':'-'}}
+                                </small>
+                            </transition>
+                            <br/>{{summarySubs(prob).score}}</td>
+                    </transition>
+                    <transition name="entry-value" mode="out-in">
+                        <td class="t-attempts" :key="getSummary().attempts">
+                            {{ getSummary().attempts }}
                         </td>
                     </transition>
                 </tr>
@@ -313,3 +518,51 @@ var vm = new Vue({
     </div>
     `
 });
+
+var controlsVm = new Vue({
+    el: '#leaderboard-controls',
+    data: {
+        showAttempts: true,
+        showPenalty: true,
+        hilit: !nohilit,
+    },
+    methods: {
+        updateShowAttempts() {
+            vm.$emit("setShowAttempts", this.showAttempts);
+        },
+        updateShowPenalty() {
+            vm.$emit("setShowPenalty", this.showPenalty);
+        },
+        updateHilit() {
+            vm.$emit("setHilit", this.hilit);
+        },
+    },
+    template: `
+        <form class="leaderboard-controls">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input"
+                       type="checkbox"
+                       id="controls-show-attempts"
+                       v-model="showAttempts"
+                       v-on:change="updateShowAttempts()"/>
+                <label class="form-check-label" for="controls-show-attempts">Show attempt count</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input"
+                       type="checkbox"
+                       id="controls-show-penalty"
+                       v-model="showPenalty"
+                       v-on:change="updateShowPenalty()"/>
+                <label class="form-check-label" for="controls-show-penalty">Show times</label>
+            </div>
+            <!-- <div class="form-check form-check-inline">
+                <input class="form-check-input"
+                       type="checkbox"
+                       id="controls-hilit"
+                       v-model="hilit"
+                       v-on:change="updateHilit()"/>
+                <label class="form-check-label" for="controls-hilit">Highlight on hover</label>
+            </div> -->
+        </form>
+    `
+})

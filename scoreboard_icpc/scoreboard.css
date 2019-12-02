@@ -16,6 +16,11 @@
     transform: translateY(30px);
 }
 
+ .table .header-repeat {
+    font-weight: bold;
+    vertical-align: top;
+ }
+
 .table td, .table th {
     text-align: center;
     vertical-align: middle;
@@ -94,7 +99,7 @@ td.t-score {
 }
 
 
-.table-head {
+.table-head, .table-foot {
     background-color: #ccc;
 }
 
@@ -126,3 +131,50 @@ td.t-score {
     background-color: rgba(255, 0, 0, 0.666);
 }
 
+.table-foot .scoreboard-score-pending {
+    background-color: rgba(80, 80, 255, 0.111);
+}
+
+.table-foot .scoreboard-score-blank {
+    background-color: rgba(255, 255, 255, 0.111);
+}
+
+.table-foot .scoreboard-score-no {
+    background-color: rgba(255, 0, 0, 0.111);
+}
+
+.table-foot .scoreboard-score-yes {
+    background-color: rgba(0, 255, 0, 0.111);
+}
+
+.table-foot .scoreboard-score-unknown {
+    background-color: rgba(255, 0, 0, 0.222);
+}
+
+.scoreboard-rank-gold {
+    background-color: #ffd700;
+}
+
+.scoreboard-rank-silver {
+    background-color: #c0c0c0;
+}
+
+.scoreboard-rank-bronze {
+    background-color: #cd7f32;
+}
+
+.footer-subcount {
+    font-weight: bold;
+}
+
+.verdict-pending {
+    color: rgba(0, 0, 80);
+}
+
+.verdict-ac {
+    color: rgba(0, 80, 0);
+}
+
+.verdict-wa {
+    color: rgba(80, 0, 0);
+}
