@@ -89,15 +89,15 @@ h1, h2, h3. h4, h5, h6 {
 }*/
 
 .leaderboard {
-    margin-top: -1px;
+    margin-top: -6px;
 }
 
-@media (max-width: 576px) {
+@media (max-width: 575px) {
     main.main {
         margin: 0;
     }
 }
-@media (max-width: 840px) {
+@media (max-width: 767px) {
     .overall-container {
         width: 100%;
     }
@@ -109,7 +109,7 @@ h1, h2, h3. h4, h5, h6 {
     }*/
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1199px) {
     .leaderboard-head {
         margin-top: -20px;
     }
@@ -120,6 +120,9 @@ h1, h2, h3. h4, h5, h6 {
     }
     .t-name {
         font-size: 11px;
+    }
+    .leaderboard {
+        margin-top: 0;
     }
 }
 
@@ -146,6 +149,7 @@ h1, h2, h3. h4, h5, h6 {
     display: inline-block;
     margin: 0;
     padding: 0.57em 0.83em;
+    font-size: 90%;
 }
 
 .first_solved, .solvedFirst {
