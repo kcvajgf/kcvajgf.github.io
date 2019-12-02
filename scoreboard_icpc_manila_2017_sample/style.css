@@ -1,0 +1,362 @@
+* {
+    -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-size: 1em;
+    font-family: 'Open Sans', sans-serif;
+    min-height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                    flex-direction: column;
+}
+
+h1 {
+    font-size: 2.98rem;
+}
+
+h2 {
+    font-size: 2.45rem;
+}
+
+h3 {
+    font-size: 2.07rem;
+}
+
+h4 {
+    font-size: 1.72rem;
+}
+
+h5 {
+    font-size: 1.44rem;
+}
+
+h6 { font-size: 1rem;
+}
+
+h1, h2, h3. h4, h5, h6 {
+    line-height: 1.2;
+}
+
+
+.icpc_logo img {
+    width: 80%;
+    margin: 0 auto;
+    display: block;
+}
+
+.icpc_ibm img {
+    width: 60%;
+    display: block;
+    margin: 0 auto;
+}
+
+.event {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.legend-title {
+    display: inline-block;
+    text-align: right;
+}
+
+/*@media (max-width: 840px) {
+    .leaderboard-controls .form-check {
+        display: block;
+    }
+    .legends-container .legend {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .controls-container, .legends-container {
+        display: inline-block;
+        position: relative;
+        min-height: 1px;
+        padding: 0;
+        float: none !important;
+        width: 45%;
+        margin: 0;
+    }
+}*/
+
+.leaderboard {
+    margin-top: -6px;
+}
+
+@media (max-width: 575px) {
+    main.main {
+        margin: 0;
+    }
+}
+@media (max-width: 767px) {
+    .overall-container {
+        width: 100%;
+    }
+    div.legends-container {
+        display: none!important;
+    }
+    /*.footer-link {
+        display: block;
+    }*/
+}
+
+@media (max-width: 1199px) {
+    .leaderboard-head {
+        margin-top: -20px;
+    }
+    div.controls-container, div.last-updated-container, div.legends-container {
+        float: none;
+        display: inline-block;
+        width: 100%;
+    }
+    .t-name {
+        font-size: 11px;
+    }
+    .leaderboard {
+        margin-top: 0;
+    }
+}
+
+@media (min-width: 1500px) {
+    .overall-container {
+        max-width: 1440px;
+    }
+}
+.controls-container {
+    float: left;
+}
+
+.leaderboard-controls {
+}
+
+.last-updated-container, .legends-container {
+    display: block;
+    float: right;
+}
+
+
+.legend {
+    text-transform: uppercase;
+    display: inline-block;
+    margin: 0;
+    padding: 0.57em 0.83em;
+    font-size: 90%;
+}
+
+.first_solved, .solvedFirst {
+ background-color: #218540 !important;
+ color: white !important;
+}
+
+.solved, .yes {
+ background-color: #5EC583 !important;
+}
+
+.attempt, .attempted, .no {
+    background-color: #E23F46 !important;
+}
+
+.pending {
+ background-color: #2789D2 !important;
+}
+
+main {
+    width: 90%;
+    margin: 0 auto;
+    -webkit-box-flex: 1;
+            -ms-flex: 1 0 auto;
+                    flex: 1 0 auto;
+}
+
+.scoreboard {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead tr.table-head, .table-foot .header-repeat {
+    background-color: #2F599F;
+    color: white;
+    text-transform: uppercase;
+}
+
+tr.table-foot.leaderboard-summary {
+    background-color: #2F599F;
+    color: white;
+}
+
+.table-foot .scoreboard-score-pending {
+    background-color: rgba(80, 80, 255, 0.333);
+}
+
+.table-foot .scoreboard-score-blank {
+    background-color: rgba(255, 255, 255, 0.333);
+}
+
+.table-foot .scoreboard-score-no {
+    background-color: rgba(255, 0, 0, 0.333);
+}
+
+.table-foot .scoreboard-score-yes {
+    background-color: rgba(0, 255, 0, 0.333);
+}
+
+.table-foot .scoreboard-score-yes.scoreboard-score-firstyes {
+    background-color: rgba(11, 180, 32, 0.666);
+}
+
+.table-foot .scoreboard-score-unknown {
+    background-color: rgba(255, 0, 0, 0.666);
+}
+th {
+    padding: 9px 6px;
+}
+
+td {
+    text-align: center;
+    padding: 9px 6px;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #EAEAEA80;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #CFCFCF80;
+}
+
+/*tr:nth-child(odd) td:nth-child(n+5):nth-child(odd) {
+    background-color: #BEBEBE80;
+}
+
+tr:nth-child(even) td:nth-child(n+5):nth-child(odd) {
+    background-color: #9F9F9F80;
+}*/
+
+.team {
+    text-align: left;
+    padding-left: 1em;
+}
+
+.name {
+}
+
+.school {
+    display: block;
+}
+
+.problem {
+    text-align: center;
+    padding: 0.57em 6px;
+    height: 62px;
+}
+
+.problem div {
+    margin: 0 0 0.47em;
+}
+
+.sponsors {
+    display: block;
+    width: 100%;
+    margin: 1em auto;
+}
+
+.sponsors .main,
+.sponsors .partners {
+    width: 90%;
+    margin: 0 auto;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+    -ms-flex-pack: distribute;
+            justify-content: space-around;
+    -webkit-box-align: center;
+            -ms-flex-align: center;
+                    align-items: center;
+}
+
+.sponsors img.rect {
+    margin: 1.5em;
+    height: 3em;
+    width: auto;
+}
+
+.sponsors img.square {
+    margin: 1em;
+    width: 5em;
+    height: auto;
+}
+
+/*special for certain logos */
+#dost {
+    margin: 0.5em;
+    width: 8em;
+}
+
+#rizallib {
+    margin: 0.5em;
+    width: 10em;
+}
+
+#stratpoint {
+    height: 6em;
+}
+
+.sponsors .main img {
+    height: auto;
+    width: 15em;
+}
+
+footer {
+    width: 100%;
+    /*height: 5em;*/
+    padding: 2em;
+    display: block;
+    text-align: center;
+    background-color: #EAEAEA;
+}
+
+footer a, footer a:visited {
+    text-decoration: none;
+    color: black;
+    margin: 0 1em;
+    font-weight: 700;
+}
+
+header {
+    width: 90%;
+    margin: 0 auto;
+    padding: 2em;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+                    justify-content: space-between;
+}
+
+header div {
+    width: 100%;
+}
+
+.details {
+    text-align: center;
+}
+
+.details p:nth-child(-n+3) {
+    margin: 0.69em;
+}
+
+.leaderboard-controls {
+    padding: 0.57em 0.83em;
+}

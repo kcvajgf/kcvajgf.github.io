@@ -1,0 +1,112 @@
+<!-- by Kevin Atienza -->
+<!DOCTYPE html>
+<html lang="en" class="gr__rizal2_lib_admu_edu_ph gr__penoy_admu_edu_ph">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <link rel="icon" type="image/x-icon" href="./favicon.ico"/>
+        <META HTTP-EQUIV="EXPIRES" CONTENT="0"/>
+        <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE"/>
+        <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE"/>
+        <title class="scoreboard-contest-name">Nice ICPC-style Scoreboard</title>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+                integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>   
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+        <link href="scoreboard.css" rel="stylesheet" />
+        <link href="style.css" rel="stylesheet" />
+        <link rel="stylesheet" href="fontawesome-free-5.11.2-web/css/fontawesome.min.css">
+        <link rel="stylesheet" href="fontawesome-free-5.11.2-web/css/solid.min.css">
+    </head>
+    <body>
+
+        <header>
+            <div class="icpc_logo">
+            <img src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/icpc-manila-art.png" alt=""></div>
+            <div class="details">
+                <h1 class="event scoreboard-contest-name">...</h1>
+                <p>Ateneo de Manila University</p>
+                <p>December 13–15, 2017</p>
+                <h4>OFFICIAL SCOREBOARD [DEMO]</h4>
+            </div>
+            <div class="icpc_ibm">
+            <img src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/ICPC_Main.png" alt=""></div>
+        </header>
+
+        <main class="main" role="main">
+
+            <div class="container overall-container">
+                <div class="row leaderboard-head">
+                    <div class="col-lg-12">
+                        <div class="controls-container">
+                            <br />
+                            <div id="leaderboard-controls"></div>
+                        </div>
+                        <div class="details-container">
+                            <div class="last-updated-container">
+                                <span class="scoreboard-last-updated-str">...</span>
+                                <span class="scoreboard-last-updated">...</span>
+                            </div>
+                            <br />
+                            <div class="legends-container"><div class="legend-title">Legend:</div><div class="legend scoreboard-score-yes scoreboard-score-firstyes">Solved First</div><div class="legend scoreboard-score-yes">Solved</div><div class="legend scoreboard-score-no">Tried, Incorrect</div><div class="legend scoreboard-score-pending">Pending Judgement</div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="leaderboard"></div>
+            </div>
+
+
+            <div class="sponsors">
+                <div class="main">
+                    <img src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/ICPC_Jet_Brains.png" alt=""/>
+                    <img src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/ICPC_Main.png" alt=""/>
+                    <img src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/ICPC_ICPC Foundation.png"/>
+                </div>
+                <div class="partners">
+                    <img class="square" src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/AIPros.png" alt="">
+                    <img class="rect" src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/Smart.png" alt="">
+                    <img class="square" id="dost" src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/DOST.png" alt="">
+                    <img class="square" id="rizallib" src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/Rizal_Library_Logo_Color+B.png" alt="">
+                    <img class="rect" id="stratpoint" src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/Stratpoint.png" alt="">
+                    <img class="rect" src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/Accenture.png" alt="">
+                    <img class="rect" src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/Acer.png" alt="">
+                </div>
+            </div>
+
+
+            <!-- Created by <A HREF="http://pc2.ecs.csus.edu/">CSUS PC^2</A> version <xsl:value-of select="/contestStandings/standingsHeader/@systemVersion"/> -->
+        </main>
+
+        <footer class="footer">
+            <div class="row">
+                <div class="col-lg"></div>
+                <div class="col-lg-3">
+                    <a href="http://fb.com/ICPCAsiaManila" target="_blank">fb.com/ICPCAsiaManila</a>
+                </div>
+                <div class="col-lg-2">
+                    <a href="http://twitter.com/ICPCAsiaManila" target="_blank">@ICPCAsiaManila</a>
+                </div>
+                <div class="col-lg-3">
+                    <a href="http://penoy.admu.edu.ph/icpcmanila/" target="_blank">penoy.admu.edu.ph/icpcmanila</a>
+                </div>
+                <div class="col-lg"></div>
+            </div>
+        </footer>
+
+            <script type="text/javascript">
+                var labels = {
+                    attempts: "ATT",
+                    solved: "SLV.",
+                    rank: "#",
+                    name: "TEAM",
+                    blankPenalty: " ",
+                    blankAttempt: " ",
+                    // showAttemptCount: "Show att. #",
+                    // showTimes: "Show times",
+                };
+            </script>
+            <script src="scoreboard.js"></script>
+    </body>
+</html>

@@ -7,7 +7,9 @@
         <META HTTP-EQUIV="EXPIRES" CONTENT="0"/>
         <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE"/>
         <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE"/>
-        <title class="scoreboard-contest-name">Nice ICPC-style Scoreboard</title>
+        <title class="scoreboard-contest-name">Nice ICPC-style Scoreboard by kevinsogo</title>
+
+        <!-- scripts and styles needed for Nice scoreboard -->
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"
                 integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
                 crossorigin="anonymous"></script>
@@ -15,27 +17,40 @@
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>   
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
         <link href="scoreboard.css" rel="stylesheet" />
-        <link href="style.css" rel="stylesheet" />
         <link rel="stylesheet" href="fontawesome-free-5.11.2-web/css/fontawesome.min.css">
         <link rel="stylesheet" href="fontawesome-free-5.11.2-web/css/solid.min.css">
+
+        <!-- custom styles -->
+        <link href="style.css" rel="stylesheet" />
+        <link href="main.css" rel="stylesheet" />
+        <link href="http://penoy.admu.edu.ph/icpcmanila/css/index.css" rel="stylesheet" />
     </head>
     <body>
 
-        <header>
-            <div class="icpc_logo">
-            <img src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/icpc-manila-art.png" alt=""></div>
-            <div class="details">
-                <h1 class="event scoreboard-contest-name">...</h1>
-                <p>Ateneo de Manila University</p>
-                <p>December 14–15, 2019</p>
-                <h4>OFFICIAL SCOREBOARD [DEMO]</h4>
+
+        <header class="site-header">
+            <div class="logo-corner icpc-ph-logo">
+                <div class="l-logo">
+                    <img src="http://penoy.admu.edu.ph/icpcmanila/images/AsiaMNL_Short.png" alt="ICPC Manila Logo"/>
+                </div>
             </div>
-            <div class="icpc_ibm">
-            <img src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/ICPC_Main.png" alt=""></div>
+            <div class="header-details">
+                <h1 class="event scoreboard-contest-name">...</h1>
+                <p class="event-venue">Ateneo de Manila University</p>
+                <p class="event-date">December 14–15, 2019</p>
+                <h4 class="event-scoreboard-name" style="margin-left: 72px;">OFFICIAL SCOREBOARD <small>[DEMO]</small></h4>
+                <!-- <h4 class="event-scoreboard-name">OFFICIAL SCOREBOARD</h4> -->
+            </div>
+            <div class="logo-corner icpc-logo">
+                <div class="l-logo">
+                    <img src="http://penoy.admu.edu.ph/icpcmanila/images/icpcf-logo-header_8x.png" alt="ICPC Manila Logo">
+                    <!-- <img src="http://penoy.admu.edu.ph/icpcmanila/images/sponsor-logo-jb-rgb6x.png" alt="ICPC Manila Logo"> -->
+                </div>
+            </div>
         </header>
 
-        <main class="main" role="main">
 
+        <main class="main" role="main">
             <div class="container overall-container">
                 <div class="row leaderboard-head">
                     <div class="col-lg-12">
@@ -57,29 +72,34 @@
                 <div id="leaderboard"></div>
             </div>
 
-
             <div class="sponsors">
-                <div class="main">
+                <div class="sponsors-main">
                     <img src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/ICPC_Jet_Brains.png" alt=""/>
-                    <img src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/ICPC_Main.png" alt=""/>
+                    <img src="http://penoy.admu.edu.ph/icpcmanila/images/icpcf-logo-header_8x.png" alt="ICPC Manila Logo"/>
                     <img src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/ICPC_ICPC Foundation.png"/>
                 </div>
+                <h2 class="text-center">Sponsors</h2>
                 <div class="partners">
-                    <img class="square" src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/AIPros.png" alt="">
-                    <img class="rect" src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/Smart.png" alt="">
-                    <img class="square" id="dost" src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/DOST.png" alt="">
-                    <img class="square" id="rizallib" src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/Rizal_Library_Logo_Color+B.png" alt="">
-                    <img class="rect" id="stratpoint" src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/Stratpoint.png" alt="">
-                    <img class="rect" src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/Accenture.png" alt="">
-                    <img class="rect" src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/Acer.png" alt="">
+                    <ul class="sponsors-list">
+                        <li id="dost">
+                            <img src="http://penoy.admu.edu.ph/icpcmanila/images/02_PCIEERD_Logo 3.png" alt="DOST PCIEERD logo">
+                        </li>
+                        <li id="smart">
+                            <img src="http://penoy.admu.edu.ph/icpcmanila/images/01_Smart.png" alt="Smart Telecommunications logo">
+                        </li>
+                        <li id="acer">
+                            <img src="http://penoy.admu.edu.ph/icpcmanila/images/03_Acer Master Brand.png" alt="Acer logo">
+                        </li>
+                        <li id="google">
+                            <img src="http://penoy.admu.edu.ph/icpcmanila/images/Google_Logo.png" alt="Google logo">
+                        </li>
+                    </ul>
                 </div>
             </div>
-
-
-            <!-- Created by <A HREF="http://pc2.ecs.csus.edu/">CSUS PC^2</A> version <xsl:value-of select="/contestStandings/standingsHeader/@systemVersion"/> -->
         </main>
 
-        <footer class="footer">
+
+        <footer>
             <div class="row">
                 <div class="col-lg"></div>
                 <div class="col-lg-3">
@@ -95,18 +115,48 @@
             </div>
         </footer>
 
-            <script type="text/javascript">
-                var labels = {
-                    attempts: "ATT",
-                    solved: "SLV.",
-                    rank: "#",
-                    name: "TEAM",
-                    blankPenalty: " ",
-                    blankAttempt: " ",
-                    // showAttemptCount: "Show att. #",
-                    // showTimes: "Show times",
-                };
-            </script>
-            <script src="scoreboard.js"></script>
+        <!-- <footer>
+            <div class="footer-content">
+                <section class="footer-media-links">
+                    <ul>
+                        <li><a href="http://fb.com/ICPCAsiaManila" target="_blank">fb.com/ICPCAsiaManila</a></li>
+                        <li><a href="http://twitter.com/ICPCAsiaManila" target="_blank">@ICPCAsiaManila</a></li>
+                    </ul>
+                </section>
+                <section class="footer_logos">
+                    <img src="http://penoy.admu.edu.ph/icpcmanila/images/ICPC_Foundation.png" alt="ICPC Foundation Logo">
+                    <img src="http://penoy.admu.edu.ph/icpcmanila/images/Logo_ADMU_Seal.png" alt="ADmU Seal Logo">
+                </section>
+            </div>
+        </footer> -->
+
+        <!--  <footer>
+            <section class="footer-media-links">
+                <ul>
+                    <li><a href="http://fb.com/ICPCAsiaManila" target="_blank">fb.com/ICPCAsiaManila</a></li>
+                    <li><a href="http://twitter.com/ICPCAsiaManila" target="_blank">@ICPCAsiaManila</a></li>
+                    <li><a href="http://penoy.admu.edu.ph/icpcmanila/" target="_blank">penoy.admu.edu.ph/icpcmanila</a></li>
+                </ul>
+            </section>
+            <section class="footer_logos">
+                <img src="http://penoy.admu.edu.ph/icpcmanila/images/ICPC_Foundation.png" alt="ICPC Foundation Logo">
+                <img src="http://penoy.admu.edu.ph/icpcmanila/images/Logo_ADMU_Seal.png" alt="ADmU Seal Logo">
+            </section>
+        </footer> -->
+
+
+        <!-- load the JS, and rename some labels -->
+        <script type="text/javascript">
+            var labels = {
+                attempts: "Tries",
+                solved: "Solved",
+                rank: "#",
+                name: "Team",
+                blankPenalty: " ",
+                blankAttempt: " ",
+                subCount: "Total submissions",
+            };
+        </script>
+        <script src="scoreboard.js"></script>
     </body>
 </html>
