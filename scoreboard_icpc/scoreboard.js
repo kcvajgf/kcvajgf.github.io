@@ -162,6 +162,8 @@ var labels = {
     showAttemptCount: "Show # attempts",
     showTimes: "Show times",
     hilitOnHover: "Highlight on hover",
+    blankPenalty: ".",
+    blankAttempt: ".",
 };
 
 for (const name in overwrittenLabels) labels[name] = overwrittenLabels[name];
@@ -182,10 +184,21 @@ var vm = new Vue({
         startedFetchLoop: false,
     },
     async mounted() {
+        this.$el.classList.remove("board-created");
         this.$el.classList.add("board-loading");
 
-        this.$on("setShowAttempts", (value) => { this.showAttempts = value; });
-        this.$on("setShowPenalty", (value) => { this.showPenalty = value; });
+        this.$on("setShowAttempts", (value) => {
+            if (this.showAttempts != value) {
+                this.showAttempts = value;
+                this.bufferLoad();
+            }
+        });
+        this.$on("setShowPenalty", (value) => {
+            if (this.showPenalty != value) {
+                this.showPenalty = value;
+                this.bufferLoad();
+            }
+        });
         this.$on("setHilit", (value) => { this.hilit = value; });
 
         await this.initFetchAll();
@@ -196,6 +209,9 @@ var vm = new Vue({
         }, 1000);
 
         this.startFetchLoop();
+    },
+    created() {
+        document.addEventListener("visibilitychange", this.bufferLoad);
     },
     computed: {
         nameContestant() {
@@ -233,6 +249,15 @@ var vm = new Vue({
     },
 
     methods: {
+        bufferLoad() {
+            console.log("BUFFERING LOAD!");
+            this.$el.classList.remove("board-created");
+            this.$el.classList.add("board-loading");
+            setTimeout(() => {
+                this.$el.classList.remove("board-loading");
+                this.$el.classList.add("board-created");
+            }, 1000);
+        },
         async startFetchLoop() {
             console.log("Starting Fetch Loop");
 
@@ -326,6 +351,20 @@ var vm = new Vue({
                 return "scoreboard-score-unknown";
             }
         },
+        summaryKey() {
+            let i = 0;
+            while (this.nameContestant["summary_".concat(i)]) i++;
+            return "summary_".concat(i);
+        },
+        headerKey() {
+            let i = 0;
+            while (this.nameContestant["header_".concat(i)]) i++;
+            return "header_".concat(i);
+        },
+        tries(n) {
+            if (n == 1) return "1 try";
+            return `${n} tries`;
+        },
         subId(sub) {
             return `${sub.score}_${sub.attempts}_${sub.penalty}_${sub.pending}`;
         },
@@ -380,16 +419,6 @@ var vm = new Vue({
             }
             return 'scoreboard-rank-blank';
         },
-        summaryKey() {
-            let i = 0;
-            while (this.nameContestant["summary_".concat(i)]) i++;
-            return "summary_".concat(i);
-        },
-        headerKey() {
-            let i = 0;
-            while (this.nameContestant["header_".concat(i)]) i++;
-            return "header_".concat(i);
-        },
     },
     template: `
     <div class="leaderboard" :class="[hilit ? 'hilit' : 'nohilit']">
@@ -437,9 +466,13 @@ var vm = new Vue({
                     <transition name="entry-value" mode="out-in" v-for="prob in problems" :key="prob">
                         <td class="t-problem" :key="subId(c.subs[prob])"
                                 :class="classForSub(c.subs[prob])">
-                            <span v-if="!c.subs[prob].attempts">-</span>
-                            <span v-if="showAttempts && c.subs[prob].attempts">
-                                {{ c.subs[prob].attempts }}
+                            <span v-if="showAttempts && !showPenalty">
+                                <small v-if="!c.subs[prob].attempts">
+                                    {{labels.blankAttempt}}
+                                </small>
+                                <small v-if="c.subs[prob].attempts">
+                                    {{c.subs[prob].attempts}}
+                                </small>
                             </span>
                             <span v-if="(!showAttempts || !showPenalty) && c.subs[prob].attempts">
                                 <i v-if="!c.subs[prob].score && c.subs[prob].pending"
@@ -450,15 +483,29 @@ var vm = new Vue({
                                    class="fas fa-check verdict-ac" :class="{'fa-xs': showAttempts}" aria-hidden="true"></i>
                             </span>
                             <transition name="entry-value" mode="out-in">
-                                <small class="t-penalty"
-                                       v-if="showPenalty && c.subs[prob].score">
-                                    <br/>{{ c.subs[prob].penalty }}
-                                </small>
-                                <small class="t-penalty"
-                                       v-if="showPenalty && !c.subs[prob].score && c.subs[prob].attempts">
-                                    <br/>{{c.subs[prob].pending?'?':'-'}}
-                                </small>
+                                <span v-if="showPenalty">
+                                    <span v-if="!showAttempts"><br/></span>
+                                    <span class="t-penalty"
+                                           v-if="c.subs[prob].score">
+                                        {{ c.subs[prob].penalty }}
+                                    </span>
+                                    <span class="t-penalty"
+                                           v-if="!c.subs[prob].score && (!showAttempts || c.subs[prob].attempts)">
+                                        {{c.subs[prob].pending?'?':labels.blankPenalty}}
+                                    </span>
+                                </span>
                             </transition>
+                            <span v-if="showAttempts && showPenalty">
+                                <br/>
+                                <small>
+                                    <span v-if="!c.subs[prob].attempts">
+                                        {{labels.blankAttempt}}
+                                    </span>
+                                    <span v-if="c.subs[prob].attempts">
+                                        {{tries(c.subs[prob].attempts)}}
+                                    </span>
+                                </small>
+                            </span>
                         </td>
                     </transition>
                     <transition name="entry-value" mode="out-in">
@@ -509,9 +556,11 @@ var vm = new Vue({
                     <transition name="entry-value" mode="out-in" v-for="prob in problems" :key="prob">
                         <td class="t-problem" :key="summarySubId(prob)"
                                 :class="classForSummarySub(summarySubs(prob))">
-                            <span v-if="!summarySubs(prob).attempts">-</span>
+                            <span v-if="!summarySubs(prob).attempts">
+                                {{labels.blankAttempt}}
+                            </span>
                             <span v-if="showAttempts && summarySubs(prob).attempts">
-                                {{ summarySubs(prob).attempts }}
+                                {{summarySubs(prob).attempts}}
                             </span>
                             <span v-if="(!showAttempts || !showPenalty) && summarySubs(prob).attempts">
                                 <i v-if="!summarySubs(prob).score"
@@ -524,7 +573,7 @@ var vm = new Vue({
                                     <br/>{{ summarySubs(prob).penalty }}
                                 </small>
                                 <small class="t-penalty" v-if="showPenalty && !summarySubs(prob).score">
-                                    <br/>{{summarySubs(prob).pending?'?':'-'}}
+                                    <br/>{{summarySubs(prob).pending?'?':labels.blankPenalty}}
                                 </small>
                             </transition>
                             <br/>{{summarySubs(prob).score}}</td>
