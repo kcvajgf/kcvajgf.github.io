@@ -547,6 +547,7 @@ var vm = new Vue({
         loadedAll: false,
         leaderboardSource,
         rankRules,
+        demo,
         showAttempts: true,
         showPenalty: true,
         hilit: !nohilit,
@@ -658,7 +659,7 @@ var vm = new Vue({
         async initFetchAll() {
             // load from localStorage
             var allData = localStorage.getItem(this.leaderboardSource);
-            if (!demo && allData) {
+            if (!this.demo && allData) {
                 console.log(`Loading ${this.leaderboardSource} from local storage`);
                 allData = JSON.parse(allData);
                 console.log(`Loaded ${this.leaderboardSource}`);
@@ -677,7 +678,7 @@ var vm = new Vue({
             });
 
             console.log("Done");
-            if (!demo && allData) localStorage.setItem(this.leaderboardSource, JSON.stringify(allData));
+            if (!this.demo && allData) localStorage.setItem(this.leaderboardSource, JSON.stringify(allData));
             return allData;
         },
 
