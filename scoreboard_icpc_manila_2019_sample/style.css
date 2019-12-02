@@ -133,39 +133,64 @@ thead tr.table-head, .table-foot .header-repeat, tr.table-foot.leaderboard-summa
 }
 
 
-.legend.scoreboard-score-pending, .contestant .scoreboard-score-pending, .table-foot .scoreboard-score-pending {
+.legend.scoreboard-score-pending, .contestant .scoreboard-score-pending {
     /*background-color: rgba(80, 80, 255, 0.333);*/
     /*background-color: #2789D2CC;*/
     background-color: #2789FFAA;
 }
 
-.legend.scoreboard-score-blank, .contestant .scoreboard-score-blank, .table-foot .scoreboard-score-blank {
+.legend.scoreboard-score-blank, .contestant .scoreboard-score-blank {
+    /*background-color: rgba(255, 255, 255, 0.333);*/
+    /*background-color: #FFFFFF50;*/
     background-color: #FFFFFF50;
 }
 
-.legend.scoreboard-score-no, .contestant .scoreboard-score-no, .table-foot .scoreboard-score-no {
+.legend.scoreboard-score-no, .contestant .scoreboard-score-no {
     /*background-color: rgba(255, 0, 0, 0.333);*/
     /*background-color: #E23F46CC;*/
     background-color: #FF3F46AA;
 }
 
-.legend.scoreboard-score-yes, .contestant .scoreboard-score-yes, .table-foot .scoreboard-score-yes {
+.legend.scoreboard-score-yes, .contestant .scoreboard-score-yes {
     /*background-color: rgba(0, 255, 0, 0.333);*/
     /*background-color: #5EC583CC;*/
     background-color: #5EFF83AA;
 }
 
-.legend.scoreboard-score-yes.scoreboard-score-firstyes, .contestant .scoreboard-score-yes.scoreboard-score-firstyes, .table-foot .scoreboard-score-yes.scoreboard-score-firstyes {
+.legend.scoreboard-score-yes.scoreboard-score-firstyes, .contestant .scoreboard-score-yes.scoreboard-score-firstyes {
     /*background-color: rgba(11, 180, 32, 0.666);*/
     /*background-color: #218540CC;*/
     background-color: #21B540AA;
 }
 
-.legend.scoreboard-score-unknown, .contestant .scoreboard-score-unknown, .table-foot .scoreboard-score-unknown {
+.legend.scoreboard-score-unknown, .contestant .scoreboard-score-unknown {
     /*background-color: rgba(255, 0, 0, 0.666);*/
     /*background-color: #FF0000CC;*/
     background-color: #FF0000AA;
 }
+
+.table-foot .scoreboard-score-pending {
+    background-color: var(--blue-accent-3);/*#2789FF25;*/
+}
+.table-foot .scoreboard-score-blank {
+    background-color: var(--blue-accent-3);/*#FFFFFF10;*/
+}
+.table-foot .scoreboard-score-no {
+    background-color: var(--blue-accent-3);/*#FF3F4625;*/
+}
+.table-foot .scoreboard-score-yes {
+    background-color: var(--blue-accent-3);/*#5EFF8325;*/
+}
+.table-foot .scoreboard-score-yes.scoreboard-score-firstyes {
+    background-color: var(--blue-accent-3);/*#21B54025;*/
+}
+.table-foot .scoreboard-score-unknown {
+    background-color: var(--blue-accent-3);/*#FF000025;*/
+}
+
+.leaderboard-summary .t-problem/* {
+    color: black;
+}*/
 
 
 
