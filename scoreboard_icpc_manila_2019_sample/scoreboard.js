@@ -529,7 +529,7 @@ var labels = {
     isSolved: "Solved?",
     totalYes: "Total Yes",
     firstYes: "1st Yes",
-    showAttemptCount: "Show # attempts",
+    showAttemptCount: "Show # tries",
     showTimes: "Show times",
     hilitOnHover: "Highlight on hover",
     blankPenalty: ".",
@@ -696,7 +696,8 @@ var vm = new Vue({
         },
 
         // these are mostly just filter-like things.
-        classForSub(sub) {
+        classForSub(c, prob) {
+            let sub = c.subs[prob];
             if (sub.pending) {
                 return "scoreboard-score-pending";
             } else if (sub.attempts == 0) {
@@ -704,7 +705,9 @@ var vm = new Vue({
             } else if (sub.score == 0) {
                 return "scoreboard-score-no";
             } else if (sub.score > 0) {
-                return "scoreboard-score-yes";
+                let summary = this.getSummary();
+                return (summary && sub.penalty == summary.subs[prob].penalty ?
+                        "scoreboard-score-yes scoreboard-score-firstyes" : "scoreboard-score-yes");
             } else {
                 return "scoreboard-score-unknown";
             }
@@ -834,7 +837,7 @@ var vm = new Vue({
                     </transition>
                     <transition name="entry-value" mode="out-in" v-for="prob in problems" :key="prob">
                         <td class="t-problem" :key="subId(c.subs[prob])"
-                                :class="classForSub(c.subs[prob])">
+                                :class="classForSub(c, prob)">
                             <span v-if="showAttempts && !showPenalty">
                                 <small v-if="!c.subs[prob].attempts">
                                     {{labels.blankAttempt}}

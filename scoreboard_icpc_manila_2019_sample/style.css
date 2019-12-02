@@ -205,6 +205,10 @@ tr.table-foot.leaderboard-summary {
     background-color: rgba(0, 255, 0, 0.333);
 }
 
+.table-foot .scoreboard-score-yes.scoreboard-score-firstyes {
+    background-color: rgba(11, 180, 32, 0.666);
+}
+
 .table-foot .scoreboard-score-unknown {
     background-color: rgba(255, 0, 0, 0.666);
 }
