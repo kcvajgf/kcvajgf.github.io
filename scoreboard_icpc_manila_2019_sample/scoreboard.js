@@ -761,11 +761,11 @@ var vm = new Vue({
                 };
             }
         },
-        summarySubId(prob) {
-            return `summary_${prob}`;
-        },
         contId(cont) {
             return `${cont.score}_${cont.penalty}`;
+        },
+        summaryId(summary) {
+            return `${summary.score}_${summary.penalty}_${summary.attempts}`;
         },
         colorForTotalScore(score) {
             score /= this.maxScore;
@@ -902,53 +902,63 @@ var vm = new Vue({
                 <tr class="table-foot leaderboard-summary" :key="summaryKey()">
                     <td class="t-rank scoreboard-rank-blank"></td>
                     <td class="t-name">
-                        <span v-if="showAttempts" class="footer-subcount">{{labels.subCount}}</span>
-                        <span v-if="!showAttempts" class="footer-subcount">{{labels.isSolved}}</span>
-                        <span v-if="showPenalty"><br/>{{labels.firstYes}}</span>
-                        <span class="footer-subcount"><br/>{{labels.totalYes}}</span>
+                        <span class="footer-subcount">{{labels.isSolved}}</span>
+                        <br/>
+                        <span class="footer-subcount">{{labels.firstYes}}</span>
+                        <br/>
+                        <span class="footer-subcount">{{labels.subCount}}</span>
+                        <br/>
+                        <span class="footer-subcount">{{labels.totalYes}}</span>
                     </td>
                     <transition name="entry-value" mode="out-in">
-                        <td class="t-score" :key="'summary_attpen'">{{ getSummary().attempts }}
+                        <td class="t-score" :key="summaryId(getSummary())">
+                            <br/>
                             <transition name="entry-value" mode="out-in">
-                                <small class="t-penalty" v-if="showPenalty && getSummary().score">
-                                    <br/>{{ getSummary().penalty }}
-                                </small>
-                                <small class="t-penalty" v-if="showPenalty && !getSummary().score">
-                                    <br/>-
-                                </small>
-                            </transition><br/>{{ getSummary().score }}
+                                <span class="t-penalty" v-if="getSummary().score">
+                                    {{getSummary().penalty}}
+                                </span>
+                                <span class="t-penalty" v-if="!getSummary().score">
+                                    {{labels.blankPenalty}}
+                                </span>
+                            </transition>
+                            <br/>
+                            <small>{{ tries(getSummary().attempts)}}</small>
+                            <br/>
+                            {{ getSummary().score }}
                         </td>
                     </transition>
-                    <transition v-if="!showPenalty" name="entry-value" mode="out-in">
-                        <td class="t-score" :key="'summary_penalty'">{{ getSummary().penalty }}</td>
-                    </transition>
+                    <td v-if="!showPenalty" class="t-score"></td>
                     <transition name="entry-value" mode="out-in" v-for="prob in problems" :key="prob">
-                        <td class="t-problem" :key="summarySubId(prob)"
+                        <td class="t-problem" :key="subId(getSummary().subs[prob])"
                                 :class="classForSummarySub(summarySubs(prob))">
-                            <span v-if="!summarySubs(prob).attempts">
-                                {{labels.blankAttempt}}
-                            </span>
-                            <span v-if="showAttempts && summarySubs(prob).attempts">
-                                {{summarySubs(prob).attempts}}
-                            </span>
-                            <span v-if="(!showAttempts || !showPenalty) && summarySubs(prob).attempts">
+
+                            <span v-if="summarySubs(prob).attempts">
                                 <i v-if="!summarySubs(prob).score"
-                                   class="fas fa-times verdict-wa" :class="{'fa-xs': showAttempts}" aria-hidden="true"></i>
+                                   class="fas fa-times verdict-wa" aria-hidden="true"></i>
                                 <i v-if="summarySubs(prob).score"
-                                   class="fas fa-check verdict-ac" :class="{'fa-xs': showAttempts}" aria-hidden="true"></i>
+                                   class="fas fa-check verdict-ac" aria-hidden="true"></i>
                             </span>
+                            <br/>
                             <transition name="entry-value" mode="out-in">
-                                <small class="t-penalty" v-if="showPenalty && summarySubs(prob).score">
-                                    <br/>{{ summarySubs(prob).penalty }}
-                                </small>
-                                <small class="t-penalty" v-if="showPenalty && !summarySubs(prob).score">
-                                    <br/>{{summarySubs(prob).pending?'?':labels.blankPenalty}}
-                                </small>
+                                <span class="t-penalty" v-if="summarySubs(prob).score">
+                                    {{ summarySubs(prob).penalty }}
+                                </span>
+                                <span class="t-penalty" v-if="!summarySubs(prob).score">
+                                    {{summarySubs(prob).pending?'?':labels.blankPenalty}}
+                                </span>
                             </transition>
-                            <br/>{{summarySubs(prob).score}}</td>
+                            <br/>
+                            <small v-if="!summarySubs(prob).attempts">
+                                {{labels.blankAttempt}}
+                            </small>
+                            <small v-if="summarySubs(prob).attempts">
+                                {{tries(summarySubs(prob).attempts)}}
+                            </small>
+                            <br/>
+                            {{summarySubs(prob).score}}
+                        </td>
                     </transition>
-                    <transition name="entry-value" mode="out-in">
-                        <td class="t-attempts" :key="getSummary().attempts">
+                    <td class="t-attempts" :key="getSummary().attempts">
                             {{ getSummary().attempts }}
                         </td>
                     </transition>
