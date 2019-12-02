@@ -1,0 +1,68 @@
+.homepage-banner {
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: 100% !important;
+}
+
+.homepage-banner img {
+  width: 100%;
+}
+
+@media(orientation: landscape) {
+  #landscape { display: block; }
+  #portrait { display: none; }
+}
+
+@media(orientation: portrait) {
+  #landscape { display: none; }
+  #portrait { display: portrait; }
+}
+
+#invitation {
+  display: inline-flex;
+  align-items: center;
+}
+
+#invitation img {
+  width: 1.44em;
+  margin-right: 1em;
+}
+
+.sponsors-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  display: grid;
+  justify-content: space-around;
+  grid-template-areas:
+    'dost acer google'
+    'dost smart google';
+    justify-content: start;
+  align-items: center;
+  grid-gap: 1em;
+}
+
+.sponsors-list img {
+  width: 100px;
+}
+
+#dost {
+  grid-area: dost;
+  display: flex;
+  flex-direction: columm;
+  justify-content: center;
+}
+#acer {
+  grid-area: acer;
+  display: flex;
+  justify-content: center;
+}
+#smart {
+  grid-area: smart;
+  align-self: start;
+}
+#google { grid-area: google; }
+
+#acer img { height: 50px; width: auto; }
+#smart img { height: 60px; width: auto; }
+#google img { height: 60px; width: auto; }
