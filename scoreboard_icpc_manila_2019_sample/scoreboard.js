@@ -516,6 +516,19 @@ if (!rankRules) {
     rankRules = [];
 }
 
+
+var defaultLabels = {
+    attempts: "Attempts",
+    solved: "Solved",
+    time: "Time",
+    rank: "Rank",
+    name: "Name",
+    subCount: "Total Submitted",
+    isSolved: "Solved?",
+    totalYes: "Total Yes",
+    firstYes: "1st Yes",
+};
+
 var vm = new Vue({
     el: '#leaderboard',
     data: {
@@ -528,6 +541,7 @@ var vm = new Vue({
         showAttempts: true,
         showPenalty: true,
         hilit: !nohilit,
+        overwrittenLabels: window.labels || {},
         startedFetchLoop: false,
     },
     async mounted() {
@@ -547,6 +561,13 @@ var vm = new Vue({
         this.startFetchLoop();
     },
     computed: {
+        labels() {
+            var labels = {};
+            for (const name in defaultLabels) labels[name] = defaultLabels[name];
+            for (const name in this.overwrittenLabels) labels[name] = this.overwrittenLabels[name];
+            return labels;
+        },
+
         nameContestant() {
             var nameContestant = {};
             for (const contestant of this.contestants) {
@@ -745,18 +766,18 @@ var vm = new Vue({
         <table class="table table-borderless table-sm">
             <thead>
                 <tr class="table-head">
-                    <th class="t-rank">Rank</th>
-                    <th class="t-name">Name</th>
+                    <th class="t-rank">{{labels.rank}}</th>
+                    <th class="t-name">{{labels.name}}</th>
                     <th class="t-score">
-                        Solved
+                        {{labels.solved}}
                         <transition name="entry-value" mode="out-in">
-                            <small v-if="showPenalty"><br/>Time</small>
+                            <small v-if="showPenalty"><br/>{{labels.time}}</small>
                         </transition>
                     </th>
-                    <th class="t-penalty" v-if="!showPenalty">Time</th>
+                    <th class="t-penalty" v-if="!showPenalty">{{labels.time}}</th>
                     <th class="t-problem" v-for="problem in problems">{{ problem }}</th>
                     <transition name="entry-value" mode="out-in">
-                        <th class="t-attempts"><small>Attempts</small></th>
+                        <th class="t-attempts"><small>{{labels.attempts}}</small></th>
                     </transition>
                 </tr>
             </thead>
@@ -792,11 +813,11 @@ var vm = new Vue({
                             </span>
                             <span v-if="(!showAttempts || !showPenalty) && c.subs[prob].attempts">
                                 <i v-if="!c.subs[prob].score && c.subs[prob].pending"
-                                   class="fa fa-question verdict-pending" aria-hidden="true"></i>
+                                   class="fas fa-question verdict-pending" :class="{'fa-xs': showAttempts}" aria-hidden="true"></i>
                                 <i v-if="!c.subs[prob].score && !c.subs[prob].pending"
-                                   class="fa fa-times verdict-wa" aria-hidden="true"></i>
+                                   class="fas fa-times verdict-wa" :class="{'fa-xs': showAttempts}" aria-hidden="true"></i>
                                 <i v-if="c.subs[prob].score"
-                                   class="fa fa-check verdict-ac" aria-hidden="true"></i>
+                                   class="fas fa-check verdict-ac" :class="{'fa-xs': showAttempts}" aria-hidden="true"></i>
                             </span>
                             <transition name="entry-value" mode="out-in">
                                 <small class="t-penalty"
@@ -817,26 +838,27 @@ var vm = new Vue({
                     </transition>
                 </tr>
                 <tr class="table-foot" :key="headerKey()">
-                    <td class="header-repeat t-rank">Rank</td>
-                    <td class="header-repeat t-name">Name</td>
+                    <td class="header-repeat t-rank">{{labels.rank}}</td>
+                    <td class="header-repeat t-name">{{labels.name}}</td>
                     <td class="header-repeat t-score">
-                        Solved
+                        {{labels.solved}}
                         <transition name="entry-value" mode="out-in">
-                            <small v-if="showPenalty"><br/>Time</small>
+                            <small v-if="showPenalty"><br/>{{labels.time}}</small>
                         </transition>
                     </td>
-                    <td class="header-repeat t-penalty" v-if="!showPenalty">Time</td>
+                    <td class="header-repeat t-penalty" v-if="!showPenalty">{{labels.time}}</td>
                     <td class="header-repeat t-problem" v-for="problem in problems">{{ problem }}</td>
                     <transition name="entry-value" mode="out-in">
-                        <td class="header-repeat t-attempts"><small>Attempts</small></td>
+                        <td class="header-repeat t-attempts"><small>{{labels.attempts}}</small></td>
                     </transition>
                 </tr>
                 <tr class="table-foot leaderboard-summary" :key="summaryKey()">
                     <td class="t-rank scoreboard-rank-blank"></td>
                     <td class="t-name">
-                        <span class="footer-subcount">Submitted</span>
-                        <span v-if="showPenalty"><br/>1st Yes</span>
-                        <span class="footer-subcount"><br/>Total Yes</span>
+                        <span v-if="showAttempts" class="footer-subcount">{{labels.subCount}}</span>
+                        <span v-if="!showAttempts" class="footer-subcount">{{labels.isSolved}}</span>
+                        <span v-if="showPenalty"><br/>{{labels.firstYes}}</span>
+                        <span class="footer-subcount"><br/>{{labels.totalYes}}</span>
                     </td>
                     <transition name="entry-value" mode="out-in">
                         <td class="t-score" :key="'summary_attpen'">{{ getSummary().attempts }}
@@ -862,9 +884,9 @@ var vm = new Vue({
                             </span>
                             <span v-if="(!showAttempts || !showPenalty) && summarySubs(prob).attempts">
                                 <i v-if="!summarySubs(prob).score"
-                                   class="fa fa-times verdict-wa" aria-hidden="true"></i>
+                                   class="fas fa-times verdict-wa" :class="{'fa-xs': showAttempts}" aria-hidden="true"></i>
                                 <i v-if="summarySubs(prob).score"
-                                   class="fa fa-check verdict-ac" aria-hidden="true"></i>
+                                   class="fas fa-check verdict-ac" :class="{'fa-xs': showAttempts}" aria-hidden="true"></i>
                             </span>
                             <transition name="entry-value" mode="out-in">
                                 <small class="t-penalty" v-if="showPenalty && summarySubs(prob).score">
