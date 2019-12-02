@@ -28,8 +28,39 @@
 }
 
 @media screen {
-    .hilit tr:hover .t-name, .hilit tr:hover .t-problem {
-        font-weight: bold;
+    .hilit tr.contestant:hover .t-name {
+        text-decoration: underline;
+    }
+
+    .hilit tr.contestant:hover .t-attempts {
+        background-color: rgba(207, 207, 255, 0.5)!important;
+    }
+
+    .hilit tr.contestant:hover .t-rank,
+            .hilit tr.contestant:hover .t-name,
+            .hilit tr.contestant:hover .t-attempts {
+        background-color: rgba(207, 207, 255, 0.5);
+    }
+
+    .hilit tr.contestant:hover .t-problem.scoreboard-score-pending {
+        background-color: rgba(80, 80, 255, 0.5);
+    }
+
+    .hilit tr.contestant:hover .t-problem.scoreboard-score-blank,
+            .hilit tr.contestant:hover .t-problem {
+        background-color: rgba(207, 207, 255, 0.5);
+    }
+
+    .hilit tr.contestant:hover .t-problem.scoreboard-score-no {
+        background-color: rgba(255, 0, 70, 0.5);
+    }
+
+    .hilit tr.contestant:hover .t-problem.scoreboard-score-yes {
+        background-color: rgba(0, 255, 110, 0.5);
+    }
+
+    .hilit tr.contestant:hover .t-problem.scoreboard-score-unknown {
+        background-color: rgba(255, 0, 70, 1.0);
     }
 }
 

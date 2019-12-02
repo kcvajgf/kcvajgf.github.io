@@ -782,7 +782,7 @@ var vm = new Vue({
                 </tr>
             </thead>
             <transition-group name="leaderboard" tag="tbody">
-                <tr v-for="c in contestants" :key="c.name">
+                <tr class="contestant" v-for="c in contestants" :key="c.name">
                     <transition name="entry-value" mode="out-in">
                         <td class="t-rank" :key="c.rank" :class="classForRank(c.rank)">{{ c.rank }}</td>
                     </transition>
@@ -828,7 +828,8 @@ var vm = new Vue({
                                        v-if="showPenalty && !c.subs[prob].score && c.subs[prob].attempts">
                                     <br/>{{c.subs[prob].pending?'?':'-'}}
                                 </small>
-                            </transition></td>
+                            </transition>
+                        </td>
                     </transition>
                     <transition name="entry-value" mode="out-in">
                         <td class="t-attempts" :key="c.attempts"
