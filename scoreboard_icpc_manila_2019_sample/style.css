@@ -63,31 +63,84 @@ h1, h2, h3. h4, h5, h6 {
     font-weight: bold;
 }
 
-.update {
-    float: right;
-}
-
-.legends {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    width: 100%;
-}
-
-.legends p {
-    margin: 0;
-    padding: 0.57em 0.83em;
-}
-
-.legend_title {
-    -webkit-box-flex: 2;
-            -ms-flex-positive: 2;
-                    flex-grow: 2;
+.legend-title {
+    display: inline-block;
     text-align: right;
 }
 
+/*@media (max-width: 840px) {
+    .leaderboard-controls .form-check {
+        display: block;
+    }
+    .legends-container .legend {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .controls-container, .legends-container {
+        display: inline-block;
+        position: relative;
+        min-height: 1px;
+        padding: 0;
+        float: none !important;
+        width: 45%;
+        margin: 0;
+    }
+}*/
+
+.leaderboard {
+    margin-top: -1px;
+}
+
+@media (max-width: 576px) {
+    main.main {
+        margin: 0;
+    }
+}
+@media (max-width: 840px) {
+    .overall-container {
+        width: 100%;
+    }
+    div.legends-container {
+        display: none!important;
+    }
+    /*.footer-link {
+        display: block;
+    }*/
+}
+
+@media (max-width: 1200px) {
+    .leaderboard-head {
+        margin-top: -20px;
+    }
+    div.controls-container, div.last-updated-container, div.legends-container {
+        float: none;
+        display: inline-block;
+        width: 100%;
+    }
+    .t-name {
+        font-size: 11px;
+    }
+}
+
+.controls-container {
+    float: left;
+}
+
+.leaderboard-controls {
+}
+
+.last-updated-container, .legends-container {
+    display: block;
+    float: right;
+}
+
+
 .legend {
     text-transform: uppercase;
+    display: inline-block;
+    margin: 0;
+    padding: 0.57em 0.83em;
 }
 
 .first_solved, .solvedFirst {
@@ -193,7 +246,7 @@ tr:nth-child(even) td:nth-child(n+5):nth-child(odd) {
     height: 62px;
 }
 
-.problem p {
+.problem div {
     margin: 0 0 0.47em;
 }
 
@@ -253,7 +306,7 @@ tr:nth-child(even) td:nth-child(n+5):nth-child(odd) {
 
 footer {
     width: 100%;
-    height: 5em;
+    /*height: 5em;*/
     padding: 2em;
     display: block;
     text-align: center;

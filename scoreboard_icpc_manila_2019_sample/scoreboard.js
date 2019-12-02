@@ -517,7 +517,8 @@ if (!rankRules) {
 }
 
 
-var defaultLabels = {
+var overwrittenLabels = window.labels || {};
+var labels = {
     attempts: "Attempts",
     solved: "Solved",
     time: "Time",
@@ -527,7 +528,12 @@ var defaultLabels = {
     isSolved: "Solved?",
     totalYes: "Total Yes",
     firstYes: "1st Yes",
+    showAttemptCount: "Show # attempts",
+    showTimes: "Show times",
+    hilitOnHover: "Highlight on hover",
 };
+
+for (const name in overwrittenLabels) labels[name] = overwrittenLabels[name];
 
 var vm = new Vue({
     el: '#leaderboard',
@@ -541,7 +547,7 @@ var vm = new Vue({
         showAttempts: true,
         showPenalty: true,
         hilit: !nohilit,
-        overwrittenLabels: window.labels || {},
+        labels: labels,
         startedFetchLoop: false,
     },
     async mounted() {
@@ -561,13 +567,6 @@ var vm = new Vue({
         this.startFetchLoop();
     },
     computed: {
-        labels() {
-            var labels = {};
-            for (const name in defaultLabels) labels[name] = defaultLabels[name];
-            for (const name in this.overwrittenLabels) labels[name] = this.overwrittenLabels[name];
-            return labels;
-        },
-
         nameContestant() {
             var nameContestant = {};
             for (const contestant of this.contestants) {
@@ -762,7 +761,7 @@ var vm = new Vue({
         },
     },
     template: `
-    <div :class="[hilit ? 'hilit' : 'nohilit']">
+    <div class="leaderboard" :class="[hilit ? 'hilit' : 'nohilit']">
         <table class="table table-borderless table-sm">
             <thead>
                 <tr class="table-head">
@@ -917,6 +916,7 @@ var controlsVm = new Vue({
         showAttempts: true,
         showPenalty: true,
         hilit: !nohilit,
+        labels: labels,
     },
     methods: {
         updateShowAttempts() {
@@ -937,7 +937,7 @@ var controlsVm = new Vue({
                        id="controls-show-attempts"
                        v-model="showAttempts"
                        v-on:change="updateShowAttempts()"/>
-                <label class="form-check-label" for="controls-show-attempts">Show attempt count</label>
+                <label class="form-check-label" for="controls-show-attempts">{{labels.showAttemptCount}}</label>
             </div>
             <div class="form-check form-check-inline">
                 <input class="form-check-input"
@@ -945,7 +945,7 @@ var controlsVm = new Vue({
                        id="controls-show-penalty"
                        v-model="showPenalty"
                        v-on:change="updateShowPenalty()"/>
-                <label class="form-check-label" for="controls-show-penalty">Show times</label>
+                <label class="form-check-label" for="controls-show-penalty">{{labels.showTimes}}</label>
             </div>
             <!-- <div class="form-check form-check-inline">
                 <input class="form-check-input"
@@ -953,7 +953,7 @@ var controlsVm = new Vue({
                        id="controls-hilit"
                        v-model="hilit"
                        v-on:change="updateHilit()"/>
-                <label class="form-check-label" for="controls-hilit">Highlight on hover</label>
+                <label class="form-check-label" for="controls-hilit">{{labels.hilitOnHover}}</label>
             </div> -->
         </form>
     `

@@ -34,39 +34,28 @@
             <img src="http://penoy.admu.edu.ph/~acmicpc/wp-content/themes/icpcasiamanila2017-website/images/ICPC_Main.png" alt=""></div>
         </header>
 
-        <main role="main">
+        <main class="main" role="main">
 
-            <div class="container">
-
-                <div class="update"><span class="scoreboard-last-updated-str">...</span> <span class="scoreboard-last-updated">...</span></div>
-                <div class="legends">
-                    <div id="leaderboard-controls"></div>
-                    <p class="legend_title">Legend:</p>
-                    <!-- <p class="first_solved legend">First to solve problem</p> -->
-                    <p class="scoreboard-score-yes legend">Solved Problem</p>
-                    <p class="scoreboard-score-no legend">Attempted Problem</p>
-                    <p class="scoreboard-score-pending legend">Pending Judgement</p>
+            <div class="container overall-container">
+                <div class="row leaderboard-head">
+                    <div class="col-lg-12">
+                        <div class="controls-container">
+                            <br />
+                            <div id="leaderboard-controls"></div>
+                        </div>
+                        <div class="details-container">
+                            <div class="last-updated-container">
+                                <span class="scoreboard-last-updated-str">...</span>
+                                <span class="scoreboard-last-updated">...</span>
+                            </div>
+                            <br />
+                            <div class="legends-container"><div class="legend-title">Legend:</div><!-- <class="legend first_solved">First to solve problem</div> --><div class="legend scoreboard-score-yes">Solved Problem</div><div class="legend scoreboard-score-no">Attempted Problem</div><div class="legend scoreboard-score-pending">Pending Judgement</div></div>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="leaderboard"></div>
             </div>
-
-            <!--<table class="scoreboard">
-                <thead>
-                    <tr class="score_head">
-                        <th>#</th>
-                        <th colspan="4" class="team">team</th>
-                        <th>slv.</th>
-                        <th>time</th>
-                        <xsl:call-template name="problemTitle"/>
-                        <th>Total att/solv</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <xsl:call-template name="teamStanding"/>
-                    <xsl:call-template name="summary"/>
-                </tbody>
-            </table> -->
 
 
             <div class="sponsors">
@@ -90,16 +79,30 @@
             <!-- Created by <A HREF="http://pc2.ecs.csus.edu/">CSUS PC^2</A> version <xsl:value-of select="/contestStandings/standingsHeader/@systemVersion"/> -->
         </main>
 
-        <footer>
-            <a href="http://fb.com/ICPCAsiaManila" target="_blank">fb.com/ICPCAsiaManila</a><a href="http://twitter.com/ICPCAsiaManila" target="_blank">@ICPCAsiaManila</a><a href="http://penoy.admu.edu.ph/icpcmanila/" target="_blank">penoy.admu.edu.ph/icpcmanila/</a>
+        <footer class="footer">
+            <div class="row">
+                <div class="col-lg"></div>
+                <div class="col-lg-3">
+                    <a href="http://fb.com/ICPCAsiaManila" target="_blank">fb.com/ICPCAsiaManila</a>
+                </div>
+                <div class="col-lg-2">
+                    <a href="http://twitter.com/ICPCAsiaManila" target="_blank">@ICPCAsiaManila</a>
+                </div>
+                <div class="col-lg-3">
+                    <a href="http://penoy.admu.edu.ph/icpcmanila/" target="_blank">penoy.admu.edu.ph/icpcmanila</a>
+                </div>
+                <div class="col-lg"></div>
+            </div>
         </footer>
 
             <script type="text/javascript">
                 var labels = {
                     attempts: "ATT",
-                    solved: "SLV",
+                    solved: "SLV.",
                     rank: "#",
                     name: "TEAM",
+                    // showAttemptCount: "Show att. #",
+                    // showTimes: "Show times",
                 };
             </script>
             <script src="scoreboard.js"></script>
