@@ -745,7 +745,7 @@ var vm = new Vue({
         },
         classForRank(rank) {
             for (const rankRule of this.rankRules) {
-                if (rank <= rankRule.rank) return rankRule.color;
+                if (rank <= rankRule.rank) return rankRule['class'];
             }
             return 'scoreboard-rank-blank';
         },
