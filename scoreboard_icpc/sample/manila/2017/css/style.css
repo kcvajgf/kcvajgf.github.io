@@ -69,7 +69,7 @@ h1, h2, h3. h4, h5, h6 {
 }
 
 /*@media (max-width: 840px) {
-    .leaderboard-controls .form-check {
+    .scoreboard-controls .form-check {
         display: block;
     }
     .legends-container .legend {
@@ -88,7 +88,7 @@ h1, h2, h3. h4, h5, h6 {
     }
 }*/
 
-.leaderboard {
+.scoreboard {
     margin-top: -6px;
 }
 
@@ -110,7 +110,7 @@ h1, h2, h3. h4, h5, h6 {
 }
 
 @media (max-width: 1199px) {
-    .leaderboard-head {
+    .scoreboard-head {
         margin-top: -20px;
     }
     div.controls-container, div.last-updated-container, div.legends-container {
@@ -121,7 +121,7 @@ h1, h2, h3. h4, h5, h6 {
     .t-name {
         font-size: 11px;
     }
-    .leaderboard {
+    .scoreboard {
         margin-top: 0;
     }
 }
@@ -135,7 +135,7 @@ h1, h2, h3. h4, h5, h6 {
     float: left;
 }
 
-.leaderboard-controls {
+.scoreboard-controls {
 }
 
 .last-updated-container, .legends-container {
@@ -188,7 +188,7 @@ thead tr.table-head, .table-foot .header-repeat {
     text-transform: uppercase;
 }
 
-tr.table-foot.leaderboard-summary {
+tr.table-foot.scoreboard-summary {
     background-color: #2F599F;
     color: white;
 }
@@ -357,6 +357,6 @@ header div {
     margin: 0.69em;
 }
 
-.leaderboard-controls {
+.scoreboard-controls {
     padding: 0.57em 0.83em;
 }
