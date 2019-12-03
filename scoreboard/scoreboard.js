@@ -1,8 +1,18 @@
 // by Kevin Atienza
 var $scoreboard = null;
 
-// curl stands for 'contestUrl'
-
+// options:
+//     Contest URLs
+//         'past', 'fetch' and 'source' for custom IOI-style contest combinations
+//         'contest' and 'year' for predetermined NOI contests
+//         If source=CF, need to pass 'ids'. |ids| = |past| + |fetch|
+//     Extra options
+//         'type' rank colors
+//         'pd' (penalty digits) number of decimal points to display for time penalty
+//         'nohilit' don't highlight on hover
+//         'td' (total score digits) number of decimal points to display for total score
+//         'sd' (score digits) number of decimal points to display for score
+//         'blanks' distinguish 0 points from no attempts (in colors)
 
 var initScoreboard = (() => {
     const currentYear = 2020;
@@ -15,15 +25,14 @@ var initScoreboard = (() => {
         ];
 
     // attempts to collect a list by making several requests. assumes that 'limit' is limited by the server.
-    // TODO unify into a single fetchWhile
-    async function fetchWhileFrom(url, params, limit, getListFrom) {
+    async function fetchWhile(url, params, start, limit, offsetName, limitName, getListFrom) {
         let result = []
         if (limit > 0) {
-            params.count = limit;
-            for (params.from = 1;; params.from += params.count) {
+            params[limitName] = limit;
+            for (params[offsetName] = start;; params[offsetName] += limit) {
                 const res = getListFrom((await axios.get(url, { params, timeout: 60000 })).data);
                 if (res) result = result.concat(res);
-                if (!res || res.length < params.count) break; // we've reached the end.
+                if (!res || res.length < limit) break; // we've reached the end.
             };
         } else {
             const res = getListFrom((await axios.get(url, { params, timeout: 60000 })).data);
@@ -31,21 +40,174 @@ var initScoreboard = (() => {
         }
         return result;
     }
-    async function fetchWhileOffset(url, params, limit, getListFrom) {
-        let result = []
-        if (limit > 0) {
-            params.limit = limit;
-            for (params.offset = 0;; params.offset += params.limit) {
-                const res = getListFrom((await axios.get(url, { params, timeout: 60000 })).data);
-                if (res) result = result.concat(res);
-                if (!res || res.length < params.limit) break; // we've reached the end.
-            };
-        } else {
-            const res = getListFrom((await axios.get(url, { params, timeout: 60000 })).data);
-            result = result.concat(res);
-        }
-        return result;
+    async function fetchWhileCF(url, params, limit, getListFrom) {
+        return await fetchWhile(url, params, 1, limit, 'from', 'count', getListFrom);
     }
+    async function fetchWhileHR(url, params, limit, getListFrom) {
+        return await fetchWhile(url, params, 0, limit, 'offset', 'limit', getListFrom);
+    }
+
+    // curl stands for 'contestUrl'
+
+    const DemoGetter = ((options) => {
+        let rawProblemGroups = [
+            {label: "Day 1", names: ["foo", "fool", "bar", "barl", "coo"]},
+            {label: "Day 2", names: ["cool", "car", "carl", "lol", "zorz"]},
+        ]
+
+        let defaultContestants = [
+            "matthew", "aldrich", "robin", "ian",
+            "farrell", "maded", "franz", "kim",
+            "dan", "cj", "andrew", "miko", "steven", "dion",
+        ];
+
+        var xmor = "WyJTdGV2ZW4gSGFsaW0iLCJDYXJsU2FnYW40MiIsIk1yTGxhbWFTQyIsIkEgdmVyeSB2ZXJ5IGxvbmcgbmFtZSBndXN0byBrb25nIG1hdHV0b25nIG1hZ2RyaXZlIiwiTWljaGFlbCBTdGViYmlucyIsIlJ1Ymljb05fUyIsIk1pa2UgVHJ1ayIsIkJlbm5ldHQgRm9kZHkiLCJDYXRoZXJpbmUiLCJUb21teSBXaXNlYXUiLCJEd2lndCBSb3J0dWdhbCIsIkIgTGFzYWduYSIsIlJvYmluIFd1IiwiR29yZG9uIFJhbXNheSIsIlZpbG9yaWEiLCJab3JybyIsIkxvdWVsbGEgQ2FjZXMiLCJTbGV2ZSBNY0RpY2hhZWwiLCJjYW1lbENhc2VBVmVyeVZlcnlMb25nTmFtZUd1c3RvS29uZ01hdHV0b25nTWFnZHJpdmUiLCJCZWFjaCBMYXNhZ25hIiwiS2l6dW5hIEFJIiwiQ2hlZkZvcmNlcyIsIlBvcHB5IEhhcmxvdyIsImtlYmFiLWNhc2UtYS12ZXJ5LXZlcnktbG9uZy1uYW1lLWd1c3RvLWtvbmctbWF0dXRvbmctbWFnZHJpdmUiLCJLdXJ1bWkiXQ=="
+        let xpos = 0, xnewguy = 0;
+
+        let xconts = [];
+        let xprobs = [];
+
+        let xcontData = {};
+        let xprobData = {};
+
+        let xsubs = {};
+        function xinitContestant(name) {
+            if (!name) {
+                let mor;
+                if (typeof xmor == "string") mor = JSON.parse(atob(xmor));
+                if (mor && typeof mor == "object" && mor.length && xpos < mor.length && Math.random() < 1/(5 + xpos * xpos * xpos / 11 / 11)) {
+                    name = mor[xpos++];
+                } else {
+                    name = `newGuy${xnewguy++}`;
+                }
+            }
+            xconts.push(name);
+
+            // set skill and stuff
+            xcontData[name] = {
+                eager: 1 + 10 * Math.random(),
+                skill: 1 + 10 * Math.random() * Math.random(),
+            }
+
+            for (const probId of xprobs) {
+                xsubs[probId][name] = {
+                    score: -1,
+                    penalty: 0,
+                };
+            }
+
+            xSolve(name);
+        }
+
+        function xinitProblem(probId) {
+            xprobs.push(probId);
+            xsubs[probId] = {};
+
+            // set difficulty and stuff
+            xprobData[probId] = {
+                attr: 0.01 + 0.11 * Math.random() * Math.random() * Math.random(),
+                diff: 0.01 + 0.95 * Math.random(),
+                expo: 0.5 + 1.5 * Math.random(),
+                skor: 0.1 + 1.4 * Math.random(),
+            };
+        }
+
+        function xSolve(name, att = 1000) {
+            let xcont = xcontData[name];
+            let changed = false;
+            for (let i = 0; !changed && i < att; i++) {
+                // alert(`HEYA ${i}`);
+                for (const probId of xprobs) {
+                    let xprob = xprobData[probId];
+                    if (Math.random() < xcont.eager * xprob.attr) {
+                        let xsub = xsubs[probId][name];
+                        changed = true;
+                        if (xsub.score == -1) xsub.score = 0;
+                        if (xsub.score < 100 && Math.pow(Math.random(), xprob.expo) < xcont.skill * xprob.diff) {
+                            xsub.score += 1 + Math.round(Math.pow(Math.random(), 1 / xprob.skor) * (100 - 1 - xsub.score));
+                            xsub.penalty += Math.round(Math.random() * Math.min(500, 10000 - xsub.penalty));
+                        }
+                    }
+                }
+            }
+            return changed;
+        }
+
+        function getProblemData(probId) {
+            console.log("GETTING", probId);
+            let res = [];
+            for (const name of xconts) {
+                res.push({
+                    contestantName: name,
+                    score: xsubs[probId][name].score,
+                    penalty: xsubs[probId][name].penalty,
+                });
+            }
+            return res;
+        }
+
+        let groups = null;
+        async function fetchProblemList() {
+            const problemGroups = [];
+            for (const group of rawProblemGroups) {
+                const probs = [];
+                for (const name of group.names) {
+                    let prob = {
+                        maxScore: 100,
+                        contestSlug: group.label,
+                        slug: `${group.label}_${name}`,
+                        name: name,
+                        id: `DEMO..${group.label}..${name}`,
+                    }
+                    probs.push(prob);
+                    xinitProblem(prob.id);
+                }
+                problemGroups.push({
+                    label: group.label,
+                    slug: group.label,
+                    probs,
+                })
+            }
+
+            // initialize contestants
+            for (const name of defaultContestants) {
+                xinitContestant(name);
+            }
+
+            return groups = problemGroups;
+        }
+
+        async function fetchProblemSubs(problem, proc) {
+            console.log("Fetching", problem.contestSlug, problem.slug);
+
+            let gotSubs = {};
+
+            let cslug = problem.contestSlug;
+            let subs = getProblemData(problem.id)
+            console.log(cslug, "Fetched", problem.id, subs);
+            proc(problem, subs || []);
+        }
+
+        async function initFetchProblem(prob, proc) {
+            if (!prob) console.warn("WARNING: PROBLEM NOT FOUND");
+            await fetchProblemSubs(prob, proc);
+        }
+
+        async function initFetchAll(proc) {
+            for (const group of groups) {
+                for (const prob of group.probs) {
+                    initFetchProblem(prob, proc);
+                }
+            }
+        }
+
+        return {
+            newGuy: xinitContestant,
+            fetchProblemSubs,
+            fetchProblemList,
+            initFetchAll,
+        };
+    });
 
     function makeHRGetter(contestDataParams, problemDataParams) {
         return (options) => {
@@ -54,7 +216,7 @@ var initScoreboard = (() => {
 
             async function getContestData(curl) {
                 const reqData = contestDataParams(curl)
-                const raw = await fetchWhileOffset(
+                const raw = await fetchWhileHR(
                     reqData.url,
                     reqData.params,
                     reqData.limit,
@@ -75,7 +237,7 @@ var initScoreboard = (() => {
 
             async function getProblemData(cslug, slug) {
                 const reqData = problemDataParams(cslug, slug);
-                const raw = await fetchWhileOffset(
+                const raw = await fetchWhileHR(
                     reqData.url,
                     reqData.params,
                     reqData.limit,
@@ -128,7 +290,7 @@ var initScoreboard = (() => {
             async function fetchProblemList() {
                 let problemGroups = [];
                 for (const url of options.curls) {
-                    let key = `hrcontest_${url}`;
+                    const key = `hrcontest_${url}`;
                     let probs = localStorage.getItem(key);
                     if (probs) {
                         console.log("Loading contest data", url, "from local storage");
@@ -150,18 +312,7 @@ var initScoreboard = (() => {
                         });
                     }
                 }
-                groups = problemGroups;
-                return problemGroups;
-            }
-
-            async function initFetchAll(proc) {
-                let promises = [];
-                for (const group of groups) {
-                    for (const prob of group.probs) {
-                        promises.push(initFetchProblem(prob, proc));
-                    }
-                }
-                await Promise.all(promises);
+                return groups = problemGroups;
             }
 
             async function initFetchProblem(prob, proc) {
@@ -177,6 +328,16 @@ var initScoreboard = (() => {
                 } else {
                     await fetchProblemSubs(prob, proc);
                 }
+            }
+
+            async function initFetchAll(proc) {
+                let promises = [];
+                for (const group of groups) {
+                    for (const prob of group.probs) {
+                        promises.push(initFetchProblem(prob, proc));
+                    }
+                }
+                await Promise.all(promises);
             }
 
             return {
@@ -271,12 +432,10 @@ var initScoreboard = (() => {
 
         async function getContestData(contestId) {
             let rawProblems = null;
-            const rawRows = await fetchWhileFrom(
+            const rawRows = await fetchWhileCF(
                 `${codeforces}/api/contest.standings`,
-                {
-                    contestId: contestId,
-                },
-                400,
+                { contestId: contestId },
+                400, // limit
                 (x) => {
                     rawProblems = x.result.problems;
                     return x.result.rows;
@@ -287,16 +446,16 @@ var initScoreboard = (() => {
             for (const rawProb of rawProblems) {
                 cleanedProblems.push({
                     maxScore: rawProb.points,
-                    slug: rawProb.index,
+                    slug: `${contestId}_${rawProb.index}`,
                     name: rawProb.name,
                     id: `CF..${contestId}..${rawProb.index}`,
                 });
             }
 
-            const problemData = {};
+            const problemSubs = {};
             for (const prob of cleanedProblems) {
-                problemData[prob.id] = {
-                    prob: prob,
+                problemSubs[prob.id] = {
+                    prob,
                     subs: [],
                 };
             }
@@ -310,7 +469,7 @@ var initScoreboard = (() => {
                     const rejects = parseInt(res.rejectedAttemptCount);
                     const penalty = score > 0 ? parseFloat(res.bestSubmissionTimeSeconds)/60 : 0;
                     if (rejects > 0 || score > 0) {
-                        problemData[prob.id].subs.push({
+                        problemSubs[prob.id].subs.push({
                             contestantName: name,
                             score: score,
                             penalty: penalty,
@@ -319,7 +478,7 @@ var initScoreboard = (() => {
                 }
             }
 
-            return {problems: cleanedProblems, problemData};
+            return {problems: cleanedProblems, problemSubs};
         }
 
         let everythings = {};
@@ -328,7 +487,7 @@ var initScoreboard = (() => {
             for (let i = 0; i < options.curls.length; i++) {
                 const url = options.curls[i];
                 const contestId = options.cfContestIDs[i];
-                let key = `cfcontest_${contestId}`;
+                let key = `cfcontest_${contestId}_${url}`;
                 let everything = localStorage.getItem(key);
                 if (everything) {
                     console.log("Loading everything", url, "from local storage");
@@ -339,6 +498,7 @@ var initScoreboard = (() => {
                         console.error("Got error", x);
                         alert(`Failed to fetch everything for ${contestId} (${url}). Please try again later.`);
                     });
+                    everything.url = url;
                     if (everything) localStorage.setItem(key, JSON.stringify(everything));
                 }
 
@@ -360,23 +520,23 @@ var initScoreboard = (() => {
 
         async function fetchProblemSubs(problem, proc) {
             for (const contestId in everythings) {
-                let key = `cfcontest_${contestId}`;
+                const url = everythings[contestId].url;
+                const key = `cfcontest_${contestId}_${url}`;
 
                 console.log("Fetching everything contest ID", contestId);
-                let everything = await getContestData(contestId).catch((x) => {
+                const everything = await getContestData(contestId).catch((x) => {
                     console.log(contestId, "Got error", x);
                     console.log(contestId, `Failed to fetch everything for ${contestId}.`,
                             ` Please try again later.`);
                 });
 
-                // save to localStorage
-                if (everything) localStorage.setItem(key, JSON.stringify(everything));
-
-                everythings[contestId] = everything;
-
-                for (const probId in everything.problemData) {
-                    const probData = everything.problemData[probId];
-                    proc(probData.prob, probData.subs);
+                if (everythings[contestId] = everything) {
+                    // save to localStorage
+                    localStorage.setItem(key, JSON.stringify(everything));
+                    for (const probId in everything.problemSubs) {
+                        const probSubs = everything.problemSubs[probId];
+                        proc(probSubs.prob, probSubs.subs);
+                    }
                 }
             };
         }
@@ -384,9 +544,11 @@ var initScoreboard = (() => {
         async function initFetchAll(proc) {
             for (const contestId in everythings) {
                 const everything = everythings[contestId];
-                for (const probId in everything.problemData) {
-                    const probData = everything.problemData[probId];
-                    proc(probData.prob, probData.subs);
+                if (everything) {
+                    for (const probId in everything.problemSubs) {
+                        const probSubs = everything.problemSubs[probId];
+                        proc(probSubs.prob, probSubs.subs);
+                    }
                 }
             }
             return Promise.resolve();
@@ -401,16 +563,16 @@ var initScoreboard = (() => {
 
 
     // helpers
+    function isclose(a, b, eps = 1e-5) {
+        return Math.abs(a - b) / Math.max(1, Math.max(Math.abs(a), Math.abs(b))) <= eps;
+    }
+
     Vue.filter('hmPenalty', function(penalty, fixed) {
         const h = Math.floor(penalty / 60);
         const m = (penalty - 60 * h).toFixed(fixed);
         const p = m < 10 ? "0" : "";
         return `${h}:${p}${m}`;
     })
-
-    function isclose(a, b) {
-        return Math.abs(a - b) / Math.max(1, Math.max(Math.abs(a), Math.abs(b))) <= 1e-5;
-    }
 
     Vue.filter('score', function(score, maxD) {
         if (score == -1) return ".";
@@ -420,100 +582,148 @@ var initScoreboard = (() => {
         return score == -1 ? "." : score.toFixed(fixed);
     })
 
+    Vue.filter('styleForTotalScore', function(score, maxScore) {
+        score /= maxScore;
+
+        let red = Math.round(0xF0 * (1 - score) + 0x5E * score);
+        let green = Math.round(0xF0 * (1 - score) + 0xFF * score);
+        let blue = Math.round(0xF0 * (1 - score) + 0x83 * score);
+        let bgcolor = `rgba(${red}, ${green}, ${blue}, 0.8)`;
+        return {'background-color': bgcolor};
+    });
+
+    Vue.filter('styleForScore', function(score, maxScore, showBlank) {
+        let color = score == -1 ? `rgba(117, 117, 117)` : "";
+        let bgcolor = `rgba(${0xff}, ${0xff}, ${0xff}, 0.333)`
+        if (!showBlank || score != -1) {
+            // gray#DDDDDD to green#5EEE83
+            score = Math.max(score, 0) / maxScore;
+            let red = Math.round(0xDD * (1 - score) + 0x5E * score);
+            let green = Math.round(0xDD * (1 - score) + 0xEE * score);
+            let blue = Math.round(0xDD * (1 - score) + 0x83 * score);
+            bgcolor = `rgba(${red}, ${green}, ${blue}, 0.5)`;
+        }
+        return {'background-color': bgcolor, 'color': color};
+    });
+
+    Vue.filter('styleForPenalty', function (penalty, maxPenalty) {
+        penalty /= maxPenalty;
+        let g = Math.round(255 * (1 - 0.2 * penalty));
+        let bgcolor = `rgba(${g}, ${g}, ${g}, 0.5)`
+        return {'background-color': bgcolor};
+    });
+
+    Vue.filter('styleForRank', function (rank, rankRules) {
+        let color = (() => {
+            for (const rankRule of rankRules) {
+                if (rank <= rankRule.rank) return rankRule.color;
+            }
+            return "#EEEEEE";
+        })();
+        return {'background-color': color};
+    });
+
     let rankRuleses = {
         "noielims": [
-            {rank: 30, color: "#00cc00"},
+            {rank: 30, color: "#00CC00"},
         ],
         "noielims2016": [
-            {rank: 20, color: "#00cc00"},
+            {rank: 20, color: "#00CC00"},
         ],
         "noifinals2019": [
-            {rank: 1, color: "#ffd700"},
-            {rank: 3, color: "#c0c0c0"},
-            {rank: 6, color: "#cd7f32"},
-            {rank: 10, color: "#00bb00"},
+            {rank: 1, color: "#FFD700"},
+            {rank: 3, color: "#C0C0C0"},
+            {rank: 6, color: "#CD7F32"},
+            {rank: 10, color: "#00BB00"},
         ],
         "noifinals": [
-            {rank: 1, color: "#ffd700"},
-            {rank: 3, color: "#c0c0c0"},
-            {rank: 6, color: "#cd7f32"},
-            {rank: 15, color: "#00bb00"},
+            {rank: 1, color: "#FFD700"},
+            {rank: 3, color: "#C0C0C0"},
+            {rank: 6, color: "#CD7F32"},
+            {rank: 15, color: "#00BB00"},
         ],
         "noiteam": [
-            {rank: 4, color: "#00cc00"},
+            {rank: 4, color: "#00CC00"},
         ],
         "generic": [],
     }
 
-    function getContestDetails() {
+
+    async function getContestDetails(options) {
         const search = new URLSearchParams(window.location.search);
-        let ruleType = search.get("type") || "generic";
-        let pastCurls = search && search.get("past") ? search.get("past").split(",") : [];
-        let fetchCurls = search && search.get("fetch") ? search.get("fetch").split(",") : [];
+
+        let ruleType       = search.get("type") || "generic";
+        let pastCurls      = search.get("past") ? search.get("past").split(",") : [];
+        let fetchCurls     = search.get("fetch") ? search.get("fetch").split(",") : [];
+        let cfContestIDs   = search.get("ids") ? search.get("ids").split(",") : [];
+        const penaltyFixed = search.get("pd") ? parseInt(search.get("pd")) : 0;
+        const tScoreMax    = search.get("td") ? parseInt(search.get("td")) : 2;
+        const scoreMax     = search.get("sd") ? parseInt(search.get("sd")) : 2;
+        const nohilit      = search.get("nohilit") ? parseInt(search.get("nohilit")) : 0;
+        const showBlank    = search.get("blanks") ? parseInt(search.get("blanks")) : 0;
+        const contest      = search.get("contest") || null;
+        const contestYear  = search.get("year") ? parseInt(search.get("year")) : currentYear;
+        let source         = search.get("source") ? search.get("source") : contestYear >= 2020 ? "CF" : "HR";
+
         let rankRules = rankRuleses[ruleType];
-        let cfContestIDs = search && search.get("ids") ? search.get("ids").split(",") : [];
-        const penaltyFixed = search && search.get("pd") ? parseInt(search.get("pd")) : 0;
-        const tScoreMax = search && search.get("td") ? parseInt(search.get("td")) : 2;
-        const scoreMax = search && search.get("sd") ? parseInt(search.get("sd")) : 2;
-        const nohilit = search && search.get("nohilit") ? parseInt(search.get("nohilit")) : 0;
-        const showBlank = search && search.get("showblank") ? parseInt(search.get("showblank")) : 0;
-        const contest = search && search.get("contest") || null;
-        const contestYear = search && search.get("year") ? parseInt(search.get("year")) : currentYear;
-        let fromCF = contestYear >= 2020;
-        const parallelContestURLs = {
-            "noi-ph-2018-team": ["noi-ph-2018-team-early"],
-            "noi-ph-2017-team": ["noi-ph-2017-team-early"],
-        };
 
-        for (let i = 0; i < cfContestIDs.length; i++) {
-            cfContestIDs[i] = parseInt(cfContestIDs[i]);
-        }
+        if (options.demo) {
+            pastCurls = [];
+            fetchCurls = ["Day 1", "Day 2"];
+            source = "DEMO";
+        } else {
 
-        if (contest) {
-            const base = `noi-ph-${contestYear}`;
-            if (contest == "noielims") {
-                if (contestYear == 2015) {
-                    pastCurls = [`${base}-1`, `${base}-2`];
-                    fetchCurls = [];
-                    rankRules = rankRuleses["noielims2016"];
-                } else if (contestYear == 2016) {
-                    pastCurls = [`${base}-1`, `${base}-2`, `${base}-3`];
-                    fetchCurls = [];
-                    rankRules = rankRuleses["noielims2016"];
-                } else {
-                    pastCurls = [];
-                    fetchCurls = [base];
-                    rankRules = rankRuleses["noielims"];
-                }
-            } else if (contest == "noifinalspractice") {
-                pastCurls = [];
-                fetchCurls = [`${base}-finals-practice`];
-                rankRules = rankRuleses[contestYear <= 2019 ? "noifinals2019" : "noifinals"];
-            } else if (contest == "noifinals1") {
-                pastCurls = [];
-                fetchCurls = [`${base}-finals-1`];
-                rankRules = rankRuleses[contestYear <= 2019 ? "noifinals2019" : "noifinals"];
-            } else if (contest == "noifinals2") {
-                pastCurls = [`${base}-finals-1`];
-                fetchCurls = [`${base}-finals-2`];
-                rankRules = rankRuleses[contestYear <= 2019 ? "noifinals2019" : "noifinals"];
-            } else if (contest == "noiteam") {
-                if (contestYear == 2015) {
-                    pastCurls = [];
-                    fetchCurls = [`${base}-finals-2`];
-                    rankRules = rankRuleses["noiteam"];
-                } else {
-                    pastCurls = [];
-                    fetchCurls = [`${base}-team`];
-                    rankRules = rankRuleses["noiteam"];
-                }
-            } else {
-                alert(`Unknown contest ${contest}`);
-                throw `Unknown contest ${contest}`;
+
+            for (let i = 0; i < cfContestIDs.length; i++) {
+                cfContestIDs[i] = parseInt(cfContestIDs[i]);
             }
-            if (contestYear != currentYear || !currentYearContests.includes(contest)) {
-                pastCurls = pastCurls.concat(fetchCurls);
-                fetchCurls = [];
+
+            if (contest) {
+                const base = `noi-ph-${contestYear}`;
+                if (contest == "noielims") {
+                    if (contestYear == 2015) {
+                        pastCurls = [`${base}-1`, `${base}-2`];
+                        fetchCurls = [];
+                        rankRules = rankRuleses["noielims2016"];
+                    } else if (contestYear == 2016) {
+                        pastCurls = [`${base}-1`, `${base}-2`, `${base}-3`];
+                        fetchCurls = [];
+                        rankRules = rankRuleses["noielims2016"];
+                    } else {
+                        pastCurls = [];
+                        fetchCurls = [base];
+                        rankRules = rankRuleses["noielims"];
+                    }
+                } else if (contest == "noifinalspractice") {
+                    pastCurls = [];
+                    fetchCurls = [`${base}-finals-practice`];
+                    rankRules = rankRuleses[contestYear <= 2019 ? "noifinals2019" : "noifinals"];
+                } else if (contest == "noifinals1") {
+                    pastCurls = [];
+                    fetchCurls = [`${base}-finals-1`];
+                    rankRules = rankRuleses[contestYear <= 2019 ? "noifinals2019" : "noifinals"];
+                } else if (contest == "noifinals2") {
+                    pastCurls = [`${base}-finals-1`];
+                    fetchCurls = [`${base}-finals-2`];
+                    rankRules = rankRuleses[contestYear <= 2019 ? "noifinals2019" : "noifinals"];
+                } else if (contest == "noiteam") {
+                    if (contestYear == 2015) {
+                        pastCurls = [];
+                        fetchCurls = [`${base}-finals-2`];
+                        rankRules = rankRuleses["noiteam"];
+                    } else {
+                        pastCurls = [];
+                        fetchCurls = [`${base}-team`];
+                        rankRules = rankRuleses["noiteam"];
+                    }
+                } else {
+                    alert(`Unknown contest ${contest}`);
+                    throw `Unknown contest ${contest}`;
+                }
+                if (contestYear != currentYear || !currentYearContests.includes(contest)) {
+                    pastCurls = pastCurls.concat(fetchCurls);
+                    fetchCurls = [];
+                }
             }
         }
 
@@ -523,23 +733,54 @@ var initScoreboard = (() => {
             rankRules = [];
         }
 
-        let fetchInterval = fromCF ? 31111 : 6111;
-        if (fromCF && cfContestIDs.length == 0) {
-            // TODO attempt to lookup a hardcoded list.
-        }
-        if (fromCF && cfContestIDs.length == 0) {
-            alert(`Contest IDs missing. Please pass them as URL params`);
+        let fetchInterval = source == "CF" ? 24111 : source == "HR" ? 6111 : 6111;
+
+        if (source == "CF" && cfContestIDs.length == 0) { // attempt to lookup a hardcoded list.
+            let cfcontests = (await axios.get(`contests/cfcontests.json`,
+                        { timeout: 60000 })
+                .catch((x) => {
+                    console.log("cfcontests.json cannot be read:", x);
+                })
+            );
+            if (cfcontests) cfcontests = cfcontests.data;
+            if (cfcontests) cfcontests = cfcontests["" + contestYear];
+            if (cfcontests) cfcontests = cfcontests[contest];
+            if (cfcontests) cfContestIDs = cfcontests;
         }
 
-        const curls = pastCurls.concat(fetchCurls);
+        let curls = pastCurls.concat(fetchCurls);
+
+        if (source == "CF") {
+            if (cfContestIDs.length == 0) {
+                alert(`Contest IDs missing. Please pass them as URL params`);
+                curls = [];
+            }
+
+            if (curls.length != cfContestIDs.length) {
+                alert(`The number of contest urls must equal the number CF contest IDs.`)
+                curls = [];
+            }
+        }
+
+        console.log("got details", curls, cfContestIDs);
+
+        const parallelContestURLs = {
+            "noi-ph-2018-team": ["noi-ph-2018-team-early"],
+            "noi-ph-2017-team": ["noi-ph-2017-team-early"],
+        };
 
         let getter;
-        if (fromCF) {
+        if (options.demo) {
+            getter = DemoGetter({curls});
+        } else if (source == "CF") {
             getter = CFGetter({curls, cfContestIDs});
-        } else {
-            // getter = HRGetter({parallelContestURLs, curls});    
-            getter = HRKunoGetter({parallelContestURLs, curls});    
+        } else if (source == "HR") {
+            // getter = HRGetter({parallelContestURLs, curls});
+            getter = HRKunoGetter({parallelContestURLs, curls});
             // getter = HRAzureGetter({parallelContestURLs, curls});
+        } else {
+            alert(`Unknown source: ${source}`);
+            getter = HRKunoGetter({parallelContestURLs, curls});
         }
 
         return {
@@ -550,15 +791,15 @@ var initScoreboard = (() => {
             scoreMax,
             nohilit,
             showBlank,
-            pastCurls,
             fetchCurls,
-            curls,
             fetchInterval,
+            demo: options.demo,
         };
     }
 
-    function initScoreboard() {
-        const contestDetails = getContestDetails();
+    async function initScoreboard(options) {
+        if (!options) options = {};
+        const contestDetails = await getContestDetails(options);
         const vm = new Vue({
             el: '#scoreboard',
             data: {
@@ -571,22 +812,21 @@ var initScoreboard = (() => {
                 fetchInterval: contestDetails.fetchInterval,
 
                 getter: contestDetails.getter,
-                pastCurls: contestDetails.pastCurls,
                 fetchCurls: contestDetails.fetchCurls,
-                curls: contestDetails.curls,
                 rankRules: contestDetails.rankRules,
                 penaltyFixed: contestDetails.penaltyFixed,
                 tScoreMax: contestDetails.tScoreMax,
                 scoreMax: contestDetails.scoreMax,
                 nohilit: contestDetails.nohilit,
                 showBlank: contestDetails.showBlank,
+
+                demo: contestDetails.demo,
             },
             async mounted() {
                 this.$el.classList.add("board-loading");
 
                 await this.initFetchAll();
-
-                this.fix(); // not needed?
+                this.fix();
 
                 setTimeout(() => {
                     this.$el.classList.remove("board-loading");
@@ -633,15 +873,14 @@ var initScoreboard = (() => {
             },
 
             methods: {
-                setScore(problem, sub, fix = true) {
-                    let contestant = this.getOrCreateContestant(sub.contestantName, false);
+                setScore(problem, sub) {
+                    let contestant = this.getOrCreateContestant(sub.contestantName);
                     let csub = contestant.subs[problem.id];
                     csub.score = sub.score;
                     csub.penalty = sub.penalty;
-                    if (fix) this.fix();
                 },
 
-                getOrCreateContestant(name, fix = true) {
+                getOrCreateContestant(name) {
                     let contestant = this.nameContestant[name];
                     if (contestant) return contestant;
                     // this is a new guy. create a new contestant
@@ -659,7 +898,6 @@ var initScoreboard = (() => {
                         penalty: 0,
                     };
                     this.contestants.push(contestant);
-                    if (fix) this.fix();
                     return contestant;
                 },
 
@@ -673,6 +911,11 @@ var initScoreboard = (() => {
 
                     if (this.startedFetchLoop) {
                         console.log("Already started. Ignoring YOU!!!");
+                        return;
+                    }
+
+                    if (this.demo) {
+                        console.log("No fetch loop for demo");
                         return;
                     }
                     this.startedFetchLoop = true;
@@ -689,6 +932,7 @@ var initScoreboard = (() => {
                                         console.log("Failed to load", prob.id,
                                                 "! Never mind. I'll try again later.")
                                     });
+                                    this.fix();
                                 }
                             }
                         }
@@ -700,103 +944,86 @@ var initScoreboard = (() => {
                 },
 
                 // fetches
-
-                async fetchProblem(problem, fix = true) {
+                async fetchProblem(problem) {
                     if (!problem) console.warn("WARNING: PROBLEM NOT FOUND!");
                     await this.getter.fetchProblemSubs(problem, (prob, subs) => {
                         this.processSubs(prob, subs);
                     });
-
-                    if (fix) this.fix();
                 },
 
                 async initFetchAll() {
                     this.problemGroups = await this.getter.fetchProblemList();
                     await this.getter.initFetchAll((prob, subs) => {
-                        this.processSubs(prob, subs, true);
+                        this.processSubs(prob, subs);
                         this.loadedProblem[prob.id] = true;
                     });
-                    this.fix();
                 },
 
-                processSubs(problem, subs, fix) {
+                processSubs(problem, subs) {
                     if (subs) for (const sub of subs) {
-                        this.setScore(problem, sub, false);
-                    }
-                    if (fix) this.fix();
-                },
-
-                // 'fix'
-                recomputeAggregates() {
-                    for (const contestant of this.contestants) {
-                        let scoreTotal = 0, penaltyTotal = 0;
-                        for (const group of this.problemGroups) {
-                            let penaltyMax = 0;
-                            for (const prob of group.probs) {
-                                scoreTotal += Math.max(0, contestant.subs[prob.id].score);
-                                penaltyMax = Math.max(penaltyMax, contestant.subs[prob.id].penalty);
-                            }
-                            penaltyTotal += penaltyMax;
-                        }
-                        contestant.score = scoreTotal;
-                        contestant.penalty = penaltyTotal;
+                        this.setScore(problem, sub);
                     }
                 },
 
-                rerank() {
-                    this.contestants.sort(function(x, y) {
-                        if (x.score != y.score) return y.score - x.score;
-                        if (x.penalty != y.penalty) return x.penalty - y.penalty;
-                        return 0;
-                    });
-
-                    for (let i = 0, rank = 0; i < this.contestants.length; i++) {
-                        if (i == 0 || this.contestants[i - 1].score != this.contestants[i].score || 
-                                this.contestants[i - 1].penalty != this.contestants[i].penalty) {
-                            rank = i + 1;
-                        }
-                        this.contestants[i].rank = rank;
-                    }
-                },
-
+                // recompute the aggregate and rank data
                 fix() {
                     this.contestants = this.contestants.slice(); // so that vue.js notices... feels hacky though.
-                    this.recomputeAggregates();
-                    this.rerank();
+
+                    (() => {// recompute aggregates
+                        for (const contestant of this.contestants) {
+                            let scoreTotal = 0, penaltyTotal = 0;
+                            for (const group of this.problemGroups) {
+                                let penaltyMax = 0;
+                                for (const prob of group.probs) {
+                                    scoreTotal += Math.max(0, contestant.subs[prob.id].score);
+                                    penaltyMax = Math.max(penaltyMax, contestant.subs[prob.id].penalty);
+                                }
+                                penaltyTotal += penaltyMax;
+                            }
+                            contestant.score = scoreTotal;
+                            contestant.penalty = penaltyTotal;
+                        }
+                    })();
+
+                    (() => { // recompute ranks
+                        this.contestants.sort(function(x, y) {
+                            if (x.score != y.score) return y.score - x.score;
+                            if (x.penalty != y.penalty) return x.penalty - y.penalty;
+                            return 0;
+                        });
+
+                        for (let i = 0, rank = 0; i < this.contestants.length; i++) {
+                            if (i == 0 || this.contestants[i - 1].score != this.contestants[i].score || 
+                                    this.contestants[i - 1].penalty != this.contestants[i].penalty) {
+                                rank = i + 1;
+                            }
+                            this.contestants[i].rank = rank;
+                        }
+                    })();
                 },
 
-
-                // these are mostly just filter-like things.
-                tColorForScore(score, maxScore) {
-                    return score == -1 ? `rgba(117, 117, 117)` : "";
-                },
-                colorForScore(score, maxScore) {
-                    if (this.showBlank && score == -1) return `rgba(222, 222, 222, 0.333)`;
-                    score = Math.max(score, 0) / maxScore;
-                    let mgr = Math.round(180 * (1 - score));
-                    return `rgba(${mgr}, 222, ${mgr}, 0.333)`;
-                },
-                colorForTotalScore(score) {
-                    score /= this.maxScore;
-                    let rb = Math.round(255 * (1 - score));
-                    return `rgba(${rb}, 255, ${rb}, 0.333)`
-                },
-                colorForPenalty(penalty) {
-                    penalty /= this.maxPenalty;
-                    let g = Math.round(255 * (1 - 0.5 * penalty));
-                    return `rgba(${g}, ${g}, ${g}, 0.333)`
-                },
-                colorForRank(rank) {
-                    for (const rankRule of this.rankRules) {
-                        if (rank <= rankRule.rank) return rankRule.color;
+                // demo methods only
+                async newGuy() {
+                    this.getter.newGuy();
+                    for (const group of this.problemGroups) {
+                        for (const prob of group.probs) {
+                            await this.fetchProblem(prob);
+                        }
                     }
-                    return "#eeeeee";
+                    this.fix();
+                },
+                async randomSolve() {
+                    // TODO
                 },
             },
             template: `
             <div :class="[
                     problemList.length <= 10 ? 'container' : 'container-fluid',
                     nohilit ? 'nohilit' : 'hilit']">
+                <div v-if="demo">
+                    <button class="perturb-button btn btn-primary" v-on:click="randomSolve">+ Random submit!</button>
+                    <button class="perturb-button btn" v-on:click="newGuy">+ Random new guy!</button>
+                </div>
                 <table class="table table-borderless table-sm">
                     <thead>
                         <tr class="table-head">
@@ -835,7 +1062,7 @@ var initScoreboard = (() => {
                             <transition name="entry-value" mode="out-in">
                                 <td class="t-rank"
                                         :key="c.rank"
-                                        :style="{'background-color': colorForRank(c.rank)}">
+                                        :style="c.rank | styleForRank(rankRules)">
                                     {{ c.rank }}
                                 </td>
                             </transition>
@@ -843,15 +1070,15 @@ var initScoreboard = (() => {
                             <transition name="entry-value" mode="out-in">
                                 <td class="t-score"
                                         :key="c.score"
-                                        :style="{'background-color': colorForTotalScore(c.score)}">
+                                        :style="c.score | styleForTotalScore(maxScore)">
                                     {{ c.score | score(tScoreMax) }}
                                 </td>
                             </transition>
                             <transition name="entry-value" mode="out-in">
                                 <td class="t-penalty" :key="c.penalty" v-if="showPenalty"
-                                        :style="{'background-color': colorForPenalty(c.penalty)}">
+                                        :style="c.penalty | styleForPenalty(maxPenalty)">
                                         <small>{{ c.penalty | hmPenalty(penaltyFixed) }}</small>
-                                    </td>
+                                </td>
                             </transition>
                             <transition name="entry-value"
                                     mode="out-in"
@@ -860,12 +1087,7 @@ var initScoreboard = (() => {
                                 <td v-if="loadedProblem[prob.id]"
                                         class="t-problem"
                                         :key="c.subs[prob.id].score"
-                                        :style="{
-                                            'background-color':
-                                                colorForScore(c.subs[prob.id].score, prob.maxScore),
-                                            'color':
-                                                tColorForScore(c.subs[prob.id].score, prob.maxScore)
-                                        }">
+                                        :style="c.subs[prob.id].score | styleForScore(prob.maxScore, showBlank)">
                                     {{ c.subs[prob.id].score | score(scoreMax) }}
                                 </td>
                                 <td v-if="!loadedProblem[prob.id]"

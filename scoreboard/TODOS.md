@@ -4,3 +4,8 @@
     CF API and hackerrank API
 
 - hardcode all results from past years so we don't have to call HR api anymore
+
+- gradient
+- sample integrate
+
+- setLoading (and also trigger on focus in-out)
