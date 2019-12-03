@@ -5,7 +5,7 @@ function initScoreboard(options) {
 
     let demoFetchData = null;
 
-    /////////////// fake data generator. feel free to remove in production to remove whitespace
+    /////////////// fake data generator. feel free to remove in production to reduce size
     demoFetchData = (() => {
         const xdata = {
             problems: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M"],
@@ -392,13 +392,11 @@ function initScoreboard(options) {
             while (Math.random() < 0.1) xpen++;
 
             const trySolving = function(c) {
-                console.log("stuck at", c, xteager[c.name])
                 let done = 0;
                 for (const p of xdata.problems) {
                     if (c.subs[p].pending ||
                             Math.random() < xteager[c.name] * xattprobs[p] && c.subs[p].score == 0) {
                         done++;
-                        console.log("make attempt");
                         // make attempt
                         if (!c.subs[p].pending) {
                             c.subs[p].attempts++;
@@ -420,7 +418,6 @@ function initScoreboard(options) {
 
             while (Math.random() < newGuyProb && xdata.contestants.length < 1111) {
                 // new guy
-                console.log("new team");
                 const c = {
                     name: (xspeci < xspecs.length && Math.random() < 0.1 ? xspecs[xspeci++] : 
                             Math.random() < 0.8 ? `Quiwarriors ${++xquis}` : `New team ${xguys++}`),
@@ -490,9 +487,9 @@ function initScoreboard(options) {
 
         return demoFetchData;
     })()
-    /////////////// end fake data
+    /////////////// end fake data generator.
 
-
+    // PC2-formatted
     async function realFetchData(source) {
         const el = $( '<div></div>' );
         el.html((await axios.get(`${source}/index.html`, { timeout: 10000 })).data);
@@ -506,7 +503,7 @@ function initScoreboard(options) {
 
         const getAttSolv = function(attsolv) {
             const parts = attsolv.split("/");
-            if (parts.length != 2) console.log(`WARNING: INVALID ATTSOLV ${attsolv}`)
+            if (parts.length != 2) console.warn(`WARNING: INVALID ATTSOLV ${attsolv}`)
             return {
                 att: parseInt(parts[0]),
                 solv: parseInt(parts[1]),
@@ -514,19 +511,21 @@ function initScoreboard(options) {
         };
         const getScoreAttPen = function(scoreAttPen) {
             const parts = scoreAttPen.split("/");
-            if (parts.length != 2) console.log(`WARNING: INVALID SCOREATTPEN ${scoreAttPen}`)
-            const att = parseInt(parts[0]);
-            const score = parts[1] == "--" ? 0 : 1;
-            const pen = parts[1] == "--" ? 0 : parseInt(parts[1]);
-            return { score, att, pen };
+            if (parts.length != 2) console.warn(`WARNING: INVALID SCOREATTPEN ${scoreAttPen}`)
+            return {
+                att: parseInt(parts[0]),
+                score: parts[1] == "--" ? 0 : 1,
+                pen: parts[1] == "--" ? 0 : parseInt(parts[1]),
+            };
         };
         const getSummaryScoreAttPen = function(sumScoreAttPen) {
             const parts = sumScoreAttPen.split("/");
-            if (parts.length != 3) console.log(`WARNING: INVALID SUMMARYSCOREATTPEN ${sumScoreAttPen}`)
-            const att = parseInt(parts[0]);
-            const score = parseInt(parts[2]);
-            const pen = parts[1] == "--" ? 0 : parseInt(parts[1]);
-            return { score, att, pen };
+            if (parts.length != 3) console.warn(`WARNING: INVALID SUMMARYSCOREATTPEN ${sumScoreAttPen}`)
+            return {
+                att: parseInt(parts[0]),
+                score: parseInt(parts[2]),
+                pen: parts[1] == "--" ? 0 : parseInt(parts[1]),
+            };
         };
 
         el.find("table tr").each((index, value) => {
@@ -543,7 +542,7 @@ function initScoreboard(options) {
                     children.each((idx, ch) => {
                         if (!(4 <= idx && idx < children.length - 1)) return;
                         const prob = ch.innerText.trim();
-                        if (prob != res.problems[idx - 4]) console.log("WARNING: PROBLEM MISMATCH AT", idx);
+                        if (prob != res.problems[idx - 4]) console.warn("WARNING: PROBLEM MISMATCH AT", idx);
                     });
                 }
             } else if (children[0].innerText.trim().length) {
@@ -555,7 +554,7 @@ function initScoreboard(options) {
                     subs: {},
                 };
                 const attsolv = getAttSolv(children[children.length - 1].innerText.trim());
-                if (attsolv.solv != c.score) console.log("WARNING: SOLVE COUNT MISMATCH");
+                if (attsolv.solv != c.score) console.warn("WARNING: SOLVE COUNT MISMATCH");
                 c.attempts = attsolv.att;
                 let sc = 0;
                 children.each((idx, ch) => {
@@ -569,7 +568,7 @@ function initScoreboard(options) {
                         pending: $(ch).is('.pending'),
                     };
                 });
-                if (sc != c.score) console.log("WARNING: SCORE MISMATCH");
+                if (sc != c.score) console.warn("WARNING: SCORE MISMATCH");
                 res.contestants.push(c);
             } else if (children[1].innerText.trim() == "Submitted/1st Yes/Total Yes") {
                 const attsolv = getAttSolv(children[children.length - 1].innerText.trim());
@@ -619,9 +618,9 @@ function initScoreboard(options) {
     const location = window ? window.location : null;
     const search = new URLSearchParams(location && location.search || {});
     const scoreboardSource = options.src || search.get("src") || (
-            demo ? "http://localhost:8000" :
+            demo ? "http://localhost:8000/html" :
             location ? [location.protocol, '//', location.host, location.pathname, 'html'].join('') : 
-            "./html/");
+            "./html");
 
     const ruleType = options.type || search.get("type") || "generic";
 
@@ -797,8 +796,8 @@ function initScoreboard(options) {
             async fetchData() {
                 console.log(`Fetching ${this.scoreboardSource}`);
                 const allData = await fetchData(this.scoreboardSource).catch((x) => {
-                    console.log("Got error", x);
-                    console.log(`Failed to fetch data from ${this.scoreboardSource}. Please try again later.`);
+                    console.error("Got error", x);
+                    console.error(`Failed to fetch data from ${this.scoreboardSource}. Please try again later.`);
                 });
 
                 console.log("Fetching Done");

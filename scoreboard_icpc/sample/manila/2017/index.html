@@ -1,5 +1,5 @@
-<!-- by Kevin Atienza -->
 <!DOCTYPE html>
+<!-- by Kevin Atienza -->
 <html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -32,7 +32,7 @@
     </head>
     <body>
 
-        <header>
+        <header class="scoreboard-header">
             <div class="icpc_logo">
             <img src="./images/icpc-manila-art.png" alt=""></div>
             <div class="details">
@@ -47,7 +47,7 @@
 
         <main class="main" role="main">
 
-            <div class="container overall-container">
+            <div class="scoreboard-main container overall-container">
                 <div class="row scoreboard-head">
                     <div class="col-lg-12">
                         <div class="controls-container">
@@ -69,7 +69,7 @@
             </div>
 
 
-            <div class="sponsors">
+            <div class="scoreboard-sponsors sponsors">
                 <div class="main">
                     <img src="./images/ICPC_Jet_Brains.png" alt=""/>
                     <img src="./images/ICPC_Main.png" alt=""/>
@@ -90,7 +90,7 @@
             <!-- Created by <A HREF="http://pc2.ecs.csus.edu/">CSUS PC^2</A> version <xsl:value-of select="/contestStandings/standingsHeader/@systemVersion"/> -->
         </main>
 
-        <footer class="footer">
+        <footer class="scoreboard-footer footer">
             <div class="row">
                 <div class="col-lg"></div>
                 <div class="col-lg-3">
@@ -106,20 +106,28 @@
             </div>
         </footer>
 
-            <script type="text/javascript">
-                initScoreboard({
-                    labels: {
-                        attempts: "ATT",
-                        solved: "SLV.",
-                        rank: "#",
-                        name: "TEAM",
-                        blankPenalty: " ",
-                        blankAttempt: " ",
-                        // showAttemptCount: "Show att. #",
-                        // showTimes: "Show times",
-                    },
-                    demo: true,
-                });
-            </script>
+        <script type="text/javascript">
+            // hide stuff if requested
+            const search = new URLSearchParams(window && window.location && window.location.search || {});
+            const minimal = search.get("minimal") && search.get("minimal") != '0';
+            if (minimal || search.get("noheader") && search.get("noheader") != '0') $(".scoreboard-header").remove();
+            if (minimal || search.get("nosponsors") && search.get("nosponsors") != '0') $(".scoreboard-sponsors").remove();
+            if (minimal || search.get("nofooter") && search.get("nofooter") != '0') $(".scoreboard-footer").remove();
+
+            // initialize scoreboard
+            initScoreboard({
+                labels: {
+                    attempts: "ATT.",
+                    solved: "SLV.",
+                    rank: "#",
+                    name: "TEAM",
+                    blankPenalty: " ",
+                    blankAttempt: " ",
+                    // showAttemptCount: "Show att. #",
+                    // showTimes: "Show times",
+                },
+                demo: true,
+            });
+        </script>
     </body>
 </html>
