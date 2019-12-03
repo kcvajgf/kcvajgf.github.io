@@ -1,0 +1,322 @@
+/* custom CSS for ICPC Manila scoreboard */
+
+* {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+html body {
+    overflow-x: auto;
+}
+
+
+
+.logo-corner {
+    max-width: 200px;
+}
+
+.logo-corner img {
+    display: block;
+}
+
+header.site-header .l-logo img {
+    height: auto;
+    max-width: 200px;
+    transform: translateY(5px);
+}
+
+header.site-header {
+    width: 100%;
+    background-size: auto auto;
+}
+
+header.site-header img {
+  max-height: 200px;
+}
+
+header {
+    margin: 0 auto;
+    padding: 2em;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+                    justify-content: space-between;
+}
+
+header div {
+    width: 100%;
+}
+
+.header-details {
+    text-align: center;
+}
+
+.scoreboard-controls {
+    padding: 0.57em 0.83em;
+}
+
+.site-header .l-logo {
+  display: contents;
+  line-height: 0;
+}
+
+.event-scoreboard-name {
+    margin-top: 0;
+}
+
+.event {
+    font-size: 2.2em;
+    font-weight: bold;
+}
+
+.event-venue, .event-date {
+    margin: 0.69em;
+    font-size: 1.2em;
+}
+
+.controls-container {
+    float: left;
+}
+
+.last-updated-container, .legends-container {
+    display: block;
+    float: right;
+}
+
+.legend-title {
+    display: inline-block;
+    text-align: right;
+    margin-right: 8px;
+}
+
+.legend {
+    display: inline-block;
+    margin: 0;
+    padding: 0.57em 0.83em;
+    font-size: 90%;
+}
+
+
+.scoreboard {
+    margin-top: -6px;
+}
+
+/*
+.first_solved, .solvedFirst {
+    background-color: #218540 !important;
+    color: white !important;
+}
+
+.solved, .yes {
+ background-color: #5EC583 !important;
+}
+
+.attempt, .attempted, .no {
+    background-color: #E23F46 !important;
+}
+
+.pending {
+ background-color: #2789D2 !important;
+}*/
+
+main.main {
+    width: 90%;
+    margin: 20px auto 0 auto;
+    -webkit-box-flex: 1;
+    -ms-flex: 1 0 auto;
+    flex: 1 0 auto;
+}
+
+thead tr.table-head, .table-foot .header-repeat, tr.table-foot.scoreboard-summary {
+    background-color: var(--blue-accent-3);
+    color: white;
+}
+
+
+.legend.scoreboard-score-pending, .contestant .scoreboard-score-pending {
+    /*background-color: rgba(80, 80, 255, 0.333);*/
+    /*background-color: #2789D2CC;*/
+    background-color: #2789FFAA;
+}
+
+.legend.scoreboard-score-blank, .contestant .scoreboard-score-blank {
+    /*background-color: rgba(255, 255, 255, 0.333);*/
+    /*background-color: #FFFFFF50;*/
+    background-color: #FFFFFF50;
+}
+
+.legend.scoreboard-score-no, .contestant .scoreboard-score-no {
+    /*background-color: rgba(255, 0, 0, 0.333);*/
+    /*background-color: #E23F46CC;*/
+    background-color: #FF3F46AA;
+}
+
+.legend.scoreboard-score-yes, .contestant .scoreboard-score-yes {
+    /*background-color: rgba(0, 255, 0, 0.333);*/
+    /*background-color: #5EC583CC;*/
+    background-color: #5EFF83AA;
+}
+
+.legend.scoreboard-score-yes.scoreboard-score-firstyes, .contestant .scoreboard-score-yes.scoreboard-score-firstyes {
+    /*background-color: rgba(11, 180, 32, 0.666);*/
+    /*background-color: #218540CC;*/
+    background-color: #21B540AA;
+}
+
+.legend.scoreboard-score-unknown, .contestant .scoreboard-score-unknown {
+    /*background-color: rgba(255, 0, 0, 0.666);*/
+    /*background-color: #FF0000CC;*/
+    background-color: #FF0000AA;
+}
+
+.table-foot .scoreboard-score-pending {
+    background-color: var(--blue-accent-3);/*#2789FF25;*/
+}
+.table-foot .scoreboard-score-blank {
+    background-color: var(--blue-accent-3);/*#FFFFFF10;*/
+}
+.table-foot .scoreboard-score-no {
+    background-color: var(--blue-accent-3);/*#FF3F4625;*/
+}
+.table-foot .scoreboard-score-yes {
+    background-color: var(--blue-accent-3);/*#5EFF8325;*/
+}
+.table-foot .scoreboard-score-yes.scoreboard-score-firstyes {
+    background-color: var(--blue-accent-3);/*#21B54025;*/
+}
+.table-foot .scoreboard-score-unknown {
+    background-color: var(--blue-accent-3);/*#FF000025;*/
+}
+
+.scoreboard-summary .t-problem/* {
+    color: black;
+}*/
+
+
+
+.scoreboard tbody tr.contestant:nth-child(odd) {
+    background-color: #EAEAEA80;
+}
+
+.scoreboard tbody tr.contestant:nth-child(even) {
+    background-color: #CFCFCF80;
+}
+
+
+.sponsors {
+    display: block;
+    width: 100%;
+    margin: 1em auto;
+}
+
+.sponsors .sponsors-main img {
+    margin: 20px;
+    height: auto;
+    width: 15em;
+}
+
+.sponsors .sponsors-main, .sponsors .partners {
+    width: 90%;
+    margin: 0 auto;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.sponsors img.rect {
+    margin: 1.5em;
+    height: 3em;
+    width: auto;
+}
+
+.sponsors img.square {
+    margin: 1em;
+    width: 5em;
+    height: auto;
+}
+
+
+footer {
+    width: 100%;
+    padding: 2em;
+    display: block;
+    text-align: center;
+}
+
+footer a, footer a:visited {
+    color: white;
+    text-decoration: none;
+    margin: 0 1em;
+    font-weight: 700;
+}
+
+
+
+@media (max-width: 575px) {
+    main.main {
+        margin: 0;
+    }
+    .overall-container .legends-container {
+        display: none !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .overall-container {
+        width: 100%;
+    }
+
+    header.site-header .logo-corner {
+        display: none;
+    }
+
+    .sponsors .sponsors-list {
+        display: block;
+    }
+
+    .sponsors .sponsors-list img {
+        text-align: center;
+        margin: 20px auto;
+        display: block;
+    }
+
+    .sponsors .sponsors-list li {
+        margin: 10px;
+        width: auto;
+    }
+}
+
+@media (max-width: 1199px) {
+    .scoreboard-head {
+        margin-top: -20px;
+    }
+
+    .overall-container .controls-container, .overall-container .last-updated-container, .overall-container .legends-container {
+        float: none;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .t-name {
+        font-size: 11px;
+    }
+
+    .scoreboard {
+        margin-top: 0;
+    }
+}
+
+@media (min-width: 1500px) {
+    .overall-container {
+        max-width: 1440px;
+    }
+}

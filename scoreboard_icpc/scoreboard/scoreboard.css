@@ -1,0 +1,222 @@
+/* by Kevin Atienza */
+
+.board-created .scoreboard-move {
+    transition: transform 1.8s ease 1.5s;
+}
+
+.scoreboard-item {
+    display: inline-block;
+    margin-right: 10px;
+}
+.board-created .scoreboard-enter-active, .board-created .scoreboard-leave-active {
+    transition: all 1.8s ease 1.5s;
+}
+.board-created .scoreboard-enter, .board-created .scoreboard-leave-to {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+ .table .header-repeat {
+    font-weight: bold;
+    vertical-align: top;
+ }
+
+.table td, .table th {
+    text-align: center;
+    vertical-align: middle;
+    line-height: 1.2;
+}
+
+@media screen {
+    .hilit tr.contestant:hover .t-name {
+        text-decoration: underline;
+    }
+
+    .hilit tr.contestant:hover .t-attempts {
+        background-color: rgba(207, 207, 255, 0.5)!important;
+    }
+
+    .hilit tr.contestant:hover .t-name,
+            .hilit tr.contestant:hover .t-attempts {
+        background-color: rgba(207, 207, 255, 0.5);
+    }
+
+    .hilit tr.contestant:hover .t-problem.scoreboard-score-pending {
+        background-color: rgba(80, 80, 255, 0.5);
+    }
+
+    .hilit tr.contestant:hover .t-problem.scoreboard-score-blank,
+            .hilit tr.contestant:hover .t-problem {
+        background-color: rgba(207, 207, 255, 0.5);
+    }
+
+    .hilit tr.contestant:hover .t-problem.scoreboard-score-no {
+        background-color: rgba(255, 0, 70, 0.5);
+    }
+
+    .hilit tr.contestant:hover .t-problem.scoreboard-score-yes {
+        background-color: rgba(0, 255, 110, 0.5);
+    }
+
+    .hilit tr.contestant:hover .t-problem.scoreboard-score-yes.scoreboard-score-firstyes {
+        background-color: rgba(11, 180, 100, 0.666);
+    }
+
+    .hilit tr.contestant:hover .t-problem.scoreboard-score-unknown {
+        background-color: rgba(255, 0, 70, 1.0);
+    }
+}
+
+tr {
+    background-color: #1111;
+}
+
+.d-name {
+    line-height: normal;
+    max-height: 40px;
+    overflow: hidden;
+    width: 100%;
+    margin: 0 auto;
+}
+td.t-name:not(:hover) .d-name {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    text-overflow: ellipsis;
+}
+td.t-name:hover .d-name {
+    overflow: visible;
+}
+td.t-name {
+    max-width: 250px;
+}
+
+td.t-score {
+    font-weight: bold;
+}
+
+.t-rank {
+    width: 0.6%;
+}
+.t-problem {
+    width: 1.8%;
+}
+.t-score {
+    width: 1.8%;
+}
+.t-name {
+    width: 7.0%;
+}
+.t-penalty {
+    width: 1.8%;
+}
+.t-attempts {
+    width: 1.8%;
+}
+
+.board-created .entry-value-leave-active {
+    transition: all 0.5s;
+    font-weight: bold;
+    opacity: 1;
+    z-index: 999;
+}
+
+.board-created .entry-value-enter-active {
+    transition: all 2s;
+    font-weight: bold;
+    opacity: 1;
+    z-index: 999;
+}
+
+.board-created .entry-value-enter, .board-created .entry-leave-to {
+    opacity: 0;
+}
+
+
+.table-head, .table-foot {
+    background-color: #ccc;
+}
+
+.group-label-par-0 {
+    background-color: #eee;
+}
+
+.group-label-par-1 {
+    background-color: #ddd;
+}
+
+.scoreboard-score-pending {
+    background-color: rgba(80, 80, 255, 0.333);
+}
+
+.scoreboard-score-blank {
+    background-color: rgba(255, 255, 255, 0.333);
+}
+
+.scoreboard-score-no {
+    background-color: rgba(255, 0, 0, 0.333);
+}
+
+.scoreboard-score-yes {
+    background-color: rgba(0, 255, 0, 0.333);
+}
+
+.scoreboard-score-yes.scoreboard-score-firstyes {
+    background-color: rgba(11, 180, 32, 0.666);
+}
+
+.scoreboard-score-unknown {
+    background-color: rgba(255, 0, 0, 0.666);
+}
+
+.table-foot .scoreboard-score-pending {
+    background-color: rgba(80, 80, 255, 0.111);
+}
+
+.table-foot .scoreboard-score-blank {
+    background-color: rgba(255, 255, 255, 0.111);
+}
+
+.table-foot .scoreboard-score-no {
+    background-color: rgba(255, 0, 0, 0.111);
+}
+
+.table-foot .scoreboard-score-yes {
+    background-color: rgba(0, 255, 0, 0.111);
+}
+
+.table-foot .scoreboard-score-yes.scoreboard-score-firstyes {
+    background-color: rgba(11, 180, 32, 0.222);
+}
+
+.table-foot .scoreboard-score-unknown {
+    background-color: rgba(255, 0, 0, 0.222);
+}
+
+.scoreboard-rank-gold {
+    background-color: #ffd700;
+}
+
+.scoreboard-rank-silver {
+    background-color: #c0c0c0;
+}
+
+.scoreboard-rank-bronze {
+    background-color: #cd7f32;
+}
+
+.footer-subcount {
+    font-weight: bold;
+}
+
+.verdict-pending {
+    color: rgba(0, 0, 80);
+}
+
+.verdict-ac {
+    color: rgba(0, 80, 0);
+}
+
+.verdict-wa {
+    color: rgba(80, 0, 0);
+}

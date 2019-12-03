@@ -1,24 +1,29 @@
-<!-- by Kevin Atienza -->
 <!DOCTYPE html>
+<!-- by Kevin Atienza -->
 <html lang="en">
     <head>
-        <title class="scoreboard-contest-name">Nice ICPC-style Scoreboard</title>
-        <script src="js/jquery-3.3.1.js"></script>
-        <script src="js/vue.js"></script>
-        <script src="js/axios.min.js"></script>   
-        <link href="css/bootstrap.min.css" rel="stylesheet" />
-        <link href="scoreboard.css" rel="stylesheet" />
-        <link rel="stylesheet" href="fontawesome-free-5.11.2-web/css/fontawesome.min.css">
-        <link rel="stylesheet" href="fontawesome-free-5.11.2-web/css/solid.min.css">
+        <title class="scoreboard-contest-name">Nice ICPC-style Scoreboard by kevinsogo</title>
+
+        <!-- library stuff -->
+        <script src="lib/js/jquery-3.3.1.js"></script>
+        <script src="lib/js/vue.js"></script>
+        <script src="lib/js/axios.min.js"></script>   
+        <link rel="stylesheet" href="lib/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="lib/fontawesome-free-5.11.2-web/css/fontawesome.min.css"/>
+        <link rel="stylesheet" href="lib/fontawesome-free-5.11.2-web/css/solid.min.css"/>
+
+        <!-- scoreboard stuff -->
+        <script src="scoreboard/scoreboard.js"></script>
+        <link rel="stylesheet" href="scoreboard/scoreboard.css" />
     </head>
     <body>
 
         <div class="container">
-            <div id="leaderboard-controls"></div>
-            <div id="leaderboard"></div>
+            <div id="scoreboard-controls"></div>
+            <div id="scoreboard"></div>
         </div>
 
 
-        <script src="scoreboard.js"></script>
+        <script type="text/javascript">initScoreboard()</script>
     </body>
 </html>
