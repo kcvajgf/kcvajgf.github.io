@@ -639,6 +639,13 @@ function initScoreboard(options) {
         return i >= 0 ? source.substring(i + word.length) : "";
     }
 
+    const defaultSummary = {
+        attempts: 0,
+        score: 0,
+        penalty: Number.POSITIVE_INFINITY,
+        subs: {},
+    };
+
     const labels = {
         attempts: "Attempts",
         solved: "Solved",
@@ -665,7 +672,7 @@ function initScoreboard(options) {
         data: {
             problems: [],
             contestants: [],
-            summary: null,
+            summary: {},
             loadedAll: false,
             scoreboardSource,
             rankRules,
@@ -677,6 +684,8 @@ function initScoreboard(options) {
         },
         async mounted() {
             this.setLoading(true);
+
+            this.assignSummary();
 
             this.$on("setShowAttempts", (value) => {
                 if (this.showAttempts != value) {
@@ -693,7 +702,6 @@ function initScoreboard(options) {
             this.$on("setHilit", (value) => { this.hilit = value; });
 
             await this.initFetchAll();
-
 
             setTimeout(() => this.setLoading(false), 1000);
 
@@ -814,9 +822,17 @@ function initScoreboard(options) {
                     console.log("Processing", allData);
                     this.problems = allData.problems;
                     this.contestants = allData.contestants;
-                    this.summary = allData.summary;
+                    this.assignSummary(allData.summary);
                     this.updateMetadata(allData);
                 }
+            },
+
+            assignSummary(newSummary) {
+                if (!newSummary) newSummary = defaultSummary;
+                this.summary.attempts = newSummary.attempts;
+                this.summary.penalty = newSummary.penalty;
+                this.summary.score = newSummary.score;
+                this.summary.subs = newSummary.subs;
             },
 
             // these are mostly just filter-like things.
@@ -829,8 +845,8 @@ function initScoreboard(options) {
                 } else if (sub.score == 0) {
                     return "scoreboard-score-no";
                 } else if (sub.score > 0) {
-                    const summary = this.getSummary();
-                    return (summary && sub.penalty == summary.subs[prob].penalty ?
+                    const sumSub = this.summarySubs(prob);
+                    return (sumSub && sub.penalty == sumSub.penalty ?
                             "scoreboard-score-yes scoreboard-score-firstyes" : "scoreboard-score-yes");
                 } else {
                     return "scoreboard-score-unknown";
@@ -865,19 +881,10 @@ function initScoreboard(options) {
                 return `${sub.score}_${sub.attempts}_${sub.penalty}_${sub.pending}`;
             },
             getSummary() {
-                if (this.summary && this.summary.subs) {
-                    return this.summary;
-                } else {
-                    return {
-                        attempts: 0,
-                        score: 0,
-                        penalty: Number.POSITIVE_INFINITY,
-                        subs: {},
-                    };
-                }
+                return this.summary.subs ? this.summary : defaultSummary;
             },
             summarySubs(prob) {
-                if (this.summary && this.summary.subs && this.summary.subs[prob]) {
+                if (this.summary.subs && this.summary.subs[prob]) {
                     return this.summary.subs[prob];
                 } else {
                     return {

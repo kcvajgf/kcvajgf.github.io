@@ -128,7 +128,7 @@ td.t-score {
     z-index: 999;
 }
 
-.board-created .entry-value-enter, .board-created .entry-leave-to {
+.board-created .entry-value-enter, .board-created .entry-value-leave-to {
     opacity: 0;
 }
 
