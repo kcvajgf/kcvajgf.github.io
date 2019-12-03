@@ -1,22 +1,22 @@
-.board-created .leaderboard-move {
+.board-created .scoreboard-move {
     transition: transform 2s ease 1.5s;
 }
 
-.leaderboard-item {
+.scoreboard-item {
     display: inline-block;
     margin-right: 10px;
 }
-.board-created .leaderboard-enter-active, .board-created .leaderboard-leave-active {
+.board-created .scoreboard-enter-active, .board-created .scoreboard-leave-active {
     transition: all 2s ease 1.5s;
 }
-.board-created .leaderboard-enter, .board-created .leaderboard-leave-to {
+.board-created .scoreboard-enter, .board-created .scoreboard-leave-to {
     opacity: 0;
     transform: translateY(30px);
 }
 
-.board-created .table .leaderboard-move td, .board-created .table .leaderboard-move th,
-.board-created .table .leaderboard-enter-active td, .board-created .table .leaderboard-enter-active th,
-.board-created .table .leaderboard-leave-active td, .board-created .table .leaderboard-leave-active th {
+.board-created .table .scoreboard-move td, .board-created .table .scoreboard-move th,
+.board-created .table .scoreboard-enter-active td, .board-created .table .scoreboard-enter-active th,
+.board-created .table .scoreboard-leave-active td, .board-created .table .scoreboard-leave-active th {
     text-align: center;/*
     border-top: 1pt solid transparent;
     border-bottom: 1pt solid transparent;*/

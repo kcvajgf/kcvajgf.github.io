@@ -828,6 +828,8 @@ function initScoreboard(options) {
             },
 
             assignSummary(newSummary) {
+                // shallow assign to not trigger dependency on summary (breaks animation)
+                // probably a mistake in the design, oh well...
                 if (!newSummary) newSummary = defaultSummary;
                 this.summary.attempts = newSummary.attempts;
                 this.summary.penalty = newSummary.penalty;
