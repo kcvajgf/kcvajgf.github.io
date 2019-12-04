@@ -512,7 +512,7 @@ var initScoreboard = (() => {
                     }
                 }
 
-                if (everything.problems && everything.problems.length) {
+                if (everything && everything.problems && everything.problems.length) {
                     problemGroups.push({
                         label: url,
                         slug: url,
