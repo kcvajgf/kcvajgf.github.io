@@ -454,7 +454,7 @@ function initScoreboard(options) {
             }
 
             // recompute summary
-            xdata.summary = {
+            let summary = xdata.summary = {
                 attempts: 0,
                 score: 0,
                 penalty: Number.POSITIVE_INFINITY,
@@ -462,23 +462,23 @@ function initScoreboard(options) {
             };
 
             for (const p of xdata.problems) {
-                xdata.summary.subs[p] = {
+                summary.subs[p] = {
                     score: 0,
                     attempts: 0,
                     penalty: Number.POSITIVE_INFINITY,
                     loaded: true,
                 };
                 for (const c of xdata.contestants) {
-                    xdata.summary.subs[p].attempts += c.subs[p].attempts;
-                    xdata.summary.subs[p].score += c.subs[p].score;
+                    summary.subs[p].attempts += c.subs[p].attempts;
+                    summary.subs[p].score += c.subs[p].score;
                     if (c.subs[p].score) {
-                        xdata.summary.subs[p].penalty = Math.min(xdata.summary.subs[p].penalty, c.subs[p].penalty);
+                        summary.subs[p].penalty = Math.min(summary.subs[p].penalty, c.subs[p].penalty);
                     }
                 }
-                xdata.summary.attempts += xdata.summary.subs[p].attempts;
-                xdata.summary.score += xdata.summary.subs[p].score;
-                if (xdata.summary.subs[p].score) {
-                    xdata.summary.penalty = Math.min(xdata.summary.penalty, xdata.summary.subs[p].penalty);
+                summary.attempts += summary.subs[p].attempts;
+                summary.score += summary.subs[p].score;
+                if (summary.subs[p].score) {
+                    summary.penalty = Math.min(summary.penalty, summary.subs[p].penalty);
                 }
             }
 
@@ -624,7 +624,13 @@ function initScoreboard(options) {
 
     const ruleType = options.type || search.get("type") || "generic";
 
-    const nohilit = 'nohilit' in options ? options.nohilit : search.get("nohilit") ? parseInt(search.get("nohilit")) : 0;
+    const nohilit = (
+            'nohilit' in options ?
+            options.nohilit :
+            search.get("nohilit") ?
+            parseInt(search.get("nohilit")) :
+            0
+        );
 
     let rankRules = rankRuleses[ruleType];
     if (!rankRules) {
@@ -661,11 +667,63 @@ function initScoreboard(options) {
         hilitOnHover: "Highlight on hover",
         blankPenalty: ".",
         blankAttempt: ".",
+        pending: "?",
     };
 
     if (options.labels) {
         for (const name in options.labels) labels[name] = options.labels[name];
     }
+
+    // filters
+    Vue.filter('tries', (n) => {
+        return n == 1 ? "1 try" : `${n} tries`;
+    });
+
+    Vue.filter('styleForTotalScore', (score, maxScore, probCount) => {
+        score /= maxScore;
+        const rb = Math.round(222 * (1 - (maxScore == probCount ? 1.0 : 0.8) * score));
+        return {'background-color': `rgba(${rb}, 222, ${rb}, 0.5)`};
+    });
+    Vue.filter('styleForAttempts', (attempts, maxAttempts) => {
+        attempts /= maxAttempts;
+        const g = Math.round(255 * (1 - 0.2 * attempts));
+        return {'background-color': `rgba(${g}, ${g}, ${g}, 0.333)`};
+    });
+    Vue.filter('classForRank', (rank, rankRules) => {
+        for (const rankRule of rankRules) {
+            if (rank <= rankRule.rank) return rankRule['class'];
+        }
+        return 'scoreboard-rank-blank';
+    });
+    Vue.filter('classForSub', (c, prob, sumSub) => {
+        const sub = c.subs[prob];
+        if (sub.pending) {
+            return "scoreboard-score-pending";
+        } else if (sub.attempts == 0) {
+            return "scoreboard-score-blank";
+        } else if (sub.score == 0) {
+            return "scoreboard-score-no";
+        } else if (sub.score > 0) {
+            return (sumSub && sub.penalty == sumSub.penalty ?
+                    "scoreboard-score-yes scoreboard-score-firstyes" : "scoreboard-score-yes");
+        } else {
+            return "scoreboard-score-unknown";
+        }
+    });
+    Vue.filter('classForSummarySub', (sub) => {
+        if (sub.attempts == 0) {
+            return "scoreboard-score-blank";
+        } else if (sub.score == 0) {
+            return "scoreboard-score-no";
+        } else if (sub.score > 0) {
+            return "scoreboard-score-yes";
+        } else {
+            return "scoreboard-score-unknown";
+        }
+    });
+    Vue.filter('subId', (sub) => `${sub.score}_${sub.attempts}_${sub.penalty}_${sub.pending}`);
+    Vue.filter('contId', (cont) => `${cont.score}_${cont.penalty}`);
+    Vue.filter('summaryId', (summary) => `${summary.score}_${summary.penalty}_${summary.attempts}`);
 
     const vm = new Vue({
         el: '#scoreboard',
@@ -743,6 +801,18 @@ function initScoreboard(options) {
                 }
                 return maxAttempts;
             },
+
+            summaryKey() {
+                let i = 0;
+                while (this.nameContestant["summary_".concat(i)]) i++;
+                return "summary_".concat(i);
+            },
+
+            headerKey() {
+                let i = 0;
+                while (this.nameContestant["header_".concat(i)]) i++;
+                return "header_".concat(i);
+            },
         },
 
         methods: {
@@ -805,7 +875,8 @@ function initScoreboard(options) {
                 console.log(`Fetching ${this.scoreboardSource}`);
                 const allData = await fetchData(this.scoreboardSource).catch((x) => {
                     console.error("Got error", x);
-                    console.error(`Failed to fetch data from ${this.scoreboardSource}. Please try again later.`);
+                    console.error(`Failed to fetch data from ${this.scoreboardSource}.`,
+                            `Please try again later.`);
                 });
 
                 console.log("Fetching Done");
@@ -831,98 +902,20 @@ function initScoreboard(options) {
                 // shallow assign to not trigger dependency on summary (breaks animation)
                 // probably a mistake in the design, oh well...
                 if (!newSummary) newSummary = defaultSummary;
-                this.summary.attempts = newSummary.attempts;
-                this.summary.penalty = newSummary.penalty;
-                this.summary.score = newSummary.score;
-                this.summary.subs = newSummary.subs;
+                Object.assign(this.summary, newSummary);
             },
 
-            // these are mostly just filter-like things.
-            classForSub(c, prob) {
-                const sub = c.subs[prob];
-                if (sub.pending) {
-                    return "scoreboard-score-pending";
-                } else if (sub.attempts == 0) {
-                    return "scoreboard-score-blank";
-                } else if (sub.score == 0) {
-                    return "scoreboard-score-no";
-                } else if (sub.score > 0) {
-                    const sumSub = this.summarySubs(prob);
-                    return (sumSub && sub.penalty == sumSub.penalty ?
-                            "scoreboard-score-yes scoreboard-score-firstyes" : "scoreboard-score-yes");
-                } else {
-                    return "scoreboard-score-unknown";
-                }
+            safeSummary() {
+                return this.summary && this.summary.subs ? this.summary : defaultSummary;
             },
-            classForSummarySub(sub) {
-                if (sub.attempts == 0) {
-                    return "scoreboard-score-blank";
-                } else if (sub.score == 0) {
-                    return "scoreboard-score-no";
-                } else if (sub.score > 0) {
-                    return "scoreboard-score-yes";
-                } else {
-                    return "scoreboard-score-unknown";
-                }
-            },
-            summaryKey() {
-                let i = 0;
-                while (this.nameContestant["summary_".concat(i)]) i++;
-                return "summary_".concat(i);
-            },
-            headerKey() {
-                let i = 0;
-                while (this.nameContestant["header_".concat(i)]) i++;
-                return "header_".concat(i);
-            },
-            tries(n) {
-                if (n == 1) return "1 try";
-                return `${n} tries`;
-            },
-            subId(sub) {
-                return `${sub.score}_${sub.attempts}_${sub.penalty}_${sub.pending}`;
-            },
-            getSummary() {
-                return this.summary.subs ? this.summary : defaultSummary;
-            },
-            summarySubs(prob) {
-                if (this.summary.subs && this.summary.subs[prob]) {
-                    return this.summary.subs[prob];
-                } else {
-                    return {
-                        score: 0,
-                        attempts: 0,
-                        penalty: Number.POSITIVE_INFINITY,
-                        loaded: false,
-                    };
-                }
-            },
-            contId(cont) {
-                return `${cont.score}_${cont.penalty}`;
-            },
-            summaryId(summary) {
-                return `${summary.score}_${summary.penalty}_${summary.attempts}`;
-            },
-            colorForTotalScore(score) {
-                score /= this.maxScore;
-                const rb = Math.round(222 * (1 - (this.maxScore == this.problems.length ? 1.0 : 0.8) * score));
-                return `rgba(${rb}, 222, ${rb}, 0.5)`;
-            },
-            colorForPenalty(penalty) {
-                penalty /= this.maxPenalty;
-                const g = Math.round(255 * (1 - 0.0 * penalty));
-                return `rgba(${g}, ${g}, ${g}, 0.333)`;
-            },
-            colorForAttempts(attempts) {
-                attempts /= this.maxAttempts;
-                const g = Math.round(255 * (1 - 0.2 * attempts));
-                return `rgba(${g}, ${g}, ${g}, 0.333)`;
-            },
-            classForRank(rank) {
-                for (const rankRule of this.rankRules) {
-                    if (rank <= rankRule.rank) return rankRule['class'];
-                }
-                return 'scoreboard-rank-blank';
+
+            sumSubs(prob) {
+                return this.safeSummary().subs[prob] || {
+                    score: 0,
+                    attempts: 0,
+                    penalty: Number.POSITIVE_INFINITY,
+                    loaded: false,
+                };
             },
         },
         template: `
@@ -930,30 +923,32 @@ function initScoreboard(options) {
             <table class="scoreboard-table table table-borderless table-sm">
                 <thead>
                     <tr class="table-head">
-                        <th class="t-rank">{{labels.rank}}</th>
-                        <th class="t-name">{{labels.name}}</th>
+                        <th class="t-rank">{{ labels.rank }}</th>
+                        <th class="t-name">{{ labels.name }}</th>
                         <th class="t-score">
-                            {{labels.solved}}
+                            {{ labels.solved }}
                             <transition name="entry-value" mode="out-in">
-                                <small v-if="showPenalty"><br/>{{labels.time}}</small>
+                                <small v-if="showPenalty"><br/>{{ labels.time }}</small>
                             </transition>
                         </th>
-                        <th class="t-penalty" v-if="!showPenalty">{{labels.time}}</th>
+                        <th class="t-penalty" v-if="!showPenalty">{{ labels.time }}</th>
                         <th class="t-problem" v-for="problem in problems">{{ problem }}</th>
                         <transition name="entry-value" mode="out-in">
-                            <th class="t-attempts"><small>{{labels.attempts}}</small></th>
+                            <th class="t-attempts"><small>{{ labels.attempts }}</small></th>
                         </transition>
                     </tr>
                 </thead>
                 <transition-group name="scoreboard" tag="tbody">
                     <tr class="contestant" v-for="c in contestants" :key="c.name">
                         <transition name="entry-value" mode="out-in">
-                            <td class="t-rank" :key="c.rank" :class="classForRank(c.rank)">{{ c.rank }}</td>
+                            <td class="t-rank" :key="c.rank" :class="c.rank | classForRank(rankRules)">
+                                {{ c.rank }}
+                            </td>
                         </transition>
                         <td class="t-name"><div class="d-name">{{ c.name }}</div></td>
                         <transition name="entry-value" mode="out-in">
-                            <td class="t-score" :key="contId(c)"
-                                :style="{'background-color': colorForTotalScore(c.score)}">
+                            <td class="t-score" :key="c | contId"
+                                :style="c.score | styleForTotalScore(maxScore, problems.length)">
                                 {{ c.score }}
                                 <transition name="entry-value" mode="out-in">
                                     <small class="t-penalty"
@@ -969,26 +964,26 @@ function initScoreboard(options) {
                             </td>
                         </transition>
                         <transition name="entry-value" mode="out-in" v-for="prob in problems" :key="prob">
-                            <td class="t-problem" :key="subId(c.subs[prob])"
-                                    :class="classForSub(c, prob)">
+                            <td class="t-problem" :key="c.subs[prob] | subId"
+                                    :class="c | classForSub(prob, sumSubs(prob))">
                                 <span v-if="showAttempts && !showPenalty">
                                     <small v-if="!c.subs[prob].attempts">
-                                        {{labels.blankAttempt}}
+                                        {{ labels.blankAttempt }}
                                     </small>
                                     <small v-if="c.subs[prob].attempts">
-                                        {{c.subs[prob].attempts}}
+                                        {{ c.subs[prob].attempts }}
                                     </small>
                                 </span>
                                 <span v-if="(!showAttempts || !showPenalty) && c.subs[prob].attempts">
                                     <i v-if="!c.subs[prob].score && c.subs[prob].pending"
                                             class="fas fa-question verdict-pending"
-                                            :class="{'fa-xs': showAttempts}" aria-hidden="true"></i>
+                                            :class="{'fa-xs': showAttempts}"></i>
                                     <i v-if="!c.subs[prob].score && !c.subs[prob].pending"
                                             class="fas fa-times verdict-wa"
-                                            :class="{'fa-xs': showAttempts}" aria-hidden="true"></i>
+                                            :class="{'fa-xs': showAttempts}"></i>
                                     <i v-if="c.subs[prob].score"
                                             class="fas fa-check verdict-ac"
-                                            :class="{'fa-xs': showAttempts}" aria-hidden="true"></i>
+                                            :class="{'fa-xs': showAttempts}"></i>
                                 </span>
                                 <transition name="entry-value" mode="out-in">
                                     <span v-if="showPenalty">
@@ -998,8 +993,9 @@ function initScoreboard(options) {
                                             {{ c.subs[prob].penalty }}
                                         </span>
                                         <span class="t-penalty"
-                                              v-if="!c.subs[prob].score && (!showAttempts || c.subs[prob].attempts)">
-                                            {{c.subs[prob].pending?'?':labels.blankPenalty}}
+                                              v-if="!c.subs[prob].score &&
+                                                   (!showAttempts || c.subs[prob].attempts)">
+                                            {{ c.subs[prob].pending ? labels.pending : labels.blankPenalty }}
                                         </span>
                                     </span>
                                 </transition>
@@ -1007,10 +1003,10 @@ function initScoreboard(options) {
                                     <br/>
                                     <small>
                                         <span v-if="!c.subs[prob].attempts">
-                                            {{labels.blankAttempt}}
+                                            {{ labels.blankAttempt }}
                                         </span>
                                         <span v-if="c.subs[prob].attempts">
-                                            {{tries(c.subs[prob].attempts)}}
+                                            {{ c.subs[prob].attempts | tries }}
                                         </span>
                                     </small>
                                 </span>
@@ -1018,87 +1014,87 @@ function initScoreboard(options) {
                         </transition>
                         <transition name="entry-value" mode="out-in">
                             <td class="t-attempts" :key="c.attempts"
-                                    :style="{'background-color': colorForAttempts(c.attempts)}">
+                                    :style="c.attempts | styleForAttempts(maxAttempts)">
                                 {{ c.attempts }}
                             </td>
                         </transition>
                     </tr>
-                    <tr class="table-foot" :key="headerKey()">
-                        <td class="header-repeat t-rank">{{labels.rank}}</td>
-                        <td class="header-repeat t-name">{{labels.name}}</td>
+                    <tr class="table-foot" :key="headerKey">
+                        <td class="header-repeat t-rank">{{ labels.rank }}</td>
+                        <td class="header-repeat t-name">{{ labels.name }}</td>
                         <td class="header-repeat t-score">
-                            {{labels.solved}}
+                            {{ labels.solved }}
                             <transition name="entry-value" mode="out-in">
-                                <small v-if="showPenalty"><br/>{{labels.time}}</small>
+                                <small v-if="showPenalty"><br/>{{ labels.time }}</small>
                             </transition>
                         </td>
-                        <td class="header-repeat t-penalty" v-if="!showPenalty">{{labels.time}}</td>
+                        <td class="header-repeat t-penalty" v-if="!showPenalty">{{ labels.time }}</td>
                         <td class="header-repeat t-problem" v-for="problem in problems">{{ problem }}</td>
                         <transition name="entry-value" mode="out-in">
-                            <td class="header-repeat t-attempts"><small>{{labels.attempts}}</small></td>
+                            <td class="header-repeat t-attempts"><small>{{ labels.attempts }}</small></td>
                         </transition>
                     </tr>
-                    <tr class="table-foot scoreboard-summary" :key="summaryKey()">
+                    <tr class="table-foot scoreboard-summary" :key="summaryKey">
                         <td class="t-rank scoreboard-rank-blank"></td>
                         <td class="t-name">
-                            <span class="footer-subcount">{{labels.isSolved}}</span>
+                            <span class="footer-subcount">{{ labels.isSolved }}</span>
                             <br/>
-                            <span class="footer-subcount">{{labels.firstYes}}</span>
+                            <span class="footer-subcount">{{ labels.firstYes }}</span>
                             <br/>
-                            <span class="footer-subcount">{{labels.subCount}}</span>
+                            <span class="footer-subcount">{{ labels.subCount }}</span>
                             <br/>
-                            <span class="footer-subcount">{{labels.totalYes}}</span>
+                            <span class="footer-subcount">{{ labels.totalYes }}</span>
                         </td>
                         <transition name="entry-value" mode="out-in">
-                            <td class="t-score" :key="summaryId(getSummary())">
+                            <td class="t-score" :key="safeSummary() | summaryId">
                                 <br/>
                                 <transition name="entry-value" mode="out-in">
-                                    <span class="t-penalty" v-if="getSummary().score">
-                                        {{getSummary().penalty}}
+                                    <span class="t-penalty" v-if="safeSummary().score">
+                                        {{ safeSummary().penalty }}
                                     </span>
-                                    <span class="t-penalty" v-if="!getSummary().score">
-                                        {{labels.blankPenalty}}
+                                    <span class="t-penalty" v-if="!safeSummary().score">
+                                        {{ labels.blankPenalty }}
                                     </span>
                                 </transition>
                                 <br/>
-                                <small>{{ tries(getSummary().attempts)}}</small>
+                                <small>{{ safeSummary().attempts | tries }}</small>
                                 <br/>
-                                {{ getSummary().score }}
+                                {{ safeSummary().score }}
                             </td>
                         </transition>
                         <td v-if="!showPenalty" class="t-score"></td>
                         <transition name="entry-value" mode="out-in" v-for="prob in problems" :key="prob">
-                            <td class="t-problem" :key="subId(getSummary().subs[prob])"
-                                    :class="classForSummarySub(summarySubs(prob))">
+                            <td class="t-problem" :key="sumSubs(prob) | subId"
+                                    :class="sumSubs(prob) | classForSummarySub">
 
-                                <span v-if="summarySubs(prob).attempts">
-                                    <i v-if="!summarySubs(prob).score"
-                                       class="fas fa-times verdict-wa" aria-hidden="true"></i>
-                                    <i v-if="summarySubs(prob).score"
-                                       class="fas fa-check verdict-ac" aria-hidden="true"></i>
+                                <span v-if="sumSubs(prob).attempts">
+                                    <i v-if="!sumSubs(prob).score"
+                                       class="fas fa-times verdict-wa"></i>
+                                    <i v-if="sumSubs(prob).score"
+                                       class="fas fa-check verdict-ac"></i>
                                 </span>
                                 <br/>
                                 <transition name="entry-value" mode="out-in">
-                                    <span class="t-penalty" v-if="summarySubs(prob).score">
-                                        {{ summarySubs(prob).penalty }}
+                                    <span class="t-penalty" v-if="sumSubs(prob).score">
+                                        {{ sumSubs(prob).penalty }}
                                     </span>
-                                    <span class="t-penalty" v-if="!summarySubs(prob).score">
-                                        {{summarySubs(prob).pending?'?':labels.blankPenalty}}
+                                    <span class="t-penalty" v-if="!sumSubs(prob).score">
+                                        {{ sumSubs(prob).pending ? labels.pending : labels.blankPenalty }}
                                     </span>
                                 </transition>
                                 <br/>
-                                <small v-if="!summarySubs(prob).attempts">
-                                    {{labels.blankAttempt}}
+                                <small v-if="!sumSubs(prob).attempts">
+                                    {{ labels.blankAttempt }}
                                 </small>
-                                <small v-if="summarySubs(prob).attempts">
-                                    {{tries(summarySubs(prob).attempts)}}
+                                <small v-if="sumSubs(prob).attempts">
+                                    {{ sumSubs(prob).attempts | tries }}
                                 </small>
                                 <br/>
-                                {{summarySubs(prob).score}}
+                                {{ sumSubs(prob).score }}
                             </td>
                         </transition>
-                        <td class="t-attempts" :key="getSummary().attempts">
-                                {{ getSummary().attempts }}
+                        <td class="t-attempts" :key="safeSummary().attempts">
+                                {{ safeSummary().attempts }}
                             </td>
                         </transition>
                     </tr>
@@ -1140,7 +1136,9 @@ function initScoreboard(options) {
                                id="controls-show-attempts"
                                v-model="showAttempts"
                                v-on:change="updateShowAttempts()"/>
-                        <label class="form-check-label" for="controls-show-attempts">{{labels.showAttemptCount}}</label>
+                        <label class="form-check-label" for="controls-show-attempts">
+                            {{ labels.showAttemptCount }}
+                        </label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input"
@@ -1148,7 +1146,9 @@ function initScoreboard(options) {
                                id="controls-show-penalty"
                                v-model="showPenalty"
                                v-on:change="updateShowPenalty()"/>
-                        <label class="form-check-label" for="controls-show-penalty">{{labels.showTimes}}</label>
+                        <label class="form-check-label" for="controls-show-penalty">
+                            {{ labels.showTimes }}
+                        </label>
                     </div>
                     <!-- <div class="form-check form-check-inline">
                         <input class="form-check-input"
@@ -1156,7 +1156,9 @@ function initScoreboard(options) {
                                id="controls-hilit"
                                v-model="hilit"
                                v-on:change="updateHilit()"/>
-                        <label class="form-check-label" for="controls-hilit">{{labels.hilitOnHover}}</label>
+                        <label class="form-check-label" for="controls-hilit">
+                            {{ labels.hilitOnHover }}
+                        </label>
                     </div> -->
                 </form>
             `
