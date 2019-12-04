@@ -506,8 +506,10 @@ var initScoreboard = (() => {
                         console.error("Got error", x);
                         alert(`Failed to fetch everything for ${contestId} (${url}). Please try again later.`);
                     });
-                    everything.url = url;
-                    if (everything) localStorage.setItem(key, JSON.stringify(everything));
+                    if (everything) {
+                        everything.url = url;
+                        localStorage.setItem(key, JSON.stringify(everything));
+                    }
                 }
 
                 if (everything.problems && everything.problems.length) {
