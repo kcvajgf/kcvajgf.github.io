@@ -356,11 +356,10 @@ var initScoreboard = (() => {
         }
     }
 
-    const HRKunoGetter = (() => {
-        const hackerrank = "http://localhost:8003"
+    const HRGetter = ((options) => { // cannot use due to CORS restriction, so use for testing only
         function contestDataParams(cslug) {
             return {
-                url: `${hackerrank}/rest/contests/${cslug}/challenges`,
+                url: `${options.hackerrankDomain}/rest/contests/${cslug}/challenges`,
                 params: {
                     // cslug,
                 },
@@ -370,7 +369,7 @@ var initScoreboard = (() => {
 
         function problemDataParams(cslug, slug) {
             return {
-                url: `${hackerrank}/rest/contests/${cslug}/challenges/${slug}/leaderboard`,
+                url: `${options.hackerrankDomain}/rest/contests/${cslug}/challenges/${slug}/leaderboard`,
                 params: {
                     // cslug,
                     // slug,
@@ -379,34 +378,9 @@ var initScoreboard = (() => {
             }
         }
         return makeHRGetter(contestDataParams, problemDataParams);
-    })();
+    });
 
-    const HRGetter = (() => {
-        const hackerrank = "https://www.hackerrank.com" // cannot use due to CORS restriction
-        function contestDataParams(cslug) {
-            return {
-                url: `${hackerrank}/rest/contests/${cslug}/challenges`,
-                params: {
-                    // cslug,
-                },
-                limit: 100,
-            }
-        }
-
-        function problemDataParams(cslug, slug) {
-            return {
-                url: `${hackerrank}/rest/contests/${cslug}/challenges/${slug}/leaderboard`,
-                params: {
-                    // cslug,
-                    // slug,
-                },
-                limit: 100,
-            }
-        }
-        return makeHRGetter(contestDataParams, problemDataParams);
-    })();
-
-    const HRAzureGetter = (() => {
+    const HRAzureGetter = ((options) => {
         function contestDataParams(cslug) {
             return {
                 url: `contests/${cslug}.json`,
@@ -430,18 +404,15 @@ var initScoreboard = (() => {
         }
 
         return makeHRGetter(contestDataParams, problemDataParams);
-    })();
+    });
 
 
     const CFGetter = ((options) => {
-        const codeforces = "http://localhost:8003"
-        // const codeforces = "https://codeforces.com"
-
 
         async function getContestData(contestId) {
             let rawProblems = null;
             const rawRows = await fetchWhileCF(
-                `${codeforces}/api/contest.standings`,
+                `${options.codeforcesDomain}/api/contest.standings`,
                 { contestId: contestId },
                 400, // limit
                 (x) => {
@@ -662,7 +633,7 @@ var initScoreboard = (() => {
     async function getContestDetails(options) {
         const search = new URLSearchParams(window.location.search);
 
-        let ruleType       = search.get("type") || options.demo ? "noifinals2019": "generic";
+        let ruleType       = search.get("type") || (options.demo ? "noifinals2019": "generic");
         let pastCurls      = search.get("past") ? search.get("past").split(",") : [];
         let fetchCurls     = search.get("fetch") ? search.get("fetch").split(",") : [];
         let cfContestIDs   = search.get("ids") ? search.get("ids").split(",") : [];
@@ -673,7 +644,10 @@ var initScoreboard = (() => {
         const showBlank    = search.get("blanks") ? parseInt(search.get("blanks")) : 0;
         const contest      = search.get("contest") || null;
         const contestYear  = search.get("year") ? parseInt(search.get("year")) : currentYear;
-        let source         = search.get("source") ? search.get("source") : contestYear >= 2020 ? "CF" : "HR";
+        let source         = search.get("source") || (contestYear >= 2020 ? "CF" : "HR");
+
+        const hackerrankDomain = search.get("localhost") ? "http://localhost:" + search.get("localhost") : "https://hackerrank.com";
+        const codeforcesDomain = search.get("localhost") ? "http://localhost:" + search.get("localhost") : "https://codeforces.com";
 
         let rankRules = rankRuleses[ruleType];
 
@@ -783,14 +757,13 @@ var initScoreboard = (() => {
         if (options.demo) {
             getter = DemoGetter({curls});
         } else if (source == "CF") {
-            getter = CFGetter({curls, cfContestIDs});
+            getter = CFGetter({codeforcesDomain, curls, cfContestIDs});
         } else if (source == "HR") {
-            // getter = HRGetter({parallelContestURLs, curls});
-            getter = HRKunoGetter({parallelContestURLs, curls});
-            // getter = HRAzureGetter({parallelContestURLs, curls});
+            getter = HRGetter({hackerrankDomain})({parallelContestURLs, curls});
+            // getter = HRAzureGetter({hackerrankDomain})({parallelContestURLs, curls});
         } else {
             alert(`Unknown source: ${source}`);
-            getter = HRKunoGetter({parallelContestURLs, curls});
+            getter = HRGetter({hackerrankDomain})({parallelContestURLs, curls});
         }
 
         return {
