@@ -190,15 +190,16 @@ var scoreboard = new Vue({
             return "";
         },
         colorForScore(score) {
-            if (!this.missing && score == -1) return "rgba(222, 222, 222, 0.333)";
-            score = Math.max(score, 0) / 100;
-            if (score <= 0.5) {
-                var gr = Math.round(255 * 2 * score);
-                return `rgba(255, ${gr}, 0, 0.333)`
-            } else {
-                var rd = Math.round(255 * 2 * (1 - score))
-                return `rgba(${rd}, 255, 0, 0.333)`
+            let bgcolor = `rgba(${0xff}, ${0xff}, ${0xff}, 0.333)`
+            if (!this.missing || score != -1) {
+                // gray#DDDDDD to green#5EEE83
+                score = Math.max(score, 0) / 100;
+                let red = Math.round(0xDD * (1 - score) + 0x5E * score);
+                let green = Math.round(0xDD * (1 - score) + 0xEE * score);
+                let blue = Math.round(0xDD * (1 - score) + 0x83 * score);
+                bgcolor = `rgba(${red}, ${green}, ${blue}, 0.5)`;
             }
+            return bgcolor;
         },
         colorForTotalScore(score) {
             score /= this.maxScore;

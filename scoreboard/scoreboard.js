@@ -184,7 +184,6 @@ var initScoreboard = (() => {
 
             let cslug = problem.contestSlug;
             let subs = getProblemData(problem.id)
-            console.log(cslug, "Fetched", problem.id, subs);
             proc(problem, subs || []);
         }
 
@@ -201,8 +200,17 @@ var initScoreboard = (() => {
             }
         }
 
+        function randomSolve() {
+            while (true) {
+                for (const c of _.shuffle(xconts)) {
+                    if (xSolve(c, 1)) return;
+                }
+            }
+        }
+
         return {
             newGuy: xinitContestant,
+            randomSolve,
             fetchProblemSubs,
             fetchProblemList,
             initFetchAll,
@@ -652,7 +660,7 @@ var initScoreboard = (() => {
     async function getContestDetails(options) {
         const search = new URLSearchParams(window.location.search);
 
-        let ruleType       = search.get("type") || "generic";
+        let ruleType       = search.get("type") || options.demo ? "noifinals2019": "generic";
         let pastCurls      = search.get("past") ? search.get("past").split(",") : [];
         let fetchCurls     = search.get("fetch") ? search.get("fetch").split(",") : [];
         let cfContestIDs   = search.get("ids") ? search.get("ids").split(",") : [];
@@ -800,6 +808,8 @@ var initScoreboard = (() => {
     async function initScoreboard(options) {
         if (!options) options = {};
         const contestDetails = await getContestDetails(options);
+
+        const getter = contestDetails.getter;
         const vm = new Vue({
             el: '#scoreboard',
             data: {
@@ -811,7 +821,6 @@ var initScoreboard = (() => {
                 startedFetchLoop: false,
                 fetchInterval: contestDetails.fetchInterval,
 
-                getter: contestDetails.getter,
                 fetchCurls: contestDetails.fetchCurls,
                 rankRules: contestDetails.rankRules,
                 penaltyFixed: contestDetails.penaltyFixed,
@@ -826,7 +835,6 @@ var initScoreboard = (() => {
                 this.$el.classList.add("board-loading");
 
                 await this.initFetchAll();
-                this.fix();
 
                 setTimeout(() => {
                     this.$el.classList.remove("board-loading");
@@ -918,6 +926,7 @@ var initScoreboard = (() => {
                         console.log("No fetch loop for demo");
                         return;
                     }
+
                     this.startedFetchLoop = true;
 
                     while (true) {
@@ -946,17 +955,19 @@ var initScoreboard = (() => {
                 // fetches
                 async fetchProblem(problem) {
                     if (!problem) console.warn("WARNING: PROBLEM NOT FOUND!");
-                    await this.getter.fetchProblemSubs(problem, (prob, subs) => {
+                    await getter.fetchProblemSubs(problem, (prob, subs) => {
                         this.processSubs(prob, subs);
                     });
                 },
 
                 async initFetchAll() {
-                    this.problemGroups = await this.getter.fetchProblemList();
-                    await this.getter.initFetchAll((prob, subs) => {
+                    this.problemGroups = await getter.fetchProblemList();
+                    await getter.initFetchAll((prob, subs) => {
                         this.processSubs(prob, subs);
                         this.loadedProblem[prob.id] = true;
+                        this.fix();
                     });
+                    this.fix();
                 },
 
                 processSubs(problem, subs) {
@@ -967,6 +978,7 @@ var initScoreboard = (() => {
 
                 // recompute the aggregate and rank data
                 fix() {
+                    console.log("FIXING");
                     this.contestants = this.contestants.slice(); // so that vue.js notices... feels hacky though.
 
                     (() => {// recompute aggregates
@@ -1004,16 +1016,20 @@ var initScoreboard = (() => {
 
                 // demo methods only
                 async newGuy() {
-                    this.getter.newGuy();
+                    getter.newGuy();
+                    await this.demoLoad();
+                },
+                async randomSolve() {
+                    getter.randomSolve();
+                    await this.demoLoad();
+                },
+                async demoLoad() {
                     for (const group of this.problemGroups) {
                         for (const prob of group.probs) {
                             await this.fetchProblem(prob);
                         }
                     }
                     this.fix();
-                },
-                async randomSolve() {
-                    // TODO
                 },
             },
             template: `
