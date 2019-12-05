@@ -923,18 +923,18 @@ function initScoreboard(options) {
             <table class="scoreboard-table table table-borderless table-sm">
                 <thead>
                     <tr class="table-head">
-                        <th class="t-rank">{{ labels.rank }}</th>
-                        <th class="t-name">{{ labels.name }}</th>
+                        <th class="t-rank" v-html="labels.rank"></th>
+                        <th class="t-name" v-html="labels.name"></th>
                         <th class="t-score">
-                            {{ labels.solved }}
+                            <span v-html="labels.solved"></span>
                             <transition name="entry-value" mode="out-in">
-                                <small v-if="showPenalty"><br/>{{ labels.time }}</small>
+                                <small v-if="showPenalty"><br/><span v-html="labels.time"></span></small>
                             </transition>
                         </th>
-                        <th class="t-penalty" v-if="!showPenalty">{{ labels.time }}</th>
+                        <th class="t-penalty" v-if="!showPenalty" v-html="labels.time"></th>
                         <th class="t-problem" v-for="problem in problems">{{ problem }}</th>
                         <transition name="entry-value" mode="out-in">
-                            <th class="t-attempts"><small>{{ labels.attempts }}</small></th>
+                            <th class="t-attempts"><small v-html="labels.attempts"></small></th>
                         </transition>
                     </tr>
                 </thead>
@@ -967,8 +967,8 @@ function initScoreboard(options) {
                             <td class="t-problem" :key="c.subs[prob] | subId"
                                     :class="c | classForSub(prob, sumSubs(prob))">
                                 <span v-if="showAttempts && !showPenalty">
-                                    <small v-if="!c.subs[prob].attempts">
-                                        {{ labels.blankAttempt }}
+                                    <small v-if="!c.subs[prob].attempts"
+                                           v-html="labels.blankAttempt">
                                     </small>
                                     <small v-if="c.subs[prob].attempts">
                                         {{ c.subs[prob].attempts }}
@@ -994,18 +994,18 @@ function initScoreboard(options) {
                                         </span>
                                         <span class="t-penalty"
                                               v-if="!c.subs[prob].score &&
-                                                   (!showAttempts || c.subs[prob].attempts)">
-                                            {{ c.subs[prob].pending ? labels.pending : labels.blankPenalty }}
+                                                   (!showAttempts || c.subs[prob].attempts)"
+                                              v-html="c.subs[prob].pending ? labels.pending : labels.blankPenalty">
                                         </span>
                                     </span>
                                 </transition>
                                 <span v-if="showAttempts && showPenalty">
                                     <br/>
                                     <small>
-                                        <span v-if="!c.subs[prob].attempts">
-                                            {{ labels.blankAttempt }}
+                                        <span v-if="!c.subs[prob].attempts"
+                                              v-html="labels.blankAttempt">
                                         </span>
-                                        <span v-if="c.subs[prob].attempts">
+                                        <span v-if="c.subs[prob].attempts" class="scoreboard-tries">
                                             {{ c.subs[prob].attempts | tries }}
                                         </span>
                                     </small>
@@ -1020,30 +1020,30 @@ function initScoreboard(options) {
                         </transition>
                     </tr>
                     <tr class="table-foot" :key="headerKey">
-                        <td class="header-repeat t-rank">{{ labels.rank }}</td>
-                        <td class="header-repeat t-name">{{ labels.name }}</td>
+                        <td class="header-repeat t-rank" v-html="labels.rank"></td>
+                        <td class="header-repeat t-name" v-html="labels.name"></td>
                         <td class="header-repeat t-score">
-                            {{ labels.solved }}
+                            <span v-html="labels.solved"></span>
                             <transition name="entry-value" mode="out-in">
-                                <small v-if="showPenalty"><br/>{{ labels.time }}</small>
+                                <small v-if="showPenalty"><br/><span v-html="labels.time"></span></small>
                             </transition>
                         </td>
-                        <td class="header-repeat t-penalty" v-if="!showPenalty">{{ labels.time }}</td>
+                        <td class="header-repeat t-penalty" v-if="!showPenalty" v-html="labels.time"></td>
                         <td class="header-repeat t-problem" v-for="problem in problems">{{ problem }}</td>
                         <transition name="entry-value" mode="out-in">
-                            <td class="header-repeat t-attempts"><small>{{ labels.attempts }}</small></td>
+                            <td class="header-repeat t-attempts"><small v-html="labels.attempts"></small></td>
                         </transition>
                     </tr>
                     <tr class="table-foot scoreboard-summary" :key="summaryKey">
                         <td class="t-rank scoreboard-rank-blank"></td>
                         <td class="t-name">
-                            <span class="footer-subcount">{{ labels.isSolved }}</span>
+                            <span class="footer-subcount" v-html="labels.isSolved"></span>
                             <br/>
-                            <span class="footer-subcount">{{ labels.firstYes }}</span>
+                            <span class="footer-subcount" v-html="labels.firstYes"></span>
                             <br/>
-                            <span class="footer-subcount">{{ labels.subCount }}</span>
+                            <small class="footer-subcount" v-html="labels.subCount"></small>
                             <br/>
-                            <span class="footer-subcount">{{ labels.totalYes }}</span>
+                            <span class="footer-subcount" v-html="labels.totalYes"></span>
                         </td>
                         <transition name="entry-value" mode="out-in">
                             <td class="t-score" :key="safeSummary() | summaryId">
@@ -1052,12 +1052,13 @@ function initScoreboard(options) {
                                     <span class="t-penalty" v-if="safeSummary().score">
                                         {{ safeSummary().penalty }}
                                     </span>
-                                    <span class="t-penalty" v-if="!safeSummary().score">
-                                        {{ labels.blankPenalty }}
+                                    <span class="t-penalty"
+                                          v-if="!safeSummary().score"
+                                          v-html="labels.blankPenalty">
                                     </span>
                                 </transition>
                                 <br/>
-                                <small>{{ safeSummary().attempts | tries }}</small>
+                                <small class="scoreboard-tries">{{ safeSummary().attempts | tries }}</small>
                                 <br/>
                                 {{ safeSummary().score }}
                             </td>
@@ -1078,15 +1079,16 @@ function initScoreboard(options) {
                                     <span class="t-penalty" v-if="sumSubs(prob).score">
                                         {{ sumSubs(prob).penalty }}
                                     </span>
-                                    <span class="t-penalty" v-if="!sumSubs(prob).score">
-                                        {{ sumSubs(prob).pending ? labels.pending : labels.blankPenalty }}
+                                    <span class="t-penalty"
+                                          v-if="!sumSubs(prob).score"
+                                          v-html="sumSubs(prob).pending ? labels.pending : labels.blankPenalty">
                                     </span>
                                 </transition>
                                 <br/>
                                 <small v-if="!sumSubs(prob).attempts">
-                                    {{ labels.blankAttempt }}
+                                    <span v-html="labels.blankAttempt"></span>
                                 </small>
-                                <small v-if="sumSubs(prob).attempts">
+                                <small v-if="sumSubs(prob).attempts" class="scoreboard-tries">
                                     {{ sumSubs(prob).attempts | tries }}
                                 </small>
                                 <br/>
@@ -1136,8 +1138,9 @@ function initScoreboard(options) {
                                id="controls-show-attempts"
                                v-model="showAttempts"
                                v-on:change="updateShowAttempts()"/>
-                        <label class="form-check-label" for="controls-show-attempts">
-                            {{ labels.showAttemptCount }}
+                        <label class="form-check-label"
+                               for="controls-show-attempts"
+                               v-html="labels.showAttemptCount">
                         </label>
                     </div>
                     <div class="form-check form-check-inline">
@@ -1146,8 +1149,9 @@ function initScoreboard(options) {
                                id="controls-show-penalty"
                                v-model="showPenalty"
                                v-on:change="updateShowPenalty()"/>
-                        <label class="form-check-label" for="controls-show-penalty">
-                            {{ labels.showTimes }}
+                        <label class="form-check-label"
+                               for="controls-show-penalty"
+                               v-html="labels.showTimes">
                         </label>
                     </div>
                     <!-- <div class="form-check form-check-inline">
@@ -1156,8 +1160,9 @@ function initScoreboard(options) {
                                id="controls-hilit"
                                v-model="hilit"
                                v-on:change="updateHilit()"/>
-                        <label class="form-check-label" for="controls-hilit">
-                            {{ labels.hilitOnHover }}
+                        <label class="form-check-label"
+                               for="controls-hilit"
+                               v-html="labels.hilitOnHover">
                         </label>
                     </div> -->
                 </form>

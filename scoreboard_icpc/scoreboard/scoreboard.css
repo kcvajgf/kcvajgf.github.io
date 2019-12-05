@@ -114,6 +114,10 @@ td.t-score {
     width: 1.8%;
 }
 
+.scoreboard td.t-problem {
+    padding: 0.25rem;
+}
+
 .board-created .entry-value-leave-active {
     transition: all 0.5s;
     font-weight: bold;
@@ -219,4 +223,8 @@ td.t-score {
 
 .verdict-wa {
     color: rgba(80, 0, 0);
+}
+
+.scoreboard-tries {
+    font-size: 70%;
 }
