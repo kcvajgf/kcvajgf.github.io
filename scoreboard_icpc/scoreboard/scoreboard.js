@@ -2,6 +2,8 @@
 var $scoreboard = null;
 
 function initScoreboard(options) {
+    
+    if (!options) options = {};
 
     let demoFetchData = null;
 
@@ -610,8 +612,6 @@ function initScoreboard(options) {
         });
         return res;
     }
-
-    if (!options) options = {};
 
     const rankRuleses = {
         "wf": [
