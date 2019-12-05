@@ -164,12 +164,15 @@
             const search = new URLSearchParams(window && window.location && window.location.search || {});
             const display = search.get("display") && search.get("display") != '0';
             const minimal = display || search.get("minimal") && search.get("minimal") != '0';
+            const realTeams = search.get("realteams") && search.get("realteams") != '0';
             if (minimal || search.get("noheader") && search.get("noheader") != '0') $(".scoreboard-header").remove();
             if (minimal || search.get("nosponsors") && search.get("nosponsors") != '0') $(".scoreboard-sponsors").remove();
             if (minimal || search.get("nofooter") && search.get("nofooter") != '0') $(".scoreboard-footer").remove();
 
+            var realTeamList = ["3Sophonomore", "7 Halim", "AdNU-Ignatius", "AdNU-Xavier", "Angin", "Anonymoes Wombat", "Aphyrus", "Awit", "BBQube", "BenIsVeryBen", "BTNodes", "BUPC", "choKOdai", "CHRistian Minecraft Server", "CPCU Debuggers", "CPCU Mate", "CPCU P=NP if N=1", "CPCU waifu=senpai", "dasehydra", "Exceptions", "Fibonachips", "FPTU Cache-miss", "FPTU NP-Hard", "FPTU Orange 3", "HCMUS-Dopamine", "Kakakompyuternaminto", "Kalayo", "KFC", "MangTomas", "mickytheta", "MushLashWish", "Nairud", "NCTU_Kirin", "NCTU_Oimo", "NeeWhang", "NTU KDB", "NU-Wizards", "Panganuron", "Polynomial", "Raga", "randomgod3", "Registers", "Team Nautilus", "Team Regalia", "TJU_Open Boys", "UC Tech", "UMDCoderz", "URAN", "VSCOde Girls"];
+
             // initialize scoreboard
-            initScoreboard({
+            let options = {
                 labels: {
                     attempts: "Tries",
                     solved: "Solved",
@@ -181,7 +184,16 @@
                 },
                 nohilit: display,
                 demo: true,
-            });
+            };
+            if (realTeams) {
+                options.demoTeamList = realTeamList;
+                options.demoInitTeamList = realTeamList;
+                options.demoProbNewTeam = 0.0;
+                options.demoEagerness = 0.1;
+                options.demoEasiness = 0.12;
+                options.demoPenaltyIncProb = 0.25;
+            }
+            initScoreboard(options);
         </script>
     </body>
 </html>

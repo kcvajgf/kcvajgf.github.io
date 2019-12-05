@@ -168,9 +168,9 @@ function initScoreboard(options) {
             lastUpdated: "Mon Dec 11 11:11:11 PHT 2019",
         };
 
-        const sc = 0.6; // gaano kagaling
-        const xeasy = 1;
-        const newGuyProb = 0.3;
+        const sc = 'demoEagerness' in options ? options.demoEagerness : 0.6; // gaano kagaling
+        const xeasy = 'demoEasiness' in options ? options.demoEasiness : 1.0;
+        const newGuyProb = 'demoProbNewTeam' in options ? options.demoProbNewTeam : 0.3;
         const xattprobs = {
             "A": 0.11*sc,
             "B": 0.03*sc,
@@ -224,7 +224,7 @@ function initScoreboard(options) {
             "Team LEL": 3.0,
         };
 
-        const xspecs = [
+        const xspecs = options.demoTeamList ? options.demoTeamList.slice() : [
             "...",
             "1BUPC",
             "2BUPC",
@@ -384,64 +384,78 @@ function initScoreboard(options) {
             }
         }
 
-
-        let xpen = 0, xguys = 0, xspeci = 0, xquis = 0;
-        async function demoFetchData(source) {
-            // increase penalty a little bit
-            xpen++;
-            while (Math.random() < 0.1) xpen++;
-
-            const trySolving = function(c) {
-                let done = 0;
-                for (const p of xdata.problems) {
-                    if (c.subs[p].pending ||
-                            Math.random() < xteager[c.name] * xattprobs[p] && c.subs[p].score == 0) {
-                        done++;
-                        // make attempt
-                        if (!c.subs[p].pending) {
-                            c.subs[p].attempts++;
-                            c.attempts++;
-                        }
-                        if (c.subs[p].pending = Math.random() < 0.06) continue;
-                        if (Math.random() < xtskill[c.name] * xsolprobs[p]) {
-                            // correct answer. add penalty
-                            if (c.subs[p].penalty != 0) throw "Invalid data";
-                            c.subs[p].penalty = xpen;
-                            c.subs[p].score = 1;
-                            c.score++;
-                            c.penalty += xpen + 20 * (c.subs[p].attempts - 1);
-                        }
+        const trySolving = function(c) {
+            let done = 0;
+            for (const p of xdata.problems) {
+                if (c.subs[p].pending ||
+                        Math.random() < xteager[c.name] * xattprobs[p] && c.subs[p].score == 0) {
+                    done++;
+                    // make attempt
+                    if (!c.subs[p].pending) {
+                        c.subs[p].attempts++;
+                        c.attempts++;
+                    }
+                    if (c.subs[p].pending = Math.random() < 0.06) continue;
+                    if (Math.random() < xtskill[c.name] * xsolprobs[p]) {
+                        // correct answer. add penalty
+                        if (c.subs[p].penalty != 0) throw "Invalid data";
+                        c.subs[p].penalty = xpen;
+                        c.subs[p].score = 1;
+                        c.score++;
+                        c.penalty += xpen + 20 * (c.subs[p].attempts - 1);
                     }
                 }
-                return done;
-            };
-
-            while (Math.random() < newGuyProb && xdata.contestants.length < 1111) {
-                // new guy
-                const c = {
-                    name: (xspeci < xspecs.length && Math.random() < 0.1 ? xspecs[xspeci++] : 
-                            Math.random() < 0.8 ? `Quiwarriors ${++xquis}` : `New team ${xguys++}`),
-                    score: 0,
-                    attempts: 0,
-                    penalty: 0,
-                    subs: {},
-                };
-                for (const p of xdata.problems) {
-                    c.subs[p] = { score: 0, attempts: 0, penalty: 0, pending: false };
-                }
-                xdata.contestants.push(c);
-                xtskill[c.name] = 0.01 + 50.0 * Math.random() * Math.random();
-                xteager[c.name] = 0.5 + 3.5 * Math.random() * Math.random() * Math.random() * Math.random();
-                while (!trySolving(c));
             }
+            return done;
+        };
 
-            for (const c of xdata.contestants) trySolving(c);
+        function addNewGuy(name, solve = true) {
+            if (!name) name = (xspeci < xspecs.length && Math.random() < 0.1 ? xspecs[xspeci++] : 
+                        Math.random() < 0.8 ? `Quiwarriors ${++xquis}` : `New team ${xguys++}`);
+            const c = {
+                name,
+                score: 0,
+                attempts: 0,
+                penalty: 0,
+                subs: {},
+            };
+            for (const p of xdata.problems) {
+                c.subs[p] = { score: 0, attempts: 0, penalty: 0, pending: false };
+            }
+            xdata.contestants.push(c);
+            xtskill[c.name] = 0.01 + 50.0 * Math.random() * Math.random();
+            xteager[c.name] = 0.5 + 3.5 * Math.random() * Math.random() * Math.random() * Math.random();
+            if (solve) while (!trySolving(c));
+        }
+
+        if (options.demoInitTeamList) {
+            xdata.contestants = [];
+            for (const name of options.demoInitTeamList) {
+                addNewGuy(name, false);
+            }
+        }
+
+        let xpen = 0, xguys = 0, xspeci = 0, xquis = 0, first = true;
+        let xpeninc = 'demoPenaltyInc' in options ? options.demoPenaltyInc : 1;
+        let xpenprob = 'demoPenaltyIncProb' in options ? options.demoPenaltyIncProb : 0.1;
+        async function demoFetchData(source) {
+            if (first) {
+                first = false;
+            } else {
+                // increase penalty a little bit
+                xpen += xpeninc;
+                while (Math.random() < xpenprob) xpen++;
+
+                while (Math.random() < newGuyProb && xdata.contestants.length < 1111) addNewGuy();
+
+                for (const c of xdata.contestants) trySolving(c);
+            }
 
             // sort
             xdata.contestants.sort(function(x, y) {
                 if (x.score != y.score) return y.score - x.score;
                 if (x.penalty != y.penalty) return x.penalty - y.penalty;
-                return 0;
+                return x.name.localeCompare(y.name);
             });
 
             // recompute rank
@@ -895,6 +909,7 @@ function initScoreboard(options) {
                     this.contestants = allData.contestants;
                     this.assignSummary(allData.summary);
                     this.updateMetadata(allData);
+                    console.log("Processed", allData);
                 }
             },
 
@@ -902,7 +917,8 @@ function initScoreboard(options) {
                 // shallow assign to not trigger dependency on summary (breaks animation)
                 // probably a mistake in the design, oh well...
                 if (!newSummary) newSummary = defaultSummary;
-                Object.assign(this.summary, newSummary);
+                // Object.assign(this.summary, newSummary);
+                this.summary = newSummary;
             },
 
             safeSummary() {
