@@ -508,7 +508,7 @@ function initScoreboard(options) {
     // PC2-formatted
     async function realFetchData(source) {
         const el = $( '<div></div>' );
-        el.html((await axios.get(`${source}/index.html`, { timeout: 10000 })).data);
+        el.html((await axios.get(`${source}/index.html`, { params: { kalat: "" + Math.random()}, timeout: 10000 })).data);
         const res = {
             problems: null,
             contestants: [],
@@ -1189,4 +1189,3 @@ function initScoreboard(options) {
     $scoreboard = { vm, controlsVm };
     return $scoreboard;
 }
-
