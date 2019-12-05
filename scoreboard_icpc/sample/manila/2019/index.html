@@ -162,7 +162,8 @@
 
             // hide stuff if requested
             const search = new URLSearchParams(window && window.location && window.location.search || {});
-            const minimal = search.get("minimal") && search.get("minimal") != '0';
+            const display = search.get("display") && search.get("display") != '0';
+            const minimal = display || search.get("minimal") && search.get("minimal") != '0';
             if (minimal || search.get("noheader") && search.get("noheader") != '0') $(".scoreboard-header").remove();
             if (minimal || search.get("nosponsors") && search.get("nosponsors") != '0') $(".scoreboard-sponsors").remove();
             if (minimal || search.get("nofooter") && search.get("nofooter") != '0') $(".scoreboard-footer").remove();
@@ -178,6 +179,7 @@
                     blankAttempt: " ",
                     subCount: "Total submissions",
                 },
+                nohilit: display,
                 demo: true,
             });
         </script>
