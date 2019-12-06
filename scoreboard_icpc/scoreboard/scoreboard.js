@@ -1077,11 +1077,11 @@ function initScoreboard(options) {
                                 </transition>
                                 <span v-if="showAttempts && showPenalty">
                                     <br/>
-                                    <small>
+                                    <small class="scoreboard-tries">
                                         <span v-if="!c.subs[prob].attempts"
                                               v-html="labels.blankAttempt">
                                         </span>
-                                        <span v-if="c.subs[prob].attempts" class="scoreboard-tries">
+                                        <span v-if="c.subs[prob].attempts">
                                             {{ c.subs[prob].attempts | tries }}
                                         </span>
                                     </small>
