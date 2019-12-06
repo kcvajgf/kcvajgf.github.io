@@ -197,6 +197,10 @@ td.t-score {
     background-color: rgba(255, 0, 0, 0.222);
 }
 
+.table-foot .t-problem, .table-foot .t-name, .table-foot .t-score {
+    vertical-align: bottom;
+}
+
 .scoreboard-rank-gold {
     background-color: #ffd700;
 }

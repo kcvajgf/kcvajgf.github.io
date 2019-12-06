@@ -9,12 +9,35 @@ function initScoreboard(options) {
 
     /////////////// fake data generator. feel free to remove in production to reduce size
     demoFetchData = (() => {
-        const xdata = {
-            problems: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M"],
-            contestants: [
+
+        function _addProblemCodes(got, length, count, prefix) {
+            if (count > 0) {
+                if (length == 0) {
+                    count--;
+                    got.push(prefix);
+                } else {
+                    const codeA = "A".charCodeAt(0);
+                    const codeZ = "Z".charCodeAt(0);
+                    for (let c = codeA; c <= codeZ; c++) {
+                        count = _addProblemCodes(got, length - 1, count, prefix + String.fromCharCode(c));
+                    }
+                }
+            }
+            return count;
+        }
+        function problemCodes(count) {
+            const got = [];
+            for (let length = 1; count > 0; length++) {
+                count = _addProblemCodes(got, length, count, "");
+            }
+            return got;
+        }
+
+        const probCodes = problemCodes(options.demoProblemCount || 13);
+
+        const initContestants = [
                 {
                     name: "Team X",
-                    rank: 1, score: 2, attempts: 3, penalty: 100,
                     subs: {
                         "A": { score: 1, attempts: 1, penalty: 30, pending: false },
                         "B": { score: 1, attempts: 2, penalty: 50, pending: false },
@@ -33,7 +56,6 @@ function initScoreboard(options) {
                 },
                 {
                     name: "Team Y",
-                    rank: 2, score: 2, attempts: 4, penalty: 110,
                     subs: {
                         "A": { score: 1, attempts: 2, penalty: 30, pending: false },
                         "B": { score: 1, attempts: 2, penalty: 40, pending: false },
@@ -52,7 +74,6 @@ function initScoreboard(options) {
                 },
                 {
                     name: "Team A",
-                    rank: 3, score: 1, attempts: 3, penalty: 70,
                     subs: {
                         "A": { score: 1, attempts: 3, penalty: 30, pending: false },
                         "B": { score: 0, attempts: 0, penalty: 0, pending: false },
@@ -71,7 +92,6 @@ function initScoreboard(options) {
                 },
                 {
                     name: "Team B",
-                    rank: 3, score: 1, attempts: 4, penalty: 70,
                     subs: {
                         "A": { score: 0, attempts: 2, penalty: 0, pending: false },
                         "B": { score: 1, attempts: 2, penalty: 50, pending: false },
@@ -90,7 +110,6 @@ function initScoreboard(options) {
                 },
                 {
                     name: "Team C",
-                    rank: 5, score: 1, attempts: 1, penalty: 71,
                     subs: {
                         "A": { score: 0, attempts: 0, penalty: 0, pending: false },
                         "B": { score: 1, attempts: 1, penalty: 71, pending: false },
@@ -109,7 +128,6 @@ function initScoreboard(options) {
                 },
                 {
                     name: "Team LOL",
-                    rank: 6, score: 0, attempts: 11, penalty: 0,
                     subs: {
                         "A": { score: 0, attempts: 5, penalty: 0, pending: false },
                         "B": { score: 0, attempts: 6, penalty: 0, pending: false },
@@ -128,7 +146,6 @@ function initScoreboard(options) {
                 },
                 {
                     name: "Team LAL",
-                    rank: 6, score: 0, attempts: 24, penalty: 0,
                     subs: {
                         "A": { score: 0, attempts: 0, penalty: 0, pending: false },
                         "B": { score: 0, attempts: 0, penalty: 0, pending: false },
@@ -147,7 +164,6 @@ function initScoreboard(options) {
                 },
                 {
                     name: "Team LEL",
-                    rank: 6, score: 0, attempts: 1, penalty: 0,
                     subs: {
                         "A": { score: 0, attempts: 0, penalty: 0, pending: false },
                         "B": { score: 0, attempts: 0, penalty: 0, pending: false },
@@ -164,8 +180,10 @@ function initScoreboard(options) {
                         "M": { score: 0, attempts: 0, penalty: 0, pending: false },
                     },
                 },
-            ],
-
+            ];
+        const xdata = {
+            problems: probCodes,
+            contestants: [],
             title: "2019 ICPC Asia-Manila Regional Programming Contest",
             lastUpdated: "Mon Dec 11 11:11:11 PHT 2019",
         };
@@ -203,6 +221,12 @@ function initScoreboard(options) {
             "L": 0.12*xeasy,
             "M": 0.008*xeasy,
         };
+
+        // pad problems
+        for (const prob of probCodes) {
+            if (!(prob in xattprobs)) xattprobs[prob] = (0.1 + 0.1*Math.random())*sc;
+            if (!(prob in xsolprobs)) xsolprobs[prob] = (0.2 + 0.4*Math.random())*sc;
+        }
 
         const xtskill = {
             "Team X": 11.0,
@@ -435,6 +459,24 @@ function initScoreboard(options) {
             for (const name of options.demoInitTeamList) {
                 addNewGuy(name, false);
             }
+        } else {
+            // initial people
+            for (const cont of initContestants) {
+                const c = {
+                    name: cont.name,
+                    score: 0,
+                    attempts: 0,
+                    penalty: 0,
+                    subs: {},
+                }
+                for (const p of xdata.problems) {
+                    c.subs[p] = cont.subs[p] || { score: 0, attempts: 0, penalty: 0, pending: false };
+                    c.score += c.subs[p].score;
+                    c.attempts += c.subs[p].attempts;
+                    c.penalty += c.subs[p].score == 0 ? 0 : c.subs[p].penalty + 20 * (c.subs[p].attempts - 1);
+                }
+                xdata.contestants.push(c);
+            }
         }
 
         let xpen = 0, xguys = 0, xspeci = 0, xquis = 0, first = true;
@@ -443,6 +485,8 @@ function initScoreboard(options) {
         async function demoFetchData(source) {
             if (first) {
                 first = false;
+
+
             } else {
                 // increase penalty a little bit
                 xpen += xpeninc;
