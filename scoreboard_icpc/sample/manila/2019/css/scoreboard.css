@@ -261,10 +261,12 @@ footer a, footer a:visited {
 
 
 
-@media (max-width: 575px) {
+@media (max-width: 599px) {
     main.main {
-        margin: 0;
+        margin-left: 0;
+        margin-right: 0;
     }
+
     .overall-container .legends-container {
         display: none !important;
     }
