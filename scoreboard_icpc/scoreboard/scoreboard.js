@@ -753,6 +753,8 @@ function initScoreboard(options) {
             hilit: !nohilit,
             labels: labels,
             startedFetchLoop: false,
+            loading: 0,
+            lastSetLoading: Date.now(),
         },
         async mounted() {
             this.setLoading(true);
@@ -761,14 +763,14 @@ function initScoreboard(options) {
 
             this.$on("setShowAttempts", (value) => {
                 if (this.showAttempts != value) {
-                    this.showAttempts = value;
                     this.bufferLoad();
+                    this.showAttempts = value;
                 }
             });
             this.$on("setShowPenalty", (value) => {
                 if (this.showPenalty != value) {
-                    this.showPenalty = value;
                     this.bufferLoad();
+                    this.showPenalty = value;
                 }
             });
             this.$on("setHilit", (value) => { this.hilit = value; });
@@ -776,6 +778,16 @@ function initScoreboard(options) {
             await this.initFetchAll();
 
             setTimeout(() => this.setLoading(false), 1000);
+
+            // restarts the animation in case one of the 'setLoading(false)' calls fails...
+            // I'm confident this isn't needed, but I'm paranoid too.
+            setInterval(() => {
+                if (this.loading > 0 && Date.now() - this.lastSetLoading >= 4000) {
+                    console.log("It's been too long since the animation last came back.");
+                    console.log("I'll force it to come back now!");
+                    this.addLoading(-this.loading);
+                }
+            }, 300);
 
             this.startFetchLoop();
         },
@@ -831,7 +843,11 @@ function initScoreboard(options) {
 
         methods: {
             setLoading(loading) {
-                if (loading) {
+                this.addLoading(loading ? +1 : -1);
+            },
+            addLoading(change) {
+                this.lastSetLoading = Date.now();
+                if ((this.loading = Math.max(0, this.loading + change)) > 0) {
                     this.$el.classList.remove("board-created");
                     this.$el.classList.add("board-loading");
                 } else {
