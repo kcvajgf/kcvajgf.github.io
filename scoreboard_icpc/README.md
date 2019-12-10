@@ -1,3 +1,5 @@
+# Setup instructions
+
 This integrates easily with PC^2, and this document explains how to set it up for that. [Integration with other contest systems to come soon!]
 
 *Notes:*

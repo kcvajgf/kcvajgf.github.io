@@ -1,6 +1,2 @@
 - hardcode all results from past years so we don't have to call HR api anymore
-- instructions.md -> README.md
-- also README.md for scoreboard/
-- Remove unneeded whitespace in html files.
-    - Somewhat relevant here kasi polling!
 - Implement non-polling version.
