@@ -696,7 +696,23 @@ function initScoreboard(options) {
         rankRules = [];
     }
 
-    const fetchData = demo ? demoFetchData : realFetchData;
+    const xFetchData = demo ? demoFetchData : realFetchData;
+    let fetchCount = "fetchCount" in options ? (options.fetchCount || 1) : -1;
+    let lastFetch = null;
+
+    function fetchData(source) {
+        if (fetchCount) {
+            fetchCount--;
+            console.log("Fetching from", source, "...", fetchCount, "left")
+            lastFetch = xFetchData(source);
+        } else {
+            console.log("Not fetching from", source, "... ran out of fetch");
+            if (lastFetch == null) {
+                console.warn("WARNING: Has not fetched at all. Misconfiguration?")
+            }
+        }
+        return lastFetch;
+    }
 
     function extractFrom(word, source) {
         const i = source.search(word);
