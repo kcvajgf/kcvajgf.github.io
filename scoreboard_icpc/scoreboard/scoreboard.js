@@ -7,6 +7,14 @@ function initScoreboard(options) {
 
     let demoFetchData = null;
 
+    function updateSummary(summary, individual) {
+        summary.attempts += individual.attempts;
+        summary.score += individual.score;
+        if (individual.score) {
+            summary.penalty = Math.min(summary.penalty, individual.penalty);
+        }
+    }
+
     /////////////// fake data generator. feel free to remove in production to reduce size
     demoFetchData = (() => {
 
@@ -529,17 +537,9 @@ function initScoreboard(options) {
                     loaded: true,
                 };
                 for (const c of xdata.contestants) {
-                    summary.subs[p].attempts += c.subs[p].attempts;
-                    summary.subs[p].score += c.subs[p].score;
-                    if (c.subs[p].score) {
-                        summary.subs[p].penalty = Math.min(summary.subs[p].penalty, c.subs[p].penalty);
-                    }
+                    updateSummary(summary.subs[p], c.subs[p]);
                 }
-                summary.attempts += summary.subs[p].attempts;
-                summary.score += summary.subs[p].score;
-                if (summary.subs[p].score) {
-                    summary.penalty = Math.min(summary.penalty, summary.subs[p].penalty);
-                }
+                updateSummary(summary, summary.subs[p]);
             }
 
             return Promise.resolve(xdata);
@@ -550,7 +550,7 @@ function initScoreboard(options) {
     /////////////// end fake data generator.
 
     // PC2-formatted
-    async function realFetchData(source) {
+    async function pc2FetchData(source) {
         const el = $( '<div></div>' );
         el.html((await axios.get(`${source}/index.html`, { params: { kalat: "" + Math.random()}, timeout: 10000 })).data);
         const res = {
@@ -655,6 +655,101 @@ function initScoreboard(options) {
             }
         });
         return res;
+    }
+
+    async function domFetchData(source) {
+        console.log('fetching', source);
+        const contestRaw = (await axios.get(source, { params: { kalat: "" + Math.random()}, timeout: 10000 })).data;
+        const raw = (await axios.get(`${source}/scoreboard`, { params: { kalat: "" + Math.random()}, timeout: 10000 })).data;
+        const teamsRaw = (await axios.get(`${source}/teams`, { params: { kalat: "" + Math.random()}, timeout: 10000 })).data;
+        const processed = {
+            problems: [],
+            contestants: [],
+            title: contestRaw.formal_name,
+            lastUpdated: raw.time,
+            state: raw.state,
+            summary: {
+                attempts: 0,
+                score: 0,
+                penalty: Number.POSITIVE_INFINITY,
+                subs: {}
+            },
+        };
+
+        // process teams
+        const teamById = {};
+        for (const team of teamsRaw) teamById[team.id] = team;
+
+        // loop to find all problem codes
+        const problemsFound = {};
+        if (raw.rows.length) {
+            for (const problemSub of raw.rows[0].problems) {
+                const problem = problemSub.label;
+                if (problemsFound[problem]) {
+                    console.warn(`Warning: problem ${problem} duplicate`);
+                }
+                problemsFound[problem] = true;
+                processed.problems.push(problem);
+            }
+            for (const row of raw.rows) {
+                for (const problemSub of row.problems) {
+                    const problem = problemSub.label;
+                    if (!problemsFound[problem]) {
+                        console.log(`Warning: problem ${problem} not found everywhere`);
+                    }
+                }
+            }
+        }
+
+        // loop to create stuff
+        for (const row of raw.rows) {
+            const team = teamById[row.team_id];
+            const contestant = {
+                name: team.name,
+                score: row.score.num_solved,
+                attempts: 0,
+                penalty: row.score.total_time,
+                affiliation: team.affiliation,
+                subs: {},
+            }
+
+            for (const prob of row.problems) {
+                const att = prob.num_judged + prob.num_pending;
+                contestant.attempts += att;
+                contestant.subs[prob.label] = {
+                    score: prob.solved ? 1 : 0,
+                    attempts: att,
+                    penalty: prob.time,
+                    pending: prob.num_pending > 0,
+                };
+            }
+
+            processed.contestants.push(contestant);
+        }
+
+        // summary
+        for (const p of processed.problems) {
+            processed.summary.subs[p] = {
+                score: 0,
+                attempts: 0,
+                penalty: Number.POSITIVE_INFINITY,
+                loaded: true,
+            };
+            for (const c of processed.contestants) {
+                updateSummary(processed.summary.subs[p], c.subs[p]);
+            }
+            updateSummary(processed.summary, processed.summary.subs[p]);
+        }
+
+        return processed;
+    }
+
+    const judge = options.judge || 'pc2';
+    let realFetchData;
+    if (judge == 'dom') {
+        realFetchData = domFetchData;
+    } else {
+        realFetchData = pc2FetchData;
     }
 
     const rankRuleses = {
@@ -940,6 +1035,13 @@ function initScoreboard(options) {
             updateMetadata(allData) {
                 if (allData.title && allData.title.length > 0) {
                     $(".scoreboard-contest-name").text(allData.title);
+                    $(".scoreboard-contest-state").html(
+                        !(allData && allData.state) ? this.labels.stateNormal :
+                        allData.state.finalized ? this.labels.stateFinalized :
+                        allData.state.thawed ? this.labels.stateThawed :
+                        allData.state.frozen ? this.labels.stateFrozen :
+                        this.labels.stateNormal
+                        );
                 }
                 if (allData.lastUpdated && allData.lastUpdated.length > 0) {
                     $(".scoreboard-last-updated-str").text("Last updated");
